@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import type { NavLink } from "@/data/aroc";
@@ -12,6 +13,15 @@ type NavbarProps = {
 
 export function Navbar({ links }: NavbarProps) {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+
+  const isActive = (link: NavLink) => {
+    if (!link.matchPath) {
+      return false;
+    }
+
+    return pathname === link.matchPath;
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-[rgba(0,184,219,0.16)] bg-[rgba(0,0,0,0.78)] backdrop-blur-xl">
@@ -19,17 +29,17 @@ export function Navbar({ links }: NavbarProps) {
         <Link
           aria-label="AROC_PL home"
           className="font-display text-[1.7rem] font-black uppercase tracking-[0.14em] text-white sm:text-[1.9rem]"
-          href="#top"
+          href="/"
         >
           AROC<span className="text-[var(--cyan)]">_</span>PL
         </Link>
 
         <div className="hidden items-center gap-8 md:flex">
-          {links.map((link, index) => (
+          {links.map((link) => (
             <Link
               className={[
                 "text-sm font-medium text-[#d1d5dc] transition-colors duration-200 hover:text-[var(--cyan)]",
-                index === 0 ? "text-[var(--cyan)]" : "",
+                isActive(link) ? "text-[var(--cyan)]" : "",
               ].join(" ")}
               href={link.href}
               key={link.href}
@@ -65,7 +75,12 @@ export function Navbar({ links }: NavbarProps) {
         <div className="mx-auto flex max-w-[1120px] flex-col gap-2 px-4 py-4 sm:px-6">
           {links.map((link) => (
             <Link
-              className="rounded-2xl border border-transparent px-4 py-3 text-sm font-medium text-[#d1d5dc] transition hover:border-[rgba(0,184,219,0.18)] hover:bg-[rgba(0,184,219,0.06)] hover:text-[var(--cyan)]"
+              className={[
+                "rounded-2xl border px-4 py-3 text-sm font-medium transition",
+                isActive(link)
+                  ? "border-[rgba(0,184,219,0.22)] bg-[rgba(0,184,219,0.08)] text-[var(--cyan)]"
+                  : "border-transparent text-[#d1d5dc] hover:border-[rgba(0,184,219,0.18)] hover:bg-[rgba(0,184,219,0.06)] hover:text-[var(--cyan)]",
+              ].join(" ")}
               href={link.href}
               key={link.href}
               onClick={() => setOpen(false)}

@@ -12,6 +12,7 @@ import {
   achievements,
   coreDivisions,
   footerData,
+  footerNavigation,
   galleryItems,
   heroData,
   navLinks,
@@ -44,7 +45,7 @@ export default function Home() {
       <Footer
         contact={footerData.contact}
         description={footerData.description}
-        navigation={navLinks}
+        navigation={footerNavigation}
         sponsors={footerData.sponsors}
       />
     </>

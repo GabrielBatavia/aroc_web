@@ -3,6 +3,7 @@ export type AccentTone = "cyan" | "blue" | "gold" | "orange" | "emerald";
 export type NavLink = {
   label: string;
   href: string;
+  matchPath?: string;
 };
 
 export type HeroData = {
@@ -121,11 +122,19 @@ export type FooterContact = {
 };
 
 export const navLinks: NavLink[] = [
-  { label: "About", href: "#about" },
-  { label: "Technology", href: "#technology" },
-  { label: "Robots", href: "#robots" },
-  { label: "Achievements", href: "#achievements" },
-  { label: "Gallery", href: "#gallery" },
+  { label: "About", href: "/about", matchPath: "/about" },
+  { label: "Technology", href: "/#technology" },
+  { label: "Robots", href: "/#robots" },
+  { label: "Achievements", href: "/#achievements" },
+  { label: "Gallery", href: "/#gallery" },
+];
+
+export const footerNavigation: NavLink[] = [
+  { label: "About Us", href: "/about", matchPath: "/about" },
+  { label: "Technology", href: "/#technology" },
+  { label: "Our Robots", href: "/#robots" },
+  { label: "Achievements", href: "/#achievements" },
+  { label: "Gallery", href: "/#gallery" },
 ];
 
 export const heroData: HeroData = {
@@ -503,7 +512,7 @@ export const footerData = {
     {
       label: "LinkedIn",
       value: "AROC PL Polinema",
-      href: "https://www.linkedin.com",
+      href: "https://www.linkedin.com/company/aroc-pl-polinema",
       icon: "linkedin",
     },
     {

@@ -246,3 +246,22 @@ export function ChevronRightIcon(props: IconProps) {
     </IconBase>
   );
 }
+
+export function GraduationCapIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="m2 9 10-5 10 5-10 5-10-5Z" />
+      <path d="M6 11.5v4.5c0 1.3 2.7 3 6 3s6-1.7 6-3v-4.5" />
+      <path d="M22 10v6" />
+      <path d="M22 16c0 .9-.7 1.5-1.5 1.5S19 16.9 19 16s.7-1.5 1.5-1.5S22 15.1 22 16Z" />
+    </IconBase>
+  );
+}
+
+export function PhoneIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1A19.4 19.4 0 0 1 5.2 12.8 19.8 19.8 0 0 1 2.1 4.1 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7l.5 3a2 2 0 0 1-.6 1.8L7.3 10a16 16 0 0 0 6.7 6.7l1.5-1.7a2 2 0 0 1 1.8-.6l3 .5a2 2 0 0 1 1.7 2Z" />
+    </IconBase>
+  );
+}

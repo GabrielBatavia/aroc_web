@@ -26,7 +26,7 @@ export function Footer({ description, sponsors, navigation, contact }: FooterPro
             <Link
               aria-label="AROC_PL home"
               className="font-display text-[2rem] font-black uppercase tracking-[0.14em] text-white"
-              href="#top"
+              href="/"
             >
               AROC<span className="text-[var(--cyan)]">_</span>PL
             </Link>
