@@ -57,25 +57,26 @@ export const aboutMission = {
 export const aboutValues = [
   {
     title: "Inovasi",
-    description: "Selalu berpikir di luar batas teknologi saat ini",
+    description: "Selalu berpikir di luar batas teknologi saat ini.",
     tone: "gold",
     icon: "star",
   },
   {
     title: "Integritas",
-    description: "Jujur, disiplin, dan bertanggung jawab dalam tim",
+    description: "Jujur, disiplin, dan bertanggung jawab dalam tim.",
     tone: "cyan",
     icon: "shield",
   },
   {
     title: "Kolaborasi",
-    description: "Satu tim, satu tujuan - lintas angkatan",
+    description: "Satu tim, satu tujuan — lintas angkatan.",
     tone: "blue",
     icon: "users",
   },
   {
     title: "Prestasi",
-    description: "Kompetisi nasional & internasional sebagai tolak ukur",
+    description:
+      "Kompetisi nasional & internasional sebagai tolok ukur kami bertumbuh.",
     tone: "orange",
     icon: "medal",
   },
@@ -105,5 +106,3 @@ export const aboutMentors = [
 ] satisfies AboutMentor[];
 
 export const aboutCohorts: TeamYear[] = teamYears;
-
-export const aboutTeamNotePath = "/data/about.ts";

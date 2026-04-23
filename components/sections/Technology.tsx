@@ -1,3 +1,5 @@
+"use client";
+
 import type { DivisionCard } from "@/data/aroc";
 import {
   BoltIcon,
@@ -7,7 +9,7 @@ import {
   EyeIcon,
   RadioIcon,
 } from "@/components/shared/Icons";
-import { SectionHeading } from "@/components/shared/SectionHeading";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 type TechnologyProps = {
   divisions: DivisionCard[];
@@ -22,101 +24,85 @@ const iconMap = {
   eye: EyeIcon,
 };
 
-const cardTone = {
-  cyan: {
-    ring: "border-[rgba(0,184,219,0.18)]",
-    line: "from-[rgba(0,184,219,0.9)] to-[rgba(43,127,255,0.9)]",
-    icon: "border-[rgba(0,184,219,0.16)] bg-[rgba(0,184,219,0.08)] text-[var(--cyan)]",
-    title: "text-[var(--cyan)]",
-  },
-  orange: {
-    ring: "border-[rgba(255,137,4,0.18)]",
-    line: "from-[rgba(255,137,4,0.9)] to-[rgba(240,177,0,0.9)]",
-    icon: "border-[rgba(255,137,4,0.16)] bg-[rgba(255,137,4,0.08)] text-[var(--orange)]",
-    title: "text-[var(--orange)]",
-  },
-  gold: {
-    ring: "border-[rgba(240,177,0,0.18)]",
-    line: "from-[rgba(255,137,4,0.9)] to-[rgba(240,177,0,0.9)]",
-    icon: "border-[rgba(240,177,0,0.16)] bg-[rgba(240,177,0,0.08)] text-[var(--gold)]",
-    title: "text-[var(--gold)]",
-  },
-  blue: {
-    ring: "border-[rgba(81,162,255,0.18)]",
-    line: "from-[rgba(81,162,255,0.9)] to-[rgba(43,127,255,0.9)]",
-    icon: "border-[rgba(81,162,255,0.16)] bg-[rgba(81,162,255,0.08)] text-[#51a2ff]",
-    title: "text-[#51a2ff]",
-  },
-  emerald: {
-    ring: "border-[rgba(0,212,146,0.18)]",
-    line: "from-[rgba(0,212,146,0.9)] to-[rgba(0,184,219,0.9)]",
-    icon: "border-[rgba(0,212,146,0.16)] bg-[rgba(0,212,146,0.08)] text-[var(--green)]",
-    title: "text-[var(--green)]",
-  },
-};
-
 export function Technology({ divisions }: TechnologyProps) {
+  const { ref: headingRef, isVisible: headingVisible } = useScrollReveal();
+  const { ref: cardsRef, isVisible: cardsVisible } = useScrollReveal();
+
   return (
-    <section className="section-divider scroll-mt-24 py-16 sm:py-20" id="technology">
-      <div className="mx-auto max-w-[1120px] px-4 sm:px-6">
-        <SectionHeading
-          centered
-          description="Structured capability blocks spanning mechanics, electronics, software intelligence, and real-time field coordination."
-          label="Our Technology"
-          title={
-            <>
-              Core <span className="heading-gradient-gold">Divisions</span>
-            </>
-          }
-        />
+    <section
+      className="surface-paper-soft scroll-mt-24 py-20 sm:py-28"
+      id="technology"
+    >
+      <div className="mx-auto max-w-[1200px] px-4 sm:px-8">
+        <div
+          ref={headingRef}
+          className={`reveal-base reveal-up ${headingVisible ? "revealed" : ""}`}
+        >
+          <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between md:gap-10">
+            <div className="max-w-[38rem]">
+              <div className="kicker">Cara Kami Membangun</div>
+              <h2 className="headline mt-5 text-[clamp(2.4rem,5vw,4rem)] text-[var(--ink)]">
+                Dua divisi,
+                <br />
+                <span className="headline-italic">satu lab.</span>
+              </h2>
+            </div>
+            <p className="max-w-[26rem] text-[1rem] leading-[1.8] text-[var(--muted)] md:pb-2">
+              Dari motor dan rangkaian sampai visi dan strategi &mdash;
+              kapabilitas yang mengubah mekanik mentah jadi mesin juara.
+            </p>
+          </div>
+        </div>
 
-        <div className="mt-12 grid gap-6 lg:grid-cols-2">
-          {divisions.map((division) => {
-            const styles = cardTone[division.tone];
-
-            return (
-              <article
-                className={`neon-panel relative overflow-hidden rounded-[1.9rem] p-6 sm:p-8 ${styles.ring}`}
-                key={division.title}
-              >
-                <div className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r ${styles.line}`} />
-                <div className="max-w-[34rem]">
-                  <div className="eyebrow !justify-start">{division.eyebrow}</div>
-                  <h3 className={`mt-4 font-display text-[2.1rem] font-bold uppercase ${styles.title}`}>
+        <div ref={cardsRef} className="mt-16 grid gap-6 lg:grid-cols-2">
+          {divisions.map((division, index) => (
+            <article
+              key={division.title}
+              className={`card-paper card-hover-lift group rounded-sm p-8 sm:p-10 reveal-base reveal-up ${cardsVisible ? `revealed reveal-delay-${index + 1}` : ""}`}
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <div className="numeral text-[2.2rem] leading-none text-[var(--gold-deep)] transition-transform duration-500 group-hover:-translate-y-1">
+                    0{index + 1}
+                  </div>
+                  <h3 className="font-serif mt-4 text-[2rem] font-semibold text-[var(--ink)]">
                     {division.title}
                   </h3>
-                  <p className="mt-3 text-[0.98rem] leading-8 text-[var(--muted)]">
-                    {division.description}
-                  </p>
                 </div>
+                <div className="text-[0.68rem] font-bold uppercase tracking-[0.24em] text-[var(--gold-deep)]">
+                  Divisi
+                </div>
+              </div>
 
-                <div className="mt-8 space-y-4">
-                  {division.items.map((item) => {
-                    const Icon = iconMap[item.icon];
+              <p className="mt-5 max-w-[30rem] text-[1rem] leading-[1.85] text-[var(--muted)]">
+                {division.description}
+              </p>
 
-                    return (
-                      <div
-                        className="flex items-start gap-4 rounded-[1.25rem] border border-white/6 bg-[rgba(4,8,16,0.45)] p-4"
-                        key={item.title}
-                      >
-                        <div className={`inline-flex rounded-2xl border p-3 ${styles.icon}`}>
-                          <Icon className="size-5" />
-                        </div>
-                        <div>
-                          <h4 className="font-display text-[1.08rem] font-bold uppercase tracking-[0.04em] text-white">
-                            {item.title}
-                          </h4>
-                          <p className="mt-1 text-sm leading-7 text-[var(--muted)]">
-                            {item.description}
-                          </p>
-                        </div>
+              <div className="mt-9 space-y-5">
+                {division.items.map((item) => {
+                  const Icon = iconMap[item.icon];
+                  return (
+                    <div
+                      key={item.title}
+                      className="flex gap-5 border-t border-[var(--rule)] pt-5 transition-all duration-300 hover:gap-6"
+                    >
+                      <div className="flex size-11 flex-shrink-0 items-center justify-center rounded-sm border border-[var(--rule)] bg-[var(--paper)] text-[var(--ink)] transition-colors group-hover:text-[var(--gold-deep)]">
+                        <Icon className="size-5" />
                       </div>
-                    );
-                  })}
-                </div>
-              </article>
-            );
-          })}
+                      <div>
+                        <h4 className="font-serif text-[1.1rem] font-semibold text-[var(--ink)]">
+                          {item.title}
+                        </h4>
+                        <p className="mt-1 text-[0.92rem] leading-[1.75] text-[var(--muted)]">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </article>
+          ))}
         </div>
       </div>
     </section>

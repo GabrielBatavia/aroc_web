@@ -122,39 +122,40 @@ export type FooterContact = {
 };
 
 export const navLinks: NavLink[] = [
-  { label: "About", href: "/about", matchPath: "/about" },
-  { label: "Technology", href: "/#technology" },
-  { label: "Robots", href: "/#robots" },
-  { label: "Achievements", href: "/#achievements" },
-  { label: "Gallery", href: "/#gallery" },
+  { label: "Tentang", href: "/about", matchPath: "/about" },
+  { label: "Tim", href: "/#team" },
+  { label: "Robot", href: "/#robots" },
+  { label: "Prestasi", href: "/#achievements" },
+  { label: "Galeri", href: "/#gallery" },
 ];
 
 export const footerNavigation: NavLink[] = [
-  { label: "About Us", href: "/about", matchPath: "/about" },
-  { label: "Technology", href: "/#technology" },
-  { label: "Our Robots", href: "/#robots" },
-  { label: "Achievements", href: "/#achievements" },
-  { label: "Gallery", href: "/#gallery" },
+  { label: "Tentang Kami", href: "/about", matchPath: "/about" },
+  { label: "Tim Kami", href: "/#team" },
+  { label: "Armada Robot", href: "/#robots" },
+  { label: "Ruang Piala", href: "/#achievements" },
+  { label: "Galeri", href: "/#gallery" },
+  { label: "Jadi Sponsor", href: "/#sponsor" },
 ];
 
 export const heroData: HeroData = {
   eyebrow: "AROC_PL JUARA!!!",
   statusLabel: "Status",
-  statusValue: "Ready",
+  statusValue: "Siap Tanding",
   titleLines: {
-    top: "Building",
-    accent: "Intelligent",
-    middle: "Robots.",
-    bottomPrefix: "Competing with",
-    bottomAccent: "Purpose.",
+    top: "Kami bangun",
+    accent: "robot",
+    middle: "",
+    bottomPrefix: "yang",
+    bottomAccent: "menang.",
   },
   description:
-    "AROC_PL is Advance Robosoccer Polinema. We engineer the future of humanoid robot soccer for national glory with hardware, intelligence, and relentless teamwork.",
-  primaryCta: { label: "Explore Team", href: "#team" },
-  secondaryCta: { label: "Watch Our Robots", href: "#robots" },
+    "AROC_PL adalah Advance Robosoccer Polinema. Kami merakit masa depan sepak bola robot humanoid — dengan presisi hardware, kecerdasan di lapangan, dan kerja tim tanpa henti.",
+  primaryCta: { label: "Kenali Tim Kami", href: "#team" },
+  secondaryCta: { label: "Jadi Sponsor", href: "#sponsor" },
   robotImage: "/images/hero-robot.png",
   systemCard: {
-    label: "System online",
+    label: "Sistem aktif",
     title: "KRSBI-Humanoid",
     metrics: [
       { label: "Vision", value: "97%" },
@@ -166,47 +167,50 @@ export const heroData: HeroData = {
 
 export const aboutCards: AboutCard[] = [
   {
-    title: "Who We Are",
+    title: "Siapa Kami",
     description:
-      "A robotics team from Politeknik Negeri Malang dedicated to building autonomous humanoid systems for competitive robot soccer.",
+      "Tim robotika dari Politeknik Negeri Malang yang fokus membangun sistem humanoid otonom untuk kompetisi sepak bola robot tingkat nasional.",
     icon: "users",
   },
   {
-    title: "Our Focus",
+    title: "Fokus Kami",
     description:
-      "Specializing in humanoid robot soccer development, from motion control and electronics to perception, strategy, and on-field reliability.",
+      "Spesialisasi pengembangan robot humanoid — mulai dari kontrol gerak, elektronika, persepsi, strategi lapangan, hingga keandalan di pertandingan.",
     icon: "target",
   },
   {
-    title: "Our Vision",
+    title: "Visi Kami",
     description:
-      "To become a leading force in intelligent robotics by shaping engineers who can design, test, and compete with purpose.",
+      "Menjadi kekuatan terdepan di robotika cerdas dengan mencetak engineer yang mampu merancang, menguji, dan berkompetisi dengan tujuan.",
     icon: "shield",
   },
 ];
 
 export const valueCards: ValueCard[] = [
   {
-    title: "Innovation",
-    description: "Always thinking beyond the current limits of robotics.",
+    title: "Inovasi",
+    description:
+      "Selalu berpikir melampaui batas teknologi robotika saat ini.",
     icon: "spark",
     tone: "gold",
   },
   {
-    title: "Integrity",
-    description: "Honest, disciplined, and accountable collaboration in every sprint.",
+    title: "Integritas",
+    description:
+      "Jujur, disiplin, dan bertanggung jawab di setiap sprint proyek.",
     icon: "shield",
     tone: "cyan",
   },
   {
-    title: "Collaboration",
-    description: "One team, one objective, connected across generations.",
+    title: "Kolaborasi",
+    description: "Satu tim, satu tujuan, terhubung lintas angkatan.",
     icon: "users",
     tone: "blue",
   },
   {
-    title: "Achievement",
-    description: "National and international competition as a benchmark for growth.",
+    title: "Prestasi",
+    description:
+      "Kompetisi nasional dan internasional sebagai tolok ukur kami bertumbuh.",
     icon: "trophy",
     tone: "orange",
   },
@@ -215,48 +219,54 @@ export const valueCards: ValueCard[] = [
 export const coreDivisions: DivisionCard[] = [
   {
     title: "Hardware",
-    eyebrow: "Our Technology",
+    eyebrow: "Teknologi Kami",
     description:
-      "The physical foundation of every robot, tuned for durability, movement precision, and efficient field performance.",
+      "Fondasi fisik setiap robot — dirancang untuk ketahanan, presisi gerak, dan performa hemat daya di lapangan.",
     tone: "orange",
     items: [
       {
-        title: "Mechanical",
-        description: "Chassis structure, gait-ready frame design, and actuator integration.",
+        title: "Mekanik",
+        description:
+          "Struktur chassis, desain frame siap gait, dan integrasi aktuator.",
         icon: "cpu",
       },
       {
-        title: "Control & Power",
-        description: "Motor drivers, power regulation, and robust battery management.",
+        title: "Kontrol & Daya",
+        description:
+          "Motor driver, regulasi daya, dan manajemen baterai yang andal.",
         icon: "bolt",
       },
       {
-        title: "PCB Design",
-        description: "Custom circuitry, sensor routing, and compact embedded interfaces.",
+        title: "Desain PCB",
+        description:
+          "Rangkaian custom, routing sensor, dan antarmuka embedded ringkas.",
         icon: "circuit",
       },
     ],
   },
   {
     title: "Software",
-    eyebrow: "Our Technology",
+    eyebrow: "Teknologi Kami",
     description:
-      "The intelligence stack that handles strategy, communication, sensing, autonomy, and adaptive behavior on the field.",
+      "Otak cerdas yang menangani strategi, komunikasi, sensing, otonomi, dan perilaku adaptif robot di lapangan.",
     tone: "cyan",
     items: [
       {
         title: "AI / Deep Learning",
-        description: "Perception pipelines for detection, decision support, and adaptive play.",
+        description:
+          "Pipeline persepsi untuk deteksi, pengambilan keputusan, dan permainan adaptif.",
         icon: "code",
       },
       {
         title: "Embedded Systems",
-        description: "Low-level coordination between sensors, actuators, and onboard compute.",
+        description:
+          "Koordinasi low-level antara sensor, aktuator, dan komputasi onboard.",
         icon: "radio",
       },
       {
         title: "Vision & AI",
-        description: "Ball, goal, and field understanding through camera-driven intelligence.",
+        description:
+          "Pemahaman bola, gawang, dan lapangan melalui kamera cerdas.",
         icon: "eye",
       },
     ],
@@ -266,44 +276,44 @@ export const coreDivisions: DivisionCard[] = [
 export const robotCards: RobotCard[] = [
   {
     name: "SI PENG",
-    role: "Striker",
+    role: "Penyerang",
     description:
-      "Fast, agile, and equipped with a powerful kicking mechanism for offensive pressure.",
+      "Cepat, lincah, dan dilengkapi mekanisme tendangan kuat untuk tekanan ofensif.",
     image: "/images/robot-sipeng.png",
     tone: "cyan",
     stats: [
-      { label: "Speed", value: 92 },
-      { label: "Power", value: 90 },
-      { label: "Vision", value: 80 },
-      { label: "Stability", value: 75 },
+      { label: "Kecepatan", value: 92 },
+      { label: "Kekuatan", value: 90 },
+      { label: "Visi", value: 80 },
+      { label: "Stabilitas", value: 75 },
     ],
   },
   {
     name: "SI JONI",
-    role: "Goalkeeper",
+    role: "Kiper",
     description:
-      "Wide stance and fast reaction time, specialized in diving blocks and defensive coverage.",
+      "Stance lebar dan reaksi cepat — spesialis diving block dan penjagaan area pertahanan.",
     image: "/images/robot-sijoni.png",
     tone: "gold",
     stats: [
-      { label: "Speed", value: 70 },
-      { label: "Power", value: 85 },
-      { label: "Vision", value: 95 },
-      { label: "Stability", value: 90 },
+      { label: "Kecepatan", value: 70 },
+      { label: "Kekuatan", value: 85 },
+      { label: "Visi", value: 95 },
+      { label: "Stabilitas", value: 90 },
     ],
   },
   {
     name: "SI KANCIL",
-    role: "Defender",
+    role: "Bek",
     description:
-      "Built for stability and recovery, excelling at positioning, interceptions, and ball control.",
+      "Dibangun untuk stabilitas dan pemulihan cepat — unggul di positioning, intersep, dan penguasaan bola.",
     image: "/images/robot-sikancil.png",
     tone: "emerald",
     stats: [
-      { label: "Speed", value: 75 },
-      { label: "Power", value: 80 },
-      { label: "Vision", value: 85 },
-      { label: "Stability", value: 95 },
+      { label: "Kecepatan", value: 75 },
+      { label: "Kekuatan", value: 80 },
+      { label: "Visi", value: 85 },
+      { label: "Stabilitas", value: 95 },
     ],
   },
 ];
@@ -312,11 +322,11 @@ export const teamLead: TeamLead = {
   name: "Ahmad Fauzi",
   role: "Ketua Tim / Hardware Lead",
   image: "/images/team-lead.png",
-  badge: "Leader",
+  badge: "Kapten",
   intro:
-    "Building a robot is not only about assembling components. It is about trust, precision, discipline, and the spirit to keep learning under pressure.",
+    "Membangun robot bukan sekadar merakit komponen. Ini soal kepercayaan, presisi, disiplin, dan semangat untuk terus belajar di bawah tekanan.",
   facts: [
-    { label: "Ketua Tim", value: "2024-2025", icon: "trophy" },
+    { label: "Periode", value: "2024-2025", icon: "trophy" },
     { label: "Jurusan", value: "Teknik Elektro", icon: "cpu" },
     { label: "Anggota", value: "11 Aktif", icon: "users" },
   ],
@@ -353,7 +363,7 @@ export const teamYears: TeamYear[] = [
       },
       {
         name: "Nurul Hidayah",
-        role: "Elektronika / PCB Design",
+        role: "Elektronika / Desain PCB",
         nim: "2141760004",
         handle: "@nurul.hidayah",
         phone: "081355443322",
@@ -375,7 +385,7 @@ export const teamYears: TeamYear[] = [
       },
       {
         name: "Dimas Ardiansyah",
-        role: "Hardware / Actuator",
+        role: "Hardware / Aktuator",
         nim: "2241760012",
         handle: "@dimasardn",
         phone: "081299112233",
@@ -383,7 +393,7 @@ export const teamYears: TeamYear[] = [
       },
       {
         name: "Alicia Pramesti",
-        role: "Electronics / Control",
+        role: "Elektronika / Kontrol",
         nim: "2241760013",
         handle: "@aliciapram",
         phone: "081234551122",
@@ -391,7 +401,7 @@ export const teamYears: TeamYear[] = [
       },
       {
         name: "Rafi Maulana",
-        role: "Strategy / Motion",
+        role: "Strategi / Gerak",
         nim: "2241760014",
         handle: "@rafi.maulana",
         phone: "081377887766",
@@ -405,7 +415,7 @@ export const teamYears: TeamYear[] = [
     members: [
       {
         name: "Mirani Putri",
-        role: "Programming / Control",
+        role: "Programming / Kontrol",
         nim: "2341760021",
         handle: "@miranip",
         phone: "081221119988",
@@ -413,7 +423,7 @@ export const teamYears: TeamYear[] = [
       },
       {
         name: "Rama Prakoso",
-        role: "Mechanical / CAD",
+        role: "Mekanik / CAD",
         nim: "2341760022",
         handle: "@ramaprakoso",
         phone: "081233445566",
@@ -421,7 +431,7 @@ export const teamYears: TeamYear[] = [
       },
       {
         name: "Salsa Rahma",
-        role: "Vision / Research",
+        role: "Vision / Riset",
         nim: "2341760023",
         handle: "@salsarahma",
         phone: "081244556677",
@@ -441,28 +451,28 @@ export const teamStats = [
 export const achievements: Achievement[] = [
   {
     year: "2024",
-    title: "Champion KRI Humanoid League",
+    title: "Juara KRI Humanoid League",
     subtitle: "Kontes Robot Indonesia",
     tone: "gold",
     icon: "trophy",
   },
   {
     year: "2023",
-    title: "Best Design & Architecture",
-    subtitle: "National KRSBI",
+    title: "Desain & Arsitektur Terbaik",
+    subtitle: "KRSBI Nasional",
     tone: "cyan",
     icon: "spark",
   },
   {
     year: "2022",
-    title: "1st Place Regional IV",
+    title: "Juara 1 Regional IV",
     subtitle: "Regional Robotics Contest",
     tone: "orange",
     icon: "medal",
   },
   {
     year: "2020",
-    title: "Top 2 National",
+    title: "Top 2 Nasional",
     subtitle: "KRSBI 2020",
     tone: "blue",
     icon: "trophy",
@@ -472,29 +482,29 @@ export const achievements: Achievement[] = [
 export const galleryItems: GalleryItem[] = [
   {
     src: "/images/gallery-1.png",
-    alt: "Prototype robot hardware with exposed wiring during testing.",
+    alt: "Prototipe robot dengan wiring terlihat saat sesi pengujian.",
     layout: "large-left",
   },
   {
     src: "/images/gallery-2.png",
-    alt: "Team members collaborating on software and electronics work.",
+    alt: "Anggota tim berkolaborasi mengerjakan software dan elektronika.",
     layout: "small-top",
   },
   {
     src: "/images/gallery-3.png",
-    alt: "Close-up of a circuit board and embedded robotics components.",
+    alt: "Close-up papan PCB dan komponen embedded robotik.",
     layout: "small-top-right",
   },
   {
     src: "/images/gallery-4.png",
-    alt: "AROC_PL discussion session around workstations in the lab.",
+    alt: "Sesi diskusi AROC_PL di sekitar workstation lab.",
     layout: "wide-bottom",
   },
 ];
 
 export const footerData = {
   description:
-    "Advance Robosoccer Polinema. We build intelligent humanoid robots to compete and push the limits of technology.",
+    "Advance Robosoccer Polinema. Kami membangun robot humanoid cerdas untuk bertanding dan mendorong batas teknologi Indonesia.",
   sponsors: ["POLINEMA", "ROBOTICS"],
   contact: [
     {
@@ -516,7 +526,7 @@ export const footerData = {
       icon: "linkedin",
     },
     {
-      label: "Location",
+      label: "Lokasi",
       value: "Politeknik Negeri Malang, Jl. Soekarno Hatta No.9, Malang",
       icon: "map",
     },

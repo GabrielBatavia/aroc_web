@@ -1,22 +1,51 @@
 @import "tailwindcss";
 
+/* =============================================
+   AROC_PL — Championship palette
+   Deep navy ink + warm cream paper + championship gold
+   ============================================= */
+
 :root {
-  --background: #020507;
-  --foreground: #f6f8fb;
-  --muted: #99a1af;
-  --cyan: #00d3f3;
-  --cyan-deep: #00b8db;
-  --blue: #2b7fff;
-  --gold: #f0b100;
-  --orange: #ff8904;
-  --green: #00d492;
+  --ink: #0f1b2c;
+  --ink-soft: #1c2a3e;
+  --ink-deep: #081321;
+  --paper: #f5f1e8;
+  --paper-soft: #ede7d9;
+  --paper-deep: #e2dac8;
+  --gold: #c9a24b;
+  --gold-deep: #a37f2b;
+  --gold-bright: #e6c171;
+  --crimson: #a52a2a;
+  --crimson-deep: #7f1d1d;
+  --muted: #5a6a7e;
+  --muted-soft: #8a99ad;
+  --rule: rgba(15, 27, 44, 0.12);
+  --rule-soft: rgba(15, 27, 44, 0.06);
+  --rule-on-ink: rgba(245, 241, 232, 0.14);
+
+  /* Legacy token mapping for any holdouts */
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --cyan: var(--gold);
+  --cyan-deep: var(--gold-deep);
+  --blue: var(--crimson);
+  --orange: var(--crimson);
+  --green: var(--gold-deep);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--paper);
+  --color-foreground: var(--ink);
+  --color-paper: var(--paper);
+  --color-paper-soft: var(--paper-soft);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-gold: var(--gold);
+  --color-crimson: var(--crimson);
+  --color-muted: var(--muted);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-serif);
 }
 
 * {
@@ -25,19 +54,16 @@
 
 html {
   scroll-behavior: smooth;
-  background: var(--background);
+  background: var(--paper);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--paper);
+  color: var(--ink);
   font-family: var(--font-geist-sans), "Segoe UI", sans-serif;
-  background-image:
-    radial-gradient(circle at 50% 0%, rgba(16, 78, 100, 0.26), transparent 34%),
-    radial-gradient(circle at 15% 12%, rgba(0, 184, 219, 0.12), transparent 18%),
-    radial-gradient(circle at 84% 8%, rgba(240, 177, 0, 0.08), transparent 18%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.96), rgba(2, 5, 7, 1));
+  font-feature-settings: "ss01", "ss02", "cv11";
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 a {
@@ -50,99 +76,478 @@ button {
 }
 
 ::selection {
-  background: rgba(0, 211, 243, 0.22);
-  color: white;
+  background: var(--gold);
+  color: var(--ink);
 }
 
-.page-background::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  pointer-events: none;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.016) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.016) 1px, transparent 1px);
-  background-size: 72px 72px;
-  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.36), transparent 82%);
+/* =============================================
+   TYPOGRAPHY PRIMITIVES
+   ============================================= */
+
+.font-serif {
+  font-family: var(--font-serif), "Georgia", "Times New Roman", serif;
+  font-feature-settings: "ss01", "ss02";
 }
 
 .font-display {
-  font-family: var(--font-display), Bahnschrift, "Arial Narrow", "Trebuchet MS", var(--font-geist-sans), sans-serif;
+  font-family: var(--font-serif), "Georgia", "Times New Roman", serif;
+  font-feature-settings: "ss01";
+  letter-spacing: -0.02em;
+}
+
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-geist-sans), sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+
+.kicker::before {
+  content: "";
+  display: inline-block;
+  width: 1.75rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.7;
+}
+
+.kicker-on-ink {
+  color: var(--gold-bright);
+}
+
+.kicker-centered {
+  justify-content: center;
+}
+
+.kicker-centered::after {
+  content: "";
+  display: inline-block;
+  width: 1.75rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.7;
+}
+
+.headline {
+  font-family: var(--font-serif), "Georgia", serif;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+}
+
+.headline-italic {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--gold-deep);
+}
+
+.headline-italic-on-ink {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--gold-bright);
+}
+
+/* =============================================
+   SURFACES
+   ============================================= */
+
+.surface-ink {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.surface-ink-deep {
+  background: var(--ink-deep);
+  color: var(--paper);
+}
+
+.surface-paper {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.surface-paper-soft {
+  background: var(--paper-soft);
+  color: var(--ink);
+}
+
+.card-paper {
+  background: #ffffff;
+  border: 1px solid var(--rule);
+  box-shadow: 0 1px 0 rgba(15, 27, 44, 0.04), 0 18px 36px -28px rgba(15, 27, 44, 0.35);
+}
+
+.card-ink {
+  background: linear-gradient(180deg, rgba(28, 42, 62, 0.96), rgba(15, 27, 44, 1));
+  border: 1px solid rgba(201, 162, 75, 0.18);
+  color: var(--paper);
+}
+
+.hairline {
+  height: 1px;
+  background: var(--rule);
+}
+
+.hairline-on-ink {
+  height: 1px;
+  background: var(--rule-on-ink);
+}
+
+/* Newsprint grain — subtle warmth on cream */
+.paper-grain {
+  position: relative;
+}
+
+.paper-grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 18% 12%, rgba(201, 162, 75, 0.055), transparent 34%),
+    radial-gradient(circle at 86% 72%, rgba(165, 42, 42, 0.035), transparent 36%);
+}
+
+/* =============================================
+   BADGES & PILLS
+   ============================================= */
+
+.champ-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+  color: var(--ink);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  box-shadow: 0 6px 16px -6px rgba(201, 162, 75, 0.5);
+}
+
+.champ-badge-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(201, 162, 75, 0.45);
+  background: rgba(201, 162, 75, 0.08);
+  color: var(--gold-bright);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.pill-ink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--rule);
+  background: #ffffff;
+  color: var(--ink);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* =============================================
+   BUTTONS
+   ============================================= */
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  height: 3.25rem;
+  padding: 0 1.75rem;
+  border-radius: 0.5rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 0 rgba(15, 27, 44, 0.1), 0 10px 24px -10px rgba(15, 27, 44, 0.55);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  background: var(--ink-soft);
+}
+
+.btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  height: 3.25rem;
+  padding: 0 1.75rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+  color: var(--ink);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s;
+  box-shadow: 0 8px 22px -8px rgba(201, 162, 75, 0.55);
+}
+
+.btn-gold:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px -8px rgba(201, 162, 75, 0.7);
+}
+
+.btn-ghost-ink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  height: 3.25rem;
+  padding: 0 1.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+}
+
+.btn-ghost-ink:hover {
+  border-color: var(--ink);
+  background: rgba(15, 27, 44, 0.04);
+  transform: translateY(-1px);
+}
+
+.btn-ghost-paper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  height: 3.25rem;
+  padding: 0 1.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(245, 241, 232, 0.28);
+  background: transparent;
+  color: var(--paper);
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+}
+
+.btn-ghost-paper:hover {
+  border-color: var(--gold);
+  background: rgba(201, 162, 75, 0.1);
+  transform: translateY(-1px);
+}
+
+/* =============================================
+   NUMBERS (stats, jersey numbers, achievement years)
+   ============================================= */
+
+.numeral {
+  font-family: var(--font-serif), "Georgia", serif;
+  font-weight: 500;
+  font-variant-numeric: lining-nums tabular-nums;
+  letter-spacing: -0.04em;
+}
+
+/* =============================================
+   ANIMATIONS — kept minimal & tasteful
+   ============================================= */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.reveal-base {
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.reveal-base.revealed {
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal-up { transform: translateY(24px); }
+.reveal-up.revealed { animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+.reveal-fade {}
+.reveal-fade.revealed { animation: fadeIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+.reveal-scale { transform: scale(0.96); }
+.reveal-scale.revealed { animation: scaleIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+.reveal-left { transform: translateX(-24px); }
+.reveal-left.revealed { animation: slideInLeft 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+.reveal-right { transform: translateX(24px); }
+.reveal-right.revealed { animation: slideInRight 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+.reveal-delay-1.revealed { animation-delay: 0.08s; }
+.reveal-delay-2.revealed { animation-delay: 0.16s; }
+.reveal-delay-3.revealed { animation-delay: 0.24s; }
+.reveal-delay-4.revealed { animation-delay: 0.32s; }
+.reveal-delay-5.revealed { animation-delay: 0.40s; }
+.reveal-delay-6.revealed { animation-delay: 0.48s; }
+
+/* Interactive lift */
+.card-hover-lift {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s, border-color 0.3s;
+}
+
+.card-hover-lift:hover {
+  transform: translateY(-3px);
+}
+
+.card-paper.card-hover-lift:hover {
+  box-shadow: 0 2px 0 rgba(15, 27, 44, 0.06), 0 28px 48px -28px rgba(15, 27, 44, 0.45);
+  border-color: rgba(15, 27, 44, 0.22);
+}
+
+.card-ink.card-hover-lift:hover {
+  border-color: rgba(201, 162, 75, 0.45);
+  box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.6);
+}
+
+/* Legacy shim — any leftover calls to the old classes get a no-op look */
+.neon-panel {
+  background: #ffffff;
+  border: 1px solid var(--rule);
+}
+
+.neon-pill {
+  box-shadow: none;
 }
 
 .eyebrow {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  font-family: var(--font-display), Bahnschrift, "Arial Narrow", var(--font-geist-sans), sans-serif;
-  font-size: 0.84rem;
+  gap: 0.6rem;
+  font-family: var(--font-geist-sans), sans-serif;
+  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--cyan);
+  color: var(--gold-deep);
 }
 
-.eyebrow::before,
-.eyebrow::after {
+.eyebrow::before {
   content: "";
   display: inline-block;
+  width: 1.75rem;
   height: 1px;
-  width: 2.1rem;
-  background: linear-gradient(90deg, transparent, rgba(0, 211, 243, 0.55), transparent);
-}
-
-.heading-gradient-cyan {
-  background: linear-gradient(90deg, var(--cyan), var(--blue));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.heading-gradient-gold {
-  background: linear-gradient(90deg, var(--orange), var(--gold));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  background: currentColor;
+  opacity: 0.7;
 }
 
 .section-divider {
   position: relative;
 }
 
-.section-divider::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(0, 211, 243, 0.28), transparent);
+.heading-gradient-cyan,
+.heading-gradient-gold {
+  color: var(--gold-deep);
+  font-style: italic;
+  font-weight: 400;
 }
 
-.neon-panel {
-  background: linear-gradient(180deg, rgba(11, 18, 31, 0.96), rgba(7, 12, 22, 0.98));
-  border: 1px solid rgba(0, 211, 243, 0.16);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.04),
-    0 0 0 1px rgba(3, 8, 20, 0.24),
-    0 18px 40px rgba(0, 0, 0, 0.45);
+/* =============================================
+   LIGHTBOX
+   ============================================= */
+
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 27, 44, 0.94);
+  backdrop-filter: blur(12px);
+  animation: fadeIn 0.25s ease;
 }
 
-.neon-pill {
-  box-shadow:
-    inset 0 0 0 1px rgba(0, 211, 243, 0.15),
-    0 0 22px rgba(0, 184, 219, 0.18);
+.lightbox-overlay img {
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 0.75rem;
+  animation: scaleIn 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+/* =============================================
+   REDUCED MOTION
+   ============================================= */
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
+  html { scroll-behavior: auto; }
   * {
     animation: none !important;
     transition: none !important;
+  }
+  .reveal-base {
+    opacity: 1;
+    transform: none;
   }
 }

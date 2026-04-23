@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Orbitron } from "next/font/google";
+import { Fraunces, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+
+import { ScrollProgress } from "@/components/shared/ScrollProgress";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,15 +14,17 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const orbitron = Orbitron({
-  variable: "--font-display",
+const fraunces = Fraunces({
+  variable: "--font-serif",
   subsets: ["latin"],
+  axes: ["opsz", "SOFT"],
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
-  title: "AROC_PL | Advance Robosoccer Polinema",
+  title: "AROC_PL — Advance Robosoccer Polinema | Tim Robotik Juara Nasional",
   description:
-    "Futuristic landing page for AROC_PL, the humanoid robotics team from Politeknik Negeri Malang.",
+    "Tim robotik humanoid Politeknik Negeri Malang. Juara Nasional KRI Humanoid League 2024. Kami bangun robot, kami pulang bawa piala.",
 };
 
 export default function RootLayout({
@@ -30,10 +34,11 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${orbitron.variable} h-full antialiased`}
+      lang="id"
+      className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground">
+      <body className="min-h-full flex flex-col">
+        <ScrollProgress />
         {children}
       </body>
     </html>
