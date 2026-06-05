@@ -1,12 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import type { HeroData } from "@/data/aroc";
 import { CountNumber } from "@/components/shared/CountNumber";
 import { MagneticButton } from "@/components/shared/MagneticButton";
+import { RobotModelViewer } from "@/components/shared/RobotModelViewer";
 import { SponsorMarquee } from "@/components/shared/SponsorMarquee";
 import { ArrowRightIcon, TrophyIcon } from "@/components/shared/Icons";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
@@ -211,14 +211,12 @@ export function Hero({ data }: HeroProps) {
                 transform: `rotateX(${tilt.y * -4}deg) rotateY(${tilt.x * 4}deg)`,
               }}
             />
-            <Image
+            <RobotModelViewer
               alt={`${data.systemCard.title} — robot humanoid AROC_PL`}
               className="relative z-10 mx-auto h-auto w-full max-w-[540px] drop-shadow-[0_30px_80px_rgba(0,0,0,0.55)] transition-transform duration-300"
-              height={980}
+              modelSrc={data.robotModel}
+              posterSrc={data.robotImage}
               priority
-              sizes="(max-width: 1024px) 90vw, 540px"
-              src={data.robotImage}
-              width={640}
               style={{
                 transform: `translate3d(${tilt.x * -14}px, ${tilt.y * -8}px, 0) rotateY(${tilt.x * 4}deg) rotateX(${tilt.y * -3}deg)`,
               }}

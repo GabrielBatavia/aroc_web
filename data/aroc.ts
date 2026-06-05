@@ -21,6 +21,7 @@ export type HeroData = {
   primaryCta: NavLink;
   secondaryCta: NavLink;
   robotImage: string;
+  robotModel: string;
   systemCard: {
     label: string;
     title: string;
@@ -154,6 +155,7 @@ export const heroData: HeroData = {
   primaryCta: { label: "Kenali Tim Kami", href: "#team" },
   secondaryCta: { label: "Jadi Sponsor", href: "#sponsor" },
   robotImage: "/images/hero-robot.png",
+  robotModel: "/images/3DHumanoid.optimized.glb",
   systemCard: {
     label: "Sistem aktif",
     title: "KRSBI-Humanoid",
