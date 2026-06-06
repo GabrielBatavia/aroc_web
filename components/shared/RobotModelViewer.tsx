@@ -2,7 +2,7 @@
 
 import type { CSSProperties } from "react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type RobotModelViewerProps = {
   alt: string;
@@ -23,6 +23,11 @@ type ModelViewerWindow = Window & {
   };
 };
 
+type ModelViewerElement = HTMLElement & {
+  dismissPoster?: () => void;
+  loaded?: boolean;
+};
+
 export function RobotModelViewer({
   alt,
   className = "",
@@ -31,6 +36,7 @@ export function RobotModelViewer({
   priority = false,
   style,
 }: RobotModelViewerProps) {
+  const viewerRef = useRef<ModelViewerElement | null>(null);
   const [viewerReady, setViewerReady] = useState(false);
   const [modelLoaded, setModelLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -65,7 +71,34 @@ export function RobotModelViewer({
     };
   }, []);
 
-  const showPoster = !viewerReady || !modelLoaded || hasError;
+  useEffect(() => {
+    const viewer = viewerRef.current;
+    if (!viewerReady || !viewer) return;
+
+    const markLoaded = () => setModelLoaded(true);
+    const markError = () => setHasError(true);
+    const updateProgress = (event: Event) => {
+      const { totalProgress } = (event as CustomEvent<{ totalProgress: number }>).detail ?? {};
+      if (totalProgress === 1 || viewer.loaded) markLoaded();
+    };
+
+    viewer.addEventListener("load", markLoaded);
+    viewer.addEventListener("error", markError);
+    viewer.addEventListener("progress", updateProgress);
+
+    const frame = requestAnimationFrame(() => {
+      viewer.dismissPoster?.();
+    });
+
+    return () => {
+      cancelAnimationFrame(frame);
+      viewer.removeEventListener("load", markLoaded);
+      viewer.removeEventListener("error", markError);
+      viewer.removeEventListener("progress", updateProgress);
+    };
+  }, [viewerReady, modelSrc]);
+
+  const showPoster = !viewerReady || hasError;
 
   return (
     <div
@@ -91,12 +124,11 @@ export function RobotModelViewer({
 
       {viewerReady && !hasError ? (
         <model-viewer
+          ref={viewerRef}
           alt={alt}
           camera-controls
           camera-orbit="18deg 76deg 112%"
-          className={`absolute inset-0 z-10 h-full w-full cursor-grab transition-opacity duration-700 active:cursor-grabbing ${
-            modelLoaded ? "opacity-100" : "opacity-0"
-          }`}
+          className="absolute inset-0 z-10 h-full w-full cursor-grab opacity-100 transition-opacity duration-700 active:cursor-grabbing"
           disable-zoom
           environment-image="neutral"
           exposure="1.15"
@@ -107,10 +139,8 @@ export function RobotModelViewer({
           max-field-of-view="36deg"
           min-camera-orbit="-180deg 52deg 82%"
           min-field-of-view="22deg"
-          onError={() => setHasError(true)}
-          onLoad={() => setModelLoaded(true)}
           poster={posterSrc}
-          reveal="auto"
+          reveal="manual"
           rotation-per-second="16deg"
           shadow-intensity="0.6"
           shadow-softness="0.85"
