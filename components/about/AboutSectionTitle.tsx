@@ -7,20 +7,16 @@ type AboutSectionTitleProps = {
   tone?: "cyan" | "orange";
 };
 
-export function AboutSectionTitle({
-  title,
-  icon,
-  kicker,
-}: AboutSectionTitleProps) {
+export function AboutSectionTitle({ title, icon, kicker }: AboutSectionTitleProps) {
   return (
-    <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
       <div>
         {kicker ? <div className="kicker">{kicker}</div> : null}
-        <div className="mt-4 flex items-center gap-4">
-          <div className="flex size-11 items-center justify-center rounded-sm border border-[var(--rule)] bg-white text-[var(--gold-deep)]">
+        <div className="mt-5 flex items-start gap-4">
+          <div className="flex size-[3.25rem] items-center justify-center rounded-2xl bg-[var(--yellow)] text-[var(--navy-deep)] shadow-[0_12px_30px_-20px_rgba(255,228,92,0.8)]">
             {icon}
           </div>
-          <h2 className="headline text-[clamp(1.9rem,3.5vw,2.6rem)] text-[var(--ink)]">
+          <h2 className="headline max-w-[12ch] text-[clamp(2.8rem,6vw,5rem)] text-[var(--navy-deep)]">
             {title}
           </h2>
         </div>

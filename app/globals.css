@@ -1,41 +1,57 @@
 @import "tailwindcss";
 
 /* =============================================
-   AROC_PL — Championship palette
-   Deep navy ink + warm cream paper + championship gold
+   AROC_PL campaign system
+   Palette derived from the current team crest: deep navy, white, championship yellow.
    ============================================= */
 
 :root {
-  --ink: #0f1b2c;
-  --ink-soft: #1c2a3e;
-  --ink-deep: #081321;
-  --paper: #f5f1e8;
-  --paper-soft: #ede7d9;
-  --paper-deep: #e2dac8;
-  --gold: #c9a24b;
-  --gold-deep: #a37f2b;
-  --gold-bright: #e6c171;
-  --crimson: #a52a2a;
-  --crimson-deep: #7f1d1d;
-  --muted: #5a6a7e;
-  --muted-soft: #8a99ad;
-  --rule: rgba(15, 27, 44, 0.12);
-  --rule-soft: rgba(15, 27, 44, 0.06);
-  --rule-on-ink: rgba(245, 241, 232, 0.14);
+  --navy-black: #050816;
+  --navy-deep: #070c22;
+  --navy: #111a3d;
+  --navy-soft: #1a2455;
+  --navy-bright: #26377a;
+  --yellow: #ffe45c;
+  --gold: #f2c94c;
+  --gold-deep: #c79820;
+  --cream: #f8f7f0;
+  --cream-soft: #efe8d1;
+  --silver: #d9dde8;
+  --muted: #9aa5bd;
+  --muted-dark: #59627b;
+  --pitch: #090a0f;
+  --danger: #ff6b57;
 
-  /* Legacy token mapping for any holdouts */
-  --background: var(--paper);
-  --foreground: var(--ink);
-  --cyan: var(--gold);
+  --rule: rgba(7, 12, 34, 0.13);
+  --rule-soft: rgba(7, 12, 34, 0.08);
+  --rule-on-ink: rgba(248, 247, 240, 0.16);
+
+  /* Legacy token mapping for existing components. */
+  --ink: var(--navy-deep);
+  --ink-soft: var(--navy);
+  --ink-deep: var(--navy-black);
+  --paper: var(--cream);
+  --paper-soft: var(--cream-soft);
+  --paper-deep: #e4d8ae;
+  --gold-bright: var(--yellow);
+  --crimson: var(--danger);
+  --crimson-deep: #c94e3c;
+  --cyan: var(--yellow);
   --cyan-deep: var(--gold-deep);
-  --blue: var(--crimson);
-  --orange: var(--crimson);
+  --blue: var(--navy-bright);
+  --orange: var(--gold);
   --green: var(--gold-deep);
+
+  --background: var(--navy-deep);
+  --foreground: var(--cream);
+  --font-serif: var(--font-display);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-bouncy: cubic-bezier(0.34, 1.42, 0.64, 1);
 }
 
 @theme inline {
-  --color-background: var(--paper);
-  --color-foreground: var(--ink);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
   --color-paper: var(--paper);
   --color-paper-soft: var(--paper-soft);
   --color-ink: var(--ink);
@@ -45,7 +61,7 @@
   --color-muted: var(--muted);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-serif: var(--font-serif);
+  --font-serif: var(--font-display);
 }
 
 * {
@@ -54,16 +70,21 @@
 
 html {
   scroll-behavior: smooth;
-  background: var(--paper);
+  background: var(--navy-deep);
 }
 
 body {
-  background: var(--paper);
-  color: var(--ink);
+  min-width: 320px;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(255, 228, 92, 0.12), transparent 28rem),
+    radial-gradient(circle at 92% 20%, rgba(38, 55, 122, 0.42), transparent 34rem),
+    var(--navy-deep);
+  color: var(--cream);
   font-family: var(--font-geist-sans), "Segoe UI", sans-serif;
   font-feature-settings: "ss01", "ss02", "cv11";
-  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
 }
 
 a {
@@ -76,48 +97,75 @@ button {
 }
 
 ::selection {
-  background: var(--gold);
-  color: var(--ink);
+  background: var(--yellow);
+  color: var(--navy-deep);
 }
 
 /* =============================================
-   TYPOGRAPHY PRIMITIVES
+   Typography
    ============================================= */
 
-.font-serif {
-  font-family: var(--font-serif), "Georgia", "Times New Roman", serif;
-  font-feature-settings: "ss01", "ss02";
-}
-
+.font-serif,
 .font-display {
-  font-family: var(--font-serif), "Georgia", "Times New Roman", serif;
-  font-feature-settings: "ss01";
-  letter-spacing: -0.02em;
+  font-family: var(--font-display), Impact, "Arial Narrow", sans-serif;
 }
 
-.kicker {
+.headline {
+  font-family: var(--font-display), Impact, "Arial Narrow", sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.headline-italic,
+.headline-italic-on-ink {
+  position: relative;
+  display: inline-block;
+  color: var(--yellow);
+  font-style: normal;
+  font-weight: 900;
+  text-shadow: 0.04em 0.04em 0 var(--navy-deep);
+}
+
+.headline-italic::after,
+.headline-italic-on-ink::after {
+  content: "";
+  position: absolute;
+  left: 0.02em;
+  right: 0.02em;
+  bottom: -0.08em;
+  height: 0.08em;
+  border-radius: 999px;
+  background: currentColor;
+  transform: rotate(-1.5deg);
+}
+
+.kicker,
+.eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  font-family: var(--font-geist-sans), sans-serif;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.28em;
+  font-weight: 800;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--gold-deep);
 }
 
-.kicker::before {
+.kicker::before,
+.eyebrow::before {
   content: "";
   display: inline-block;
-  width: 1.75rem;
-  height: 1px;
+  width: 1.9rem;
+  height: 2px;
   background: currentColor;
-  opacity: 0.7;
+  opacity: 0.9;
 }
 
 .kicker-on-ink {
-  color: var(--gold-bright);
+  color: var(--yellow);
 }
 
 .kicker-centered {
@@ -127,65 +175,93 @@ button {
 .kicker-centered::after {
   content: "";
   display: inline-block;
-  width: 1.75rem;
-  height: 1px;
+  width: 1.9rem;
+  height: 2px;
   background: currentColor;
-  opacity: 0.7;
 }
 
-.headline {
-  font-family: var(--font-serif), "Georgia", serif;
-  font-weight: 500;
-  letter-spacing: -0.025em;
-  line-height: 1.02;
-}
-
-.headline-italic {
-  font-style: italic;
-  font-weight: 400;
-  color: var(--gold-deep);
-}
-
-.headline-italic-on-ink {
-  font-style: italic;
-  font-weight: 400;
-  color: var(--gold-bright);
+.numeral {
+  font-family: var(--font-display), Impact, "Arial Narrow", sans-serif;
+  font-weight: 800;
+  font-variant-numeric: lining-nums tabular-nums;
+  letter-spacing: -0.045em;
 }
 
 /* =============================================
-   SURFACES
+   Surfaces and texture
    ============================================= */
 
 .surface-ink {
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--navy-deep);
+  color: var(--cream);
 }
 
 .surface-ink-deep {
-  background: var(--ink-deep);
-  color: var(--paper);
+  background: var(--navy-black);
+  color: var(--cream);
 }
 
 .surface-paper {
-  background: var(--paper);
-  color: var(--ink);
+  background: var(--cream);
+  color: var(--navy-deep);
 }
 
 .surface-paper-soft {
-  background: var(--paper-soft);
-  color: var(--ink);
+  background: var(--cream-soft);
+  color: var(--navy-deep);
+}
+
+.campaign-shell {
+  position: relative;
+  overflow: hidden;
+}
+
+.campaign-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 228, 92, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 228, 92, 0.05) 1px, transparent 1px),
+    radial-gradient(circle at 18% 12%, rgba(255, 228, 92, 0.15), transparent 24rem),
+    radial-gradient(circle at 84% 60%, rgba(38, 55, 122, 0.55), transparent 30rem);
+  background-size: 4rem 4rem, 4rem 4rem, auto, auto;
+  mask-image: linear-gradient(to bottom, black, rgba(0, 0, 0, 0.8), transparent 110%);
+}
+
+.paper-grain {
+  position: relative;
+  isolation: isolate;
+}
+
+.paper-grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 18% 12%, rgba(255, 228, 92, 0.16), transparent 28rem),
+    radial-gradient(circle at 86% 72%, rgba(17, 26, 61, 0.07), transparent 30rem),
+    linear-gradient(90deg, rgba(7, 12, 34, 0.045) 1px, transparent 1px);
+  background-size: auto, auto, 4rem 4rem;
 }
 
 .card-paper {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.84);
   border: 1px solid var(--rule);
-  box-shadow: 0 1px 0 rgba(15, 27, 44, 0.04), 0 18px 36px -28px rgba(15, 27, 44, 0.35);
+  box-shadow: 0 2px 0 rgba(7, 12, 34, 0.04), 0 26px 60px -38px rgba(7, 12, 34, 0.5);
 }
 
 .card-ink {
-  background: linear-gradient(180deg, rgba(28, 42, 62, 0.96), rgba(15, 27, 44, 1));
-  border: 1px solid rgba(201, 162, 75, 0.18);
-  color: var(--paper);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255, 228, 92, 0.16), transparent 22rem),
+    linear-gradient(180deg, rgba(26, 36, 85, 0.98), rgba(7, 12, 34, 1));
+  border: 1px solid rgba(255, 228, 92, 0.24);
+  color: var(--cream);
+  box-shadow: 0 28px 70px -36px rgba(5, 8, 22, 0.9);
 }
 
 .hairline {
@@ -198,187 +274,156 @@ button {
   background: var(--rule-on-ink);
 }
 
-/* Newsprint grain — subtle warmth on cream */
-.paper-grain {
+.tech-card {
   position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 228, 92, 0.18);
+  background:
+    linear-gradient(135deg, rgba(255, 228, 92, 0.1), transparent 36%),
+    rgba(17, 26, 61, 0.74);
+  box-shadow: inset 0 1px 0 rgba(248, 247, 240, 0.08), 0 28px 70px -44px rgba(0, 0, 0, 0.8);
 }
 
-.paper-grain::before {
+.tech-card::before {
   content: "";
   position: absolute;
   inset: 0;
-  z-index: -1;
   pointer-events: none;
   background-image:
-    radial-gradient(circle at 18% 12%, rgba(201, 162, 75, 0.055), transparent 34%),
-    radial-gradient(circle at 86% 72%, rgba(165, 42, 42, 0.035), transparent 36%);
+    linear-gradient(rgba(248, 247, 240, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(248, 247, 240, 0.045) 1px, transparent 1px);
+  background-size: 2.2rem 2.2rem;
+  opacity: 0.55;
 }
 
 /* =============================================
-   BADGES & PILLS
+   Badges and buttons
    ============================================= */
 
-.champ-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.55rem 1rem;
-  border-radius: 999px;
-  background: linear-gradient(135deg, var(--gold-bright), var(--gold));
-  color: var(--ink);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  box-shadow: 0 6px 16px -6px rgba(201, 162, 75, 0.5);
-}
-
+.champ-badge,
 .champ-badge-outline {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.5rem 1rem;
+  gap: 0.65rem;
+  min-height: 2.8rem;
+  padding: 0.55rem 1rem;
   border-radius: 999px;
-  border: 1px solid rgba(201, 162, 75, 0.45);
-  background: rgba(201, 162, 75, 0.08);
-  color: var(--gold-bright);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.22em;
+  font-weight: 900;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
+}
+
+.champ-badge {
+  background: var(--yellow);
+  color: var(--navy-deep);
+  box-shadow: 0 0.5rem 0 var(--navy-black), 0 20px 44px -26px rgba(255, 228, 92, 0.7);
+}
+
+.champ-badge-outline {
+  border: 1px solid rgba(255, 228, 92, 0.46);
+  background: rgba(255, 228, 92, 0.08);
+  color: var(--yellow);
 }
 
 .pill-ink {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.4rem 0.9rem;
-  border-radius: 999px;
   border: 1px solid var(--rule);
-  background: #ffffff;
-  color: var(--ink);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.74);
+  padding: 0.45rem 0.9rem;
+  color: var(--navy-deep);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
 }
 
-/* =============================================
-   BUTTONS
-   ============================================= */
-
-.btn-primary {
+.btn-primary,
+.btn-gold,
+.btn-ghost-ink,
+.btn-ghost-paper {
+  position: relative;
+  isolation: isolate;
   display: inline-flex;
+  min-height: 3.2rem;
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  height: 3.25rem;
-  padding: 0 1.75rem;
-  border-radius: 0.5rem;
-  background: var(--ink);
-  color: var(--paper);
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), background 0.2s, box-shadow 0.2s;
-  box-shadow: 0 1px 0 rgba(15, 27, 44, 0.1), 0 10px 24px -10px rgba(15, 27, 44, 0.55);
+  overflow: hidden;
+  border-radius: 999px;
+  padding: 0 1.45rem;
+  font-size: 0.84rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: transform 0.55s var(--ease-bouncy), box-shadow 0.35s var(--ease-out), border-color 0.25s ease, background 0.25s ease;
 }
 
-.btn-primary:hover {
-  transform: translateY(-1px);
-  background: var(--ink-soft);
+.btn-primary::before,
+.btn-gold::before,
+.btn-ghost-ink::before,
+.btn-ghost-paper::before {
+  content: "";
+  position: absolute;
+  inset: 0.2rem;
+  z-index: -1;
+  border-radius: inherit;
+  opacity: 0;
+  transform: scale(0.82) rotate(-5deg);
+  transition: opacity 0.25s ease, transform 0.55s var(--ease-bouncy);
 }
 
+.btn-primary,
 .btn-gold {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  height: 3.25rem;
-  padding: 0 1.75rem;
-  border-radius: 0.5rem;
-  background: linear-gradient(135deg, var(--gold-bright), var(--gold));
-  color: var(--ink);
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s;
-  box-shadow: 0 8px 22px -8px rgba(201, 162, 75, 0.55);
+  background: var(--yellow);
+  color: var(--navy-deep);
+  box-shadow: 0 0.45rem 0 var(--navy-black), 0 22px 38px -28px rgba(255, 228, 92, 0.75);
 }
 
-.btn-gold:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 12px 28px -8px rgba(201, 162, 75, 0.7);
-}
-
-.btn-ghost-ink {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  height: 3.25rem;
-  padding: 0 1.75rem;
-  border-radius: 0.5rem;
-  border: 1px solid var(--rule);
-  background: transparent;
-  color: var(--ink);
-  font-size: 0.95rem;
-  font-weight: 600;
-  transition: border-color 0.2s, background 0.2s, transform 0.2s;
-}
-
-.btn-ghost-ink:hover {
-  border-color: var(--ink);
-  background: rgba(15, 27, 44, 0.04);
-  transform: translateY(-1px);
+.btn-primary::before,
+.btn-gold::before {
+  background: rgba(255, 255, 255, 0.45);
 }
 
 .btn-ghost-paper {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  height: 3.25rem;
-  padding: 0 1.75rem;
-  border-radius: 0.5rem;
-  border: 1px solid rgba(245, 241, 232, 0.28);
-  background: transparent;
-  color: var(--paper);
-  font-size: 0.95rem;
-  font-weight: 600;
-  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+  border: 1px solid rgba(248, 247, 240, 0.24);
+  background: rgba(248, 247, 240, 0.05);
+  color: var(--cream);
 }
 
+.btn-ghost-ink {
+  border: 1px solid rgba(7, 12, 34, 0.18);
+  background: rgba(255, 255, 255, 0.55);
+  color: var(--navy-deep);
+}
+
+.btn-primary:hover,
+.btn-gold:hover,
+.btn-ghost-ink:hover,
 .btn-ghost-paper:hover {
-  border-color: var(--gold);
-  background: rgba(201, 162, 75, 0.1);
-  transform: translateY(-1px);
+  transform: translateY(-0.28rem) rotate(-1.2deg) scale(0.98, 0.95);
+}
+
+.btn-primary:hover::before,
+.btn-gold:hover::before,
+.btn-ghost-ink:hover::before,
+.btn-ghost-paper:hover::before {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
 }
 
 /* =============================================
-   NUMBERS (stats, jersey numbers, achievement years)
-   ============================================= */
-
-.numeral {
-  font-family: var(--font-serif), "Georgia", serif;
-  font-weight: 500;
-  font-variant-numeric: lining-nums tabular-nums;
-  letter-spacing: -0.04em;
-}
-
-/* =============================================
-   ANIMATIONS — kept minimal & tasteful
+   Motion
    ============================================= */
 
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeIn {
@@ -387,36 +432,46 @@ button {
 }
 
 @keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 @keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(-24px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes wiggle {
+  0% { transform: translateY(1px) rotate(0deg); }
+  22% { transform: translate(-1px, -1px) rotate(-1deg); }
+  48% { transform: translate(1px, 0) rotate(1deg); }
+  72% { transform: translate(0, -1px) rotate(-0.5deg); }
+  100% { transform: translate(0) rotate(0deg); }
+}
+
+@keyframes marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes scan {
+  from { transform: translateX(-120%); }
+  to { transform: translateX(120%); }
+}
+
+@keyframes dashFlow {
+  from { stroke-dashoffset: 150; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-0.65rem); }
 }
 
 .reveal-base {
@@ -426,23 +481,18 @@ button {
 
 .reveal-base.revealed {
   animation-fill-mode: both;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-timing-function: var(--ease-out);
 }
 
 .reveal-up { transform: translateY(24px); }
-.reveal-up.revealed { animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
-
-.reveal-fade {}
-.reveal-fade.revealed { animation: fadeIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
-
+.reveal-up.revealed { animation: fadeInUp 0.8s var(--ease-out) both; }
+.reveal-fade.revealed { animation: fadeIn 0.7s var(--ease-out) both; }
 .reveal-scale { transform: scale(0.96); }
-.reveal-scale.revealed { animation: scaleIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
-
+.reveal-scale.revealed { animation: scaleIn 0.7s var(--ease-out) both; }
 .reveal-left { transform: translateX(-24px); }
-.reveal-left.revealed { animation: slideInLeft 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
-
+.reveal-left.revealed { animation: slideInLeft 0.8s var(--ease-out) both; }
 .reveal-right { transform: translateX(24px); }
-.reveal-right.revealed { animation: slideInRight 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.reveal-right.revealed { animation: slideInRight 0.8s var(--ease-out) both; }
 
 .reveal-delay-1.revealed { animation-delay: 0.08s; }
 .reveal-delay-2.revealed { animation-delay: 0.16s; }
@@ -451,69 +501,35 @@ button {
 .reveal-delay-5.revealed { animation-delay: 0.40s; }
 .reveal-delay-6.revealed { animation-delay: 0.48s; }
 
-/* Interactive lift */
 .card-hover-lift {
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s, border-color 0.3s;
+  transition: transform 0.55s var(--ease-bouncy), box-shadow 0.3s var(--ease-out), border-color 0.3s ease;
 }
 
 .card-hover-lift:hover {
-  transform: translateY(-3px);
+  transform: translateY(-0.35rem) rotate(-0.4deg);
 }
 
 .card-paper.card-hover-lift:hover {
-  box-shadow: 0 2px 0 rgba(15, 27, 44, 0.06), 0 28px 48px -28px rgba(15, 27, 44, 0.45);
-  border-color: rgba(15, 27, 44, 0.22);
+  border-color: rgba(7, 12, 34, 0.28);
+  box-shadow: 0 2px 0 rgba(7, 12, 34, 0.06), 0 34px 70px -42px rgba(7, 12, 34, 0.58);
 }
 
 .card-ink.card-hover-lift:hover {
-  border-color: rgba(201, 162, 75, 0.45);
-  box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.6);
+  border-color: rgba(255, 228, 92, 0.52);
+  box-shadow: 0 32px 74px -38px rgba(0, 0, 0, 0.82);
 }
 
-/* Legacy shim — any leftover calls to the old classes get a no-op look */
-.neon-panel {
-  background: #ffffff;
-  border: 1px solid var(--rule);
+.is-wiggle {
+  animation: wiggle 0.9s steps(7, end) infinite;
+  animation-delay: var(--animation-delay, 0s);
 }
 
-.neon-pill {
-  box-shadow: none;
-}
-
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-family: var(--font-geist-sans), sans-serif;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--gold-deep);
-}
-
-.eyebrow::before {
-  content: "";
-  display: inline-block;
-  width: 1.75rem;
-  height: 1px;
-  background: currentColor;
-  opacity: 0.7;
-}
-
-.section-divider {
-  position: relative;
-}
-
-.heading-gradient-cyan,
-.heading-gradient-gold {
-  color: var(--gold-deep);
-  font-style: italic;
-  font-weight: 400;
+.float-y {
+  animation: floatY 5s ease-in-out infinite;
 }
 
 /* =============================================
-   LIGHTBOX
+   Lightbox
    ============================================= */
 
 .lightbox-overlay {
@@ -523,7 +539,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(15, 27, 44, 0.94);
+  background: rgba(5, 8, 22, 0.94);
   backdrop-filter: blur(12px);
   animation: fadeIn 0.25s ease;
 }
@@ -532,22 +548,52 @@ button {
   max-width: 90vw;
   max-height: 85vh;
   object-fit: contain;
-  border-radius: 0.75rem;
-  animation: scaleIn 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  border-radius: 1.2rem;
+  animation: scaleIn 0.3s var(--ease-out);
 }
 
-/* =============================================
-   REDUCED MOTION
-   ============================================= */
+/* Legacy shim names. */
+.neon-panel {
+  background: rgba(255, 255, 255, 0.84);
+  border: 1px solid var(--rule);
+}
+
+.neon-pill {
+  box-shadow: none;
+}
+
+.section-divider {
+  position: relative;
+}
+
+.heading-gradient-cyan,
+.heading-gradient-gold {
+  color: var(--yellow);
+}
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  * {
+  *, *::before, *::after {
     animation: none !important;
     transition: none !important;
   }
   .reveal-base {
     opacity: 1;
     transform: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .champ-badge,
+  .champ-badge-outline {
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+  }
+
+  .btn-primary,
+  .btn-gold,
+  .btn-ghost-ink,
+  .btn-ghost-paper {
+    width: 100%;
   }
 }

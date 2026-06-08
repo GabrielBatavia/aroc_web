@@ -1,11 +1,26 @@
 "use client";
 
-import type { AboutCard, ValueCard } from "@/data/aroc";
+import { DoodleArrow, SensorCone } from "@/components/shared/BrandAssets";
+import { ShieldIcon, TargetIcon, TrophyIcon, UsersIcon, StarIcon } from "@/components/shared/Icons";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import type { AboutCard, ValueCard } from "@/data/aroc";
 
 type AboutProps = {
   cards: AboutCard[];
   values: ValueCard[];
+};
+
+const aboutIconMap = {
+  users: UsersIcon,
+  target: TargetIcon,
+  shield: ShieldIcon,
+};
+
+const valueIconMap = {
+  spark: StarIcon,
+  shield: ShieldIcon,
+  users: UsersIcon,
+  trophy: TrophyIcon,
 };
 
 export function About({ cards, values }: AboutProps) {
@@ -14,94 +29,88 @@ export function About({ cards, values }: AboutProps) {
   const { ref: valuesRef, isVisible: valuesVisible } = useScrollReveal();
 
   return (
-    <section
-      className="surface-paper-soft relative scroll-mt-24 py-20 sm:py-28"
-      id="about"
-    >
-      <div className="mx-auto max-w-[1200px] px-4 sm:px-8">
-        <div
-          ref={headingRef}
-          className={`grid gap-10 md:grid-cols-[0.95fr_1.05fr] md:gap-16 reveal-base reveal-up ${headingVisible ? "revealed" : ""}`}
-        >
-          <div>
-            <div className="kicker">Tentang Tim</div>
-            <h2 className="headline mt-5 text-[clamp(2.4rem,5vw,4.2rem)] text-[var(--ink)]">
-              Tim robotika
-              <br />
-              <span className="headline-italic">dari Malang.</span>
+    <section className="surface-ink relative scroll-mt-24 overflow-hidden py-20 sm:py-28" id="about">
+      <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(circle_at_12%_25%,rgba(255,228,92,0.14),transparent_28rem),radial-gradient(circle_at_80%_70%,rgba(38,55,122,0.5),transparent_32rem)]" />
+      <SensorCone className="absolute right-[-2rem] top-20 hidden w-72 rotate-6 text-[rgba(255,228,92,0.22)] lg:block" />
+
+      <div className="relative mx-auto max-w-[1240px] px-4 sm:px-8">
+        <div ref={headingRef} className={`grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-end reveal-base reveal-up ${headingVisible ? "revealed" : ""}`}>
+          <div className="relative">
+            <div className="kicker kicker-on-ink">Tentang Tim</div>
+            <h2 className="headline mt-5 max-w-[10ch] text-[clamp(3.2rem,8vw,6.8rem)] text-[var(--cream)]">
+              Robotika dari Malang.
             </h2>
+            <DoodleArrow className="absolute -bottom-9 left-[12rem] hidden w-36 rotate-[10deg] text-[var(--yellow)] md:block" />
           </div>
-          <div className="flex flex-col justify-end">
-            <p className="text-[1.08rem] leading-[1.85] text-[var(--ink)]">
-              Kami adalah engineer, programmer, dan fabrikator dari{" "}
-              <strong className="font-semibold">
-                Politeknik Negeri Malang
-              </strong>
-              . Satu lab yang sama, satu piala yang diburu, dan robot yang
-              benar-benar main sepak bola &mdash; andal, di bawah tekanan, dan
-              melawan tim-tim terbaik di Indonesia.
+
+          <div className="rounded-[2rem] border border-[rgba(255,228,92,0.2)] bg-[rgba(248,247,240,0.06)] p-6 backdrop-blur-xl sm:p-8">
+            <p className="text-[1.08rem] leading-[1.85] text-[rgba(248,247,240,0.84)]">
+              Kami adalah engineer, programmer, dan fabrikator dari <strong className="text-[var(--yellow)]">Politeknik Negeri Malang</strong>. Satu lab, satu lapangan uji, dan robot humanoid yang dipaksa bekerja di bawah tekanan kompetisi.
             </p>
-            <p className="mt-5 text-[1rem] leading-[1.85] text-[var(--muted)]">
-              Berikut kami &mdash; siapa kami, cara kami bekerja, dan kenapa
-              perusahaan yang berinvestasi di AROC_PL sedang berinvestasi pada
-              generasi berikutnya talenta robotika Indonesia.
+            <p className="mt-5 text-[0.98rem] leading-[1.8] text-[rgba(248,247,240,0.62)]">
+              Bagi sponsor, AROC_PL adalah akses ke talenta robotika yang sudah terbiasa merancang, menguji, memperbaiki, dan bertanding dengan deadline nyata.
             </p>
           </div>
         </div>
 
-        <div className="hairline mt-16" />
-
-        <div
-          ref={cardsRef}
-          className="mt-16 grid gap-10 md:grid-cols-3 md:gap-12"
-        >
-          {cards.map((card, index) => (
-            <article
-              key={card.title}
-              className={`group reveal-base reveal-up ${cardsVisible ? `revealed reveal-delay-${index + 1}` : ""}`}
-            >
-              <div className="numeral text-[2.5rem] leading-none text-[var(--gold-deep)] transition-transform duration-500 group-hover:-translate-y-1">
-                {String(index + 1).padStart(2, "0")}
-              </div>
-              <h3 className="font-serif mt-4 text-[1.55rem] font-semibold text-[var(--ink)]">
-                {card.title}
-              </h3>
-              <div className="mt-3 h-px w-10 bg-[var(--gold)] transition-all duration-500 group-hover:w-20" />
-              <p className="mt-5 text-[0.98rem] leading-[1.85] text-[var(--muted)]">
-                {card.description}
-              </p>
-            </article>
-          ))}
-        </div>
-
-        <div className="hairline mt-20" />
-
-        <div
-          ref={valuesRef}
-          className="mt-16"
-        >
-          <div className="kicker">Yang Kami Pegang</div>
-          <h3 className="headline mt-4 text-[clamp(1.8rem,3.5vw,2.6rem)] text-[var(--ink)]">
-            Empat nilai, tanpa kompromi.
-          </h3>
-
-          <div className="mt-12 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
-            {values.map((value, index) => (
+        <div ref={cardsRef} className="mt-14 grid gap-5 md:grid-cols-3">
+          {cards.map((card, index) => {
+            const Icon = aboutIconMap[card.icon];
+            return (
               <article
-                key={value.title}
-                className={`group reveal-base reveal-up ${valuesVisible ? `revealed reveal-delay-${index + 1}` : ""}`}
+                className={`tech-card group rounded-[1.7rem] p-6 sm:p-7 reveal-base reveal-up ${cardsVisible ? `revealed reveal-delay-${index + 1}` : ""}`}
+                key={card.title}
               >
-                <div className="text-[0.72rem] font-bold uppercase tracking-[0.24em] text-[var(--gold-deep)]">
-                  &mdash; 0{index + 1}
+                <div className="relative z-10">
+                  <div className="flex items-start justify-between gap-5">
+                    <div className="numeral text-[3rem] leading-none text-[var(--yellow)]">0{index + 1}</div>
+                    <div className="flex size-12 items-center justify-center rounded-2xl bg-[var(--yellow)] text-[var(--navy-deep)] transition group-hover:rotate-[-6deg] group-hover:scale-95">
+                      <Icon className="size-6" />
+                    </div>
+                  </div>
+                  <h3 className="font-display mt-8 text-[2rem] font-black uppercase leading-none tracking-[-0.03em] text-[var(--cream)]">
+                    {card.title}
+                  </h3>
+                  <p className="mt-4 text-[0.97rem] leading-[1.8] text-[rgba(248,247,240,0.68)]">
+                    {card.description}
+                  </p>
                 </div>
-                <h4 className="font-serif mt-3 text-[1.35rem] font-semibold text-[var(--ink)] transition-colors group-hover:text-[var(--gold-deep)]">
-                  {value.title}
-                </h4>
-                <p className="mt-3 text-[0.95rem] leading-[1.8] text-[var(--muted)]">
-                  {value.description}
-                </p>
               </article>
-            ))}
+            );
+          })}
+        </div>
+
+        <div ref={valuesRef} className="mt-16 rounded-[2rem] bg-[var(--yellow)] p-5 text-[var(--navy-deep)] sm:p-8">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <div className="font-mono text-[0.72rem] font-black uppercase tracking-[0.22em]">Yang Kami Pegang</div>
+              <h3 className="headline mt-3 text-[clamp(2.5rem,6vw,5rem)] text-[var(--navy-deep)]">
+                Empat nilai. Nol kompromi.
+              </h3>
+            </div>
+            <p className="max-w-[28rem] text-[0.98rem] leading-[1.75] text-[rgba(7,12,34,0.72)]">
+              Prinsip kerja yang menjaga tim tetap cepat, disiplin, dan relevan ketika robot gagal di lapangan.
+            </p>
+          </div>
+
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {values.map((value, index) => {
+              const Icon = valueIconMap[value.icon];
+              return (
+                <article
+                  className={`rounded-[1.25rem] border border-[rgba(7,12,34,0.16)] bg-[rgba(248,247,240,0.45)] p-5 reveal-base reveal-up ${valuesVisible ? `revealed reveal-delay-${index + 1}` : ""}`}
+                  key={value.title}
+                >
+                  <Icon className="size-6" />
+                  <h4 className="font-display mt-5 text-[1.65rem] font-black uppercase leading-none tracking-[-0.03em]">
+                    {value.title}
+                  </h4>
+                  <p className="mt-3 text-[0.92rem] leading-[1.7] text-[rgba(7,12,34,0.72)]">
+                    {value.description}
+                  </p>
+                </article>
+              );
+            })}
           </div>
         </div>
       </div>

@@ -4,12 +4,26 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { ArocGeneratedMark } from "@/components/shared/BrandAssets";
+import { CloseIcon, InstagramIcon, MailIcon, MenuIcon } from "@/components/shared/Icons";
 import type { NavLink } from "@/data/aroc";
-import { CloseIcon, MenuIcon } from "@/components/shared/Icons";
 
 type NavbarProps = {
   links: NavLink[];
 };
+
+const socialLinks = [
+  {
+    label: "Instagram",
+    href: "https://instagram.com/aroc_pl",
+    icon: InstagramIcon,
+  },
+  {
+    label: "Email",
+    href: "mailto:hello@arocpl.com",
+    icon: MailIcon,
+  },
+];
 
 export function Navbar({ links }: NavbarProps) {
   const [open, setOpen] = useState(false);
@@ -17,7 +31,7 @@ export function Navbar({ links }: NavbarProps) {
   const pathname = usePathname();
 
   useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 12);
+    const handler = () => setScrolled(window.scrollY > 18);
     handler();
     window.addEventListener("scroll", handler, { passive: true });
     return () => window.removeEventListener("scroll", handler);
@@ -31,93 +45,117 @@ export function Navbar({ links }: NavbarProps) {
   return (
     <header
       className={[
-        "sticky top-0 z-50 border-b transition-all duration-300",
-        scrolled
-          ? "border-[rgba(201,162,75,0.25)] bg-[var(--ink-deep)]/98 backdrop-blur-2xl shadow-[0_2px_24px_rgba(0,0,0,0.35)]"
-          : "border-[rgba(245,241,232,0.1)] bg-[var(--ink)]/98 backdrop-blur-xl",
+        "fixed inset-x-0 top-0 z-50 px-3 pt-3 transition-all duration-300 sm:px-5 sm:pt-5",
+        scrolled ? "translate-y-0" : "",
       ].join(" ")}
     >
-      <nav className="mx-auto flex max-w-[1200px] items-center justify-between px-4 py-4 sm:px-8 sm:py-5">
+      <nav
+        className={[
+          "mx-auto grid max-w-[1240px] grid-cols-[1fr_auto_1fr] items-center gap-3 rounded-full border px-3 py-2 shadow-[0_22px_60px_-44px_rgba(0,0,0,0.95)] backdrop-blur-2xl transition-all duration-300 sm:px-4",
+          scrolled
+            ? "border-[rgba(255,228,92,0.3)] bg-[rgba(5,8,22,0.88)]"
+            : "border-[rgba(248,247,240,0.14)] bg-[rgba(5,8,22,0.62)]",
+        ].join(" ")}
+      >
+        <div className="hidden items-center gap-2 lg:flex">
+          {socialLinks.map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <a
+                aria-label={item.label}
+                className="group flex size-10 items-center justify-center rounded-full border border-[rgba(248,247,240,0.15)] bg-[rgba(248,247,240,0.06)] text-[var(--cream)] transition hover:-translate-y-1 hover:rotate-[-4deg] hover:border-[var(--yellow)] hover:text-[var(--yellow)]"
+                href={item.href}
+                key={item.label}
+                rel={index === 0 ? "noreferrer" : undefined}
+                target={index === 0 ? "_blank" : undefined}
+              >
+                <Icon className="size-4" />
+              </a>
+            );
+          })}
+        </div>
+
         <Link
           aria-label="AROC_PL beranda"
-          className="group flex items-center gap-3"
+          className="group col-start-1 flex min-w-0 items-center gap-2 lg:col-start-2"
           href="/"
         >
-          <span className="flex size-10 items-center justify-center rounded-sm border border-[rgba(201,162,75,0.55)] bg-[linear-gradient(135deg,rgba(201,162,75,0.2),rgba(201,162,75,0.08))] font-serif text-[1.15rem] font-bold text-[var(--gold-bright)] transition group-hover:border-[var(--gold-bright)] group-hover:bg-[rgba(201,162,75,0.2)]">
-            A
+          <span className="relative flex size-12 shrink-0 items-center justify-center rounded-full bg-[var(--yellow)] p-1 shadow-[0_0_0_4px_rgba(255,228,92,0.12)] transition group-hover:rotate-[-4deg] group-hover:scale-95">
+            <ArocGeneratedMark className="size-full" />
           </span>
-          <span className="font-serif text-[1.2rem] font-semibold tracking-[0.18em] text-[var(--paper)]">
-            AROC_PL
+          <span className="hidden leading-none sm:block">
+            <span className="block font-display text-[1.2rem] font-black uppercase tracking-[0.1em] text-[var(--cream)]">
+              AROC_PL
+            </span>
+            <span className="block font-mono text-[0.54rem] font-bold uppercase tracking-[0.22em] text-[var(--yellow)]">
+              Humanoid Team
+            </span>
           </span>
         </Link>
 
-        <div className="hidden items-center gap-1 md:flex">
-          {links.map((link) => (
+        <div className="hidden items-center justify-center gap-1 xl:flex">
+          {links.map((link, index) => (
             <Link
               className={[
-                "relative px-4 py-2 text-[0.92rem] font-semibold tracking-[0.04em] transition-colors duration-200",
+                "group rounded-full px-4 py-2 text-[0.8rem] font-black uppercase tracking-[0.13em] transition",
                 isActive(link)
-                  ? "text-[var(--gold-bright)]"
-                  : "text-[var(--paper)] hover:text-[var(--gold-bright)]",
-                "after:absolute after:bottom-0 after:left-1/2 after:h-[2px] after:-translate-x-1/2 after:bg-[var(--gold-bright)] after:transition-all after:duration-300",
-                isActive(link) ? "after:w-6" : "after:w-0 hover:after:w-6",
+                  ? "bg-[var(--yellow)] text-[var(--navy-deep)]"
+                  : "text-[rgba(248,247,240,0.78)] hover:bg-[rgba(248,247,240,0.08)] hover:text-[var(--yellow)]",
               ].join(" ")}
               href={link.href}
-              key={link.href}
+              key={`${link.href}-${index}`}
             >
-              {link.label}
+              <span className="inline-block transition group-hover:-translate-y-0.5 group-hover:rotate-[-2deg]">
+                {link.label}
+              </span>
             </Link>
           ))}
-          <Link
-            className="ml-4 inline-flex h-10 items-center justify-center rounded-sm bg-[linear-gradient(135deg,var(--gold-bright),var(--gold))] px-5 text-[0.82rem] font-bold uppercase tracking-[0.18em] text-[var(--ink)] shadow-[0_6px_18px_-6px_rgba(201,162,75,0.6)] transition hover:-translate-y-0.5 hover:shadow-[0_10px_22px_-6px_rgba(201,162,75,0.75)]"
-            href="#sponsor"
-          >
-            Jadi Sponsor
-          </Link>
         </div>
 
-        <button
-          aria-expanded={open}
-          aria-label={open ? "Tutup menu navigasi" : "Buka menu navigasi"}
-          className="inline-flex size-11 items-center justify-center rounded-sm border border-[rgba(201,162,75,0.4)] bg-[rgba(201,162,75,0.08)] text-[var(--gold-bright)] transition hover:border-[var(--gold-bright)] hover:bg-[rgba(201,162,75,0.16)] md:hidden"
-          onClick={() => setOpen((value) => !value)}
-          type="button"
-        >
-          {open ? <CloseIcon className="size-5" /> : <MenuIcon className="size-5" />}
-        </button>
+        <div className="col-start-3 flex items-center justify-end gap-2">
+          <Link className="hidden btn-gold min-h-11 px-5 text-[0.72rem] md:inline-flex" href="/#sponsor">
+            Jadi Sponsor
+          </Link>
+          <button
+            aria-expanded={open}
+            aria-label={open ? "Tutup menu navigasi" : "Buka menu navigasi"}
+            className="flex size-11 items-center justify-center rounded-full border border-[rgba(255,228,92,0.36)] bg-[rgba(255,228,92,0.09)] text-[var(--yellow)] transition hover:bg-[rgba(255,228,92,0.16)] xl:hidden"
+            onClick={() => setOpen((value) => !value)}
+            type="button"
+          >
+            {open ? <CloseIcon className="size-5" /> : <MenuIcon className="size-5" />}
+          </button>
+        </div>
       </nav>
 
-      <div
-        className={[
-          "overflow-hidden border-t border-[rgba(201,162,75,0.18)] bg-[var(--ink-deep)] transition-[max-height,opacity] duration-300 md:hidden",
-          open ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
-        ].join(" ")}
-      >
-        <div className="mx-auto flex max-w-[1200px] flex-col gap-1 px-4 py-5 sm:px-8">
-          {links.map((link) => (
+      {open ? (
+        <div className="mx-auto mt-2 max-w-[1240px] overflow-hidden rounded-[1.6rem] border border-[rgba(255,228,92,0.22)] bg-[rgba(5,8,22,0.95)] shadow-[0_32px_80px_-46px_rgba(0,0,0,0.95)] backdrop-blur-2xl xl:hidden">
+          <div className="grid gap-2 p-4">
+            {links.map((link) => (
+              <Link
+                className={[
+                  "rounded-2xl px-4 py-3 text-[0.95rem] font-black uppercase tracking-[0.12em] transition",
+                  isActive(link)
+                    ? "bg-[var(--yellow)] text-[var(--navy-deep)]"
+                    : "text-[var(--cream)] hover:bg-[rgba(248,247,240,0.08)] hover:text-[var(--yellow)]",
+                ].join(" ")}
+                href={link.href}
+                key={link.href}
+                onClick={() => setOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ))}
             <Link
-              className={[
-                "rounded-sm px-4 py-3 text-[0.95rem] font-semibold tracking-[0.03em] transition",
-                isActive(link)
-                  ? "bg-[rgba(201,162,75,0.14)] text-[var(--gold-bright)]"
-                  : "text-[var(--paper)] hover:bg-[rgba(245,241,232,0.06)] hover:text-[var(--gold-bright)]",
-              ].join(" ")}
-              href={link.href}
-              key={link.href}
+              className="btn-gold mt-2"
+              href="/#sponsor"
               onClick={() => setOpen(false)}
             >
-              {link.label}
+              Jadi Sponsor
             </Link>
-          ))}
-          <Link
-            className="mt-3 inline-flex h-12 items-center justify-center rounded-sm bg-[linear-gradient(135deg,var(--gold-bright),var(--gold))] text-[0.82rem] font-bold uppercase tracking-[0.18em] text-[var(--ink)] shadow-[0_6px_18px_-6px_rgba(201,162,75,0.6)]"
-            href="#sponsor"
-            onClick={() => setOpen(false)}
-          >
-            Jadi Sponsor
-          </Link>
+          </div>
         </div>
-      </div>
+      ) : null}
     </header>
   );
 }

@@ -3,248 +3,200 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-import type { HeroData } from "@/data/aroc";
+import {
+  DoodleArrow,
+  DoodleUnderline,
+  SensorCone,
+  SoccerPath,
+} from "@/components/shared/BrandAssets";
+import { ArrowRightIcon, TrophyIcon } from "@/components/shared/Icons";
 import { CountNumber } from "@/components/shared/CountNumber";
 import { MagneticButton } from "@/components/shared/MagneticButton";
 import { RobotModelViewer } from "@/components/shared/RobotModelViewer";
-import { SponsorMarquee } from "@/components/shared/SponsorMarquee";
-import { ArrowRightIcon, TrophyIcon } from "@/components/shared/Icons";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import type { HeroData } from "@/data/aroc";
 
 type HeroProps = {
   data: HeroData;
 };
 
-const supportWords = [
-  "POLITEKNIK NEGERI MALANG",
-  "KRSBI HUMANOID",
+const marqueeWords = [
+  "AROC_PL",
+  "HUMANOID SOCCER",
   "KRI 2024 CHAMPION",
-  "ROBOSOCCER INDONESIA",
-  "YOUR LOGO HERE",
   "POLINEMA ROBOTICS",
+  "ROBOT THAT PLAYS TO WIN",
+];
+
+const facts = [
+  { value: 11, suffix: "+", label: "Engineer aktif" },
+  { value: 3, suffix: "", label: "Robot lineup" },
+  { value: 4, suffix: "x", label: "Podium nasional" },
 ];
 
 export function Hero({ data }: HeroProps) {
-  const { ref: leftRef, isVisible: leftVisible } = useScrollReveal({
-    threshold: 0.1,
-  });
-  const { ref: rightRef, isVisible: rightVisible } = useScrollReveal({
-    threshold: 0.1,
-  });
-
-  // Mouse parallax on robot
+  const { ref: copyRef, isVisible: copyVisible } = useScrollReveal({ threshold: 0.1 });
+  const { ref: visualRef, isVisible: visualVisible } = useScrollReveal({ threshold: 0.1 });
   const stageRef = useRef<HTMLDivElement>(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [canMove, setCanMove] = useState(false);
 
   useEffect(() => {
-    const prefersReduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-    if (prefersReduced) return;
-    const onMove = (e: MouseEvent) => {
-      const el = stageRef.current;
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const nx = (e.clientX - cx) / rect.width;
-      const ny = (e.clientY - cy) / rect.height;
-      setTilt({ x: nx, y: ny });
-    };
-    window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setCanMove(!query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
   }, []);
 
-  // Headline character-by-character reveal
-  const line1 = "Kami bangun robot";
-  const line2Words = [
-    { text: "yang", italic: false },
-    { text: "menang.", italic: true },
-  ];
-
   return (
-    <section className="surface-ink relative overflow-hidden" id="top">
-      {/* Ambient light */}
+    <section className="surface-ink campaign-shell relative min-h-screen overflow-hidden pb-0 pt-28 sm:pt-32 lg:pt-36" id="top">
       <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-90"
-        style={{
-          background:
-            "radial-gradient(ellipse at 75% 40%, rgba(201,162,75,0.18), transparent 55%), radial-gradient(ellipse at 10% 90%, rgba(165,42,42,0.08), transparent 50%)",
-        }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.035]"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 1px 1px, rgba(245,241,232,1) 1px, transparent 0)",
-          backgroundSize: "3px 3px",
-        }}
+        aria-hidden="true"
+        className="absolute left-1/2 top-28 z-[1] h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(255,228,92,0.2),transparent_65%)] blur-3xl"
       />
 
-      <div className="relative mx-auto grid max-w-[1200px] items-center gap-12 px-4 pb-20 pt-16 sm:px-8 sm:pb-24 sm:pt-20 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16 lg:pb-28 lg:pt-24">
-        {/* Left: headline + proof + CTA */}
+      <div className="relative z-10 mx-auto grid max-w-[1240px] gap-12 px-4 pb-16 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-8 lg:pb-20">
         <div
-          ref={leftRef}
-          className={`reveal-base reveal-up relative z-10 ${leftVisible ? "revealed" : ""}`}
+          ref={copyRef}
+          className={`relative z-20 reveal-base reveal-up ${copyVisible ? "revealed" : ""}`}
         >
           <div className="champ-badge">
             <TrophyIcon className="size-4" />
-            <span>Juara Nasional &middot; KRI 2024</span>
+            <span>Juara Nasional / KRI Humanoid 2024</span>
           </div>
 
-          <h1 className="headline mt-8 text-[clamp(2.8rem,7.5vw,5.4rem)] text-[var(--paper)]">
-            <span className="block">
-              {line1.split(" ").map((word, wi) => (
-                <span
-                  key={wi}
-                  className="mr-[0.28em] inline-block"
-                  aria-hidden={false}
-                >
-                  {word.split("").map((ch, ci) => (
-                    <span
-                      key={ci}
-                      className={`inline-block ${leftVisible ? "animate-[letterRise_0.7s_cubic-bezier(0.22,1,0.36,1)_both]" : "opacity-0"}`}
-                      style={{
-                        animationDelay: `${(wi * 4 + ci) * 0.03}s`,
-                      }}
-                    >
-                      {ch}
-                    </span>
-                  ))}
-                </span>
-              ))}
-            </span>
-            <span className="block">
-              {line2Words.map((w, i) => (
-                <span
-                  key={i}
-                  className={`mr-[0.28em] inline-block ${w.italic ? "headline-italic-on-ink" : ""}`}
-                >
-                  {w.text.split("").map((ch, ci) => (
-                    <span
-                      key={ci}
-                      className={`inline-block ${leftVisible ? "animate-[letterRise_0.7s_cubic-bezier(0.22,1,0.36,1)_both]" : "opacity-0"}`}
-                      style={{
-                        animationDelay: `${(line1.length + i * 8 + ci) * 0.03 + 0.1}s`,
-                      }}
-                    >
-                      {ch}
-                    </span>
-                  ))}
-                </span>
-              ))}
-            </span>
-          </h1>
+          <div className="relative mt-8">
+            <h1 className="headline max-w-[9ch] text-[clamp(4rem,13vw,9.8rem)] text-[var(--cream)]">
+              Humanoid <span className="headline-italic-on-ink">robot</span> soccer team.
+            </h1>
+            <DoodleUnderline className="absolute -bottom-5 left-2 w-52 rotate-[-2deg] text-[var(--yellow)] sm:w-72" />
+          </div>
 
-          <p className="mt-7 max-w-[34rem] text-[1.05rem] leading-[1.8] text-[rgba(245,241,232,0.78)] sm:text-[1.12rem]">
-            AROC_PL adalah tim robotik humanoid{" "}
-            <span className="text-[var(--paper)]">
-              Politeknik Negeri Malang
-            </span>
-            . Tiga angkatan, satu lab, dan koleksi piala sebagai bukti kerja —
-            merakit masa depan sepak bola robot dengan presisi hardware,
-            kecerdasan di lapangan, dan kerja tim tanpa henti.
+          <p className="mt-10 max-w-[34rem] text-[1.04rem] leading-[1.85] text-[rgba(248,247,240,0.74)] sm:text-[1.12rem]">
+            {data.description} Tiga angkatan, satu lab, dan satu misi: membuat robot humanoid yang benar-benar bermain untuk menang.
           </p>
 
-          <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-            <MagneticButton href="#team" className="btn-gold">
-              Kenali Tim Kami
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <MagneticButton className="btn-gold" href={data.primaryCta.href}>
+              {data.primaryCta.label}
               <ArrowRightIcon className="size-5" />
             </MagneticButton>
-            <Link className="btn-ghost-paper" href="#sponsor">
-              Jadi Sponsor Kami
+            <Link className="btn-ghost-paper" href={data.secondaryCta.href}>
+              {data.secondaryCta.label}
             </Link>
           </div>
 
-          {/* Animated proof strip */}
-          <div className="mt-14 grid max-w-xl grid-cols-3 gap-6 border-t border-[rgba(245,241,232,0.14)] pt-8">
-            <div>
-              <div className="numeral text-[2.4rem] leading-none text-[var(--gold-bright)]">
-                <CountNumber end={11} suffix="+" />
+          <div className="mt-11 grid max-w-xl grid-cols-3 gap-3 sm:gap-5">
+            {facts.map((fact, index) => (
+              <div
+                className="rounded-[1.25rem] border border-[rgba(248,247,240,0.12)] bg-[rgba(248,247,240,0.06)] p-4 backdrop-blur"
+                key={fact.label}
+              >
+                <div className="numeral text-[2.6rem] leading-none text-[var(--yellow)]">
+                  <CountNumber end={fact.value} suffix={fact.suffix} />
+                </div>
+                <div className="mt-2 font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-[rgba(248,247,240,0.5)]">
+                  {fact.label}
+                </div>
+                <div className="mt-3 h-1 rounded-full bg-[rgba(248,247,240,0.1)]">
+                  <div
+                    className="h-full rounded-full bg-[var(--yellow)]"
+                    style={{ width: `${index === 0 ? 88 : index === 1 ? 72 : 96}%` }}
+                  />
+                </div>
               </div>
-              <div className="mt-2 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-[rgba(245,241,232,0.62)]">
-                Engineer Aktif
-              </div>
-            </div>
-            <div>
-              <div className="numeral text-[2.4rem] leading-none text-[var(--gold-bright)]">
-                <CountNumber end={3} />
-              </div>
-              <div className="mt-2 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-[rgba(245,241,232,0.62)]">
-                Robot Bertanding
-              </div>
-            </div>
-            <div>
-              <div className="numeral text-[2.4rem] leading-none text-[var(--gold-bright)]">
-                <CountNumber end={4} suffix="x" />
-              </div>
-              <div className="mt-2 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-[rgba(245,241,232,0.62)]">
-                Podium Nasional
-              </div>
-            </div>
+            ))}
           </div>
         </div>
 
-        {/* Right: robot portrait with parallax */}
         <div
-          ref={rightRef}
-          className={`reveal-base reveal-right relative mx-auto w-full max-w-[540px] ${rightVisible ? "revealed" : ""}`}
+          ref={visualRef}
+          className={`relative z-10 mx-auto w-full max-w-[680px] reveal-base reveal-right ${visualVisible ? "revealed" : ""}`}
         >
+          <DoodleArrow className="absolute -left-8 top-5 z-20 hidden w-36 rotate-[-14deg] text-[var(--yellow)] opacity-80 md:block" />
+          <SensorCone className="absolute right-0 top-16 z-0 hidden w-48 text-[rgba(255,228,92,0.36)] md:block" />
+          <SoccerPath className="absolute -bottom-8 left-1/2 z-0 w-[90%] -translate-x-1/2 text-[rgba(255,228,92,0.42)]" />
+
           <div
             ref={stageRef}
-            className="relative"
+            className="relative min-h-[520px] overflow-visible rounded-[2rem] border border-[rgba(255,228,92,0.2)] bg-[linear-gradient(180deg,rgba(26,36,85,0.55),rgba(5,8,22,0.1))] px-3 pt-6 shadow-[0_40px_110px_-70px_rgba(0,0,0,1)] sm:min-h-[620px]"
+            onPointerMove={(event) => {
+              if (!canMove) return;
+              const rect = stageRef.current?.getBoundingClientRect();
+              if (!rect) return;
+              const x = (event.clientX - (rect.left + rect.width / 2)) / rect.width;
+              const y = (event.clientY - (rect.top + rect.height / 2)) / rect.height;
+              setTilt({ x, y });
+            }}
+            onPointerLeave={() => setTilt({ x: 0, y: 0 })}
             style={{ perspective: "1200px" }}
           >
             <div
-              aria-hidden
-              className="absolute inset-x-[8%] top-[14%] h-[58%] rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.26),rgba(201,162,75,0.08)_38%,transparent_70%)] blur-3xl transition-transform duration-300"
-              style={{
-                transform: `translate3d(${tilt.x * 20}px, ${tilt.y * 14}px, 0)`,
-              }}
+              aria-hidden="true"
+              className="absolute inset-x-[12%] top-[12%] h-[58%] rounded-full bg-[radial-gradient(circle,rgba(255,228,92,0.24),rgba(255,228,92,0.05)_46%,transparent_70%)] blur-3xl transition-transform duration-300"
+              style={{ transform: `translate3d(${tilt.x * 26}px, ${tilt.y * 18}px, 0)` }}
             />
             <div
-              aria-hidden
-              className="absolute inset-x-6 bottom-24 top-6 rounded-[0.5rem] border border-[rgba(201,162,75,0.18)] transition-transform duration-300"
-              style={{
-                transform: `rotateX(${tilt.y * -4}deg) rotateY(${tilt.x * 4}deg)`,
-              }}
+              aria-hidden="true"
+              className="absolute inset-5 rounded-[1.55rem] border border-[rgba(248,247,240,0.08)] transition-transform duration-300"
+              style={{ transform: `rotateX(${tilt.y * -4}deg) rotateY(${tilt.x * 4}deg)` }}
             />
+            <div aria-hidden="true" className="absolute inset-x-0 top-16 h-20 overflow-hidden opacity-40">
+              <div className="h-full w-[60%] bg-[linear-gradient(90deg,transparent,rgba(255,228,92,0.16),transparent)] animate-[scan_3.6s_linear_infinite]" />
+            </div>
+
             <RobotModelViewer
-              alt={`${data.systemCard.title} — robot humanoid AROC_PL`}
-              className="relative z-10 mx-auto h-auto w-full max-w-[540px] drop-shadow-[0_30px_80px_rgba(0,0,0,0.55)] transition-transform duration-300"
+              alt={`${data.systemCard.title} - robot humanoid AROC_PL`}
+              className="relative z-10 mx-auto max-w-[600px] drop-shadow-[0_34px_90px_rgba(0,0,0,0.72)] transition-transform duration-300"
               modelSrc={data.robotModel}
               posterSrc={data.robotImage}
               priority
               style={{
-                transform: `translate3d(${tilt.x * -14}px, ${tilt.y * -8}px, 0) rotateY(${tilt.x * 4}deg) rotateX(${tilt.y * -3}deg)`,
+                transform: `translate3d(${tilt.x * -16}px, ${tilt.y * -10}px, 0) rotateY(${tilt.x * 5}deg) rotateX(${tilt.y * -3}deg)`,
               }}
             />
-          </div>
 
-          <div className="relative z-10 mx-auto mt-2 max-w-[26rem] border-t border-[rgba(201,162,75,0.35)] pt-4 text-center">
-            <div className="text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-[var(--gold-bright)]">
-              Spesimen Armada &middot; {data.systemCard.title}
+            <div className="absolute left-4 top-4 z-20 rounded-2xl border border-[rgba(255,228,92,0.28)] bg-[rgba(5,8,22,0.68)] p-4 backdrop-blur-xl sm:left-6 sm:top-6">
+              <div className="font-mono text-[0.58rem] font-black uppercase tracking-[0.2em] text-[var(--yellow)]">
+                {data.statusLabel}
+              </div>
+              <div className="mt-1 font-display text-[1.65rem] font-black uppercase leading-none text-[var(--cream)]">
+                {data.statusValue}
+              </div>
             </div>
-            <div className="mt-2 font-serif text-[1.05rem] italic text-[rgba(245,241,232,0.82)]">
-              &ldquo;Kecerdasan fisik seorang juara.&rdquo;
+
+            <div className="absolute bottom-5 right-4 z-20 w-[13rem] rounded-2xl border border-[rgba(248,247,240,0.14)] bg-[rgba(5,8,22,0.72)] p-4 backdrop-blur-xl sm:bottom-8 sm:right-7">
+              <div className="font-mono text-[0.58rem] font-black uppercase tracking-[0.2em] text-[var(--yellow)]">
+                {data.systemCard.label}
+              </div>
+              <div className="mt-1 font-display text-[1.45rem] font-black uppercase leading-none text-[var(--cream)]">
+                {data.systemCard.title}
+              </div>
+              <div className="mt-4 grid grid-cols-2 gap-3">
+                {data.systemCard.metrics.map((metric) => (
+                  <div key={metric.label}>
+                    <div className="numeral text-[1.25rem] leading-none text-[var(--yellow)]">{metric.value}</div>
+                    <div className="mt-1 font-mono text-[0.52rem] font-black uppercase tracking-[0.16em] text-[rgba(248,247,240,0.52)]">
+                      {metric.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Scrolling sponsor marquee */}
-      <div className="relative border-y border-[rgba(245,241,232,0.12)] bg-[var(--ink-deep)]/60 py-6">
-        <SponsorMarquee items={supportWords} />
+      <div className="relative z-20 overflow-hidden border-y border-[rgba(248,247,240,0.12)] bg-[var(--yellow)] py-5 text-[var(--navy-deep)]">
+        <div className="flex w-[200%] animate-[marquee_24s_linear_infinite] gap-8 whitespace-nowrap">
+          {[...marqueeWords, ...marqueeWords, ...marqueeWords, ...marqueeWords].map((word, index) => (
+            <span className="font-display text-[clamp(2.6rem,7vw,5rem)] font-black uppercase leading-none tracking-[-0.04em]" key={`${word}-${index}`}>
+              {word} /
+            </span>
+          ))}
+        </div>
       </div>
-
-      <style>{`
-        @keyframes letterRise {
-          from { opacity: 0; transform: translateY(0.5em); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </section>
   );
 }
