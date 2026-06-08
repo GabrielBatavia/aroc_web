@@ -110,6 +110,40 @@ button {
   font-family: var(--font-display), Impact, "Arial Narrow", sans-serif;
 }
 
+.campaign-title {
+  color: var(--cream);
+  font-family: var(--font-display), Impact, "Arial Narrow", sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.07em;
+  line-height: 0.78;
+  text-transform: uppercase;
+}
+
+.campaign-title span {
+  display: block;
+  color: var(--yellow);
+  text-shadow: 0.05em 0.05em 0 var(--navy-black);
+}
+
+.campaign-stage {
+  background:
+    radial-gradient(circle at 50% 8%, rgba(255, 228, 92, 0.12), transparent 28rem),
+    linear-gradient(180deg, var(--navy-deep), var(--navy-black));
+}
+
+.campaign-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 228, 92, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 228, 92, 0.055) 1px, transparent 1px),
+    radial-gradient(circle at 2px 2px, rgba(248, 247, 240, 0.12) 1px, transparent 0);
+  background-size: 4rem 4rem, 4rem 4rem, 1.2rem 1.2rem;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent 105%);
+}
+
 .headline {
   font-family: var(--font-display), Impact, "Arial Narrow", sans-serif;
   font-weight: 800;
