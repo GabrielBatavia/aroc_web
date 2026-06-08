@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import { ArocGeneratedMark, DoodleArrow } from "@/components/shared/BrandAssets";
+import { ArocGeneratedMark } from "@/components/shared/BrandAssets";
 import {
   InstagramIcon,
   LinkedinIcon,
@@ -26,38 +26,13 @@ const iconMap = {
   map: MapPinIcon,
 };
 
-export function Footer({ description, sponsors, navigation, contact }: FooterProps) {
+export function Footer({ sponsors, navigation, contact }: FooterProps) {
   const { ref, isVisible } = useScrollReveal({ threshold: 0.05 });
 
   return (
     <footer ref={ref} className="surface-ink-deep campaign-shell border-t border-[rgba(248,247,240,0.08)]" id="contact">
       <div className={`relative z-10 mx-auto max-w-[1240px] px-4 py-16 sm:px-8 lg:py-20 reveal-base reveal-up ${isVisible ? "revealed" : ""}`}>
-        <div className="relative overflow-hidden rounded-[2rem] border border-[rgba(255,228,92,0.22)] bg-[rgba(17,26,61,0.66)] p-5 shadow-[0_40px_110px_-72px_rgba(0,0,0,1)] sm:p-8 lg:p-10">
-          <DoodleArrow className="absolute right-4 top-2 hidden w-32 rotate-[-12deg] text-[var(--yellow)] opacity-70 md:block" />
-          <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-            <div>
-              <div className="champ-badge-outline">Kemitraan Robotics 2026</div>
-              <h2 className="headline mt-6 max-w-[11ch] text-[clamp(3rem,8vw,6.5rem)] text-[var(--cream)]">
-                Brand kamu di podium.
-              </h2>
-            </div>
-            <div>
-              <p className="max-w-[36rem] text-[1.05rem] leading-[1.85] text-[rgba(248,247,240,0.72)]">
-                {description} Kami membuka ruang partner untuk riset, kompetisi, publikasi, dan jalur talenta engineering Polinema.
-              </p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Link className="btn-gold" href="mailto:hello@arocpl.com?subject=Kemitraan%20AROC_PL">
-                  Mulai Kemitraan
-                </Link>
-                <Link className="btn-ghost-paper" href="/#gallery">
-                  Lihat Aktivitas Lab
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-14 border-y border-[rgba(248,247,240,0.1)] py-7">
+        <div className="border-y border-[rgba(248,247,240,0.1)] py-7">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
             <div className="kicker kicker-on-ink">Current Backing</div>
             <div className="flex flex-wrap items-center gap-x-10 gap-y-3">

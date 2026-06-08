@@ -4,12 +4,12 @@ import { HomeCampaign } from "@/components/campaign/HomeCampaign";
 import {
   aboutCards,
   achievements,
+  campaignNavLinks,
   coreDivisions,
   footerData,
   footerNavigation,
   galleryItems,
   heroData,
-  navLinks,
   robotCards,
   teamLead,
   teamStats,
@@ -20,7 +20,7 @@ import {
 export default function Home() {
   return (
     <>
-      <Navbar links={navLinks} />
+      <Navbar links={campaignNavLinks} />
       <HomeCampaign
         aboutCards={aboutCards}
         achievements={achievements}

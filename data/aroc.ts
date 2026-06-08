@@ -130,6 +130,15 @@ export const navLinks: NavLink[] = [
   { label: "Galeri", href: "/#gallery" },
 ];
 
+export const campaignNavLinks: NavLink[] = [
+  { label: "Story", href: "/#story" },
+  { label: "Robots", href: "/#robots" },
+  { label: "Proof", href: "/#achievements" },
+  { label: "Team", href: "/#team" },
+  { label: "Gallery", href: "/#gallery" },
+  { label: "Sponsor", href: "/#sponsor" },
+];
+
 export const footerNavigation: NavLink[] = [
   { label: "Tentang Kami", href: "/about", matchPath: "/about" },
   { label: "Tim Kami", href: "/#team" },
