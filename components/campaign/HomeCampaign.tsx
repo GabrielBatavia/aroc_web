@@ -483,10 +483,18 @@ function CampaignHero({ hero }: { hero: HeroData }) {
 function CurvedMarquee() {
   const words = ["AROC_PL", "Humanoid Soccer", "KRI 2024 Champion", "Polinema", "Built to Win", "Robot Soccer"];
   return (
-    <section aria-label="Marquee" className="relative overflow-hidden bg-[var(--yellow)] py-4 text-[var(--navy-deep)]">
+    <section
+      aria-label="Marquee"
+      className="relative overflow-hidden bg-[var(--yellow)] py-5 text-[var(--navy-deep)]"
+      style={{
+        /* Top shadow makes the hard cut from dark hero feel intentional — like a stamp */
+        boxShadow: "inset 0 6px 24px rgba(3,6,16,0.18)",
+        borderTop: "1px solid rgba(3,6,16,0.1)",
+      }}
+    >
       <div
         aria-hidden="true"
-        className="absolute inset-0 opacity-[0.12]"
+        className="absolute inset-0 opacity-[0.1]"
         style={{ backgroundImage: "radial-gradient(circle at 2px 2px, #070c22 1.2px, transparent 0)", backgroundSize: "18px 18px" }}
       />
       <div className="relative flex w-[200%] gap-0" style={{ animation: "marquee 30s linear infinite" }}>
@@ -498,12 +506,18 @@ function CurvedMarquee() {
                 className="shrink-0 font-display font-black uppercase"
                 style={{ fontSize: "clamp(2.4rem, 5vw, 4rem)", letterSpacing: "-0.04em", lineHeight: 1 }}
               >
-                {w} <span className="mx-1 text-[0.7em] opacity-40">/</span>
+                {w} <span className="mx-1 text-[0.7em] opacity-35">/</span>
               </span>
             ))}
           </div>
         ))}
       </div>
+      {/* Bottom shadow into next section */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-4"
+        style={{ background: "linear-gradient(to bottom, transparent, rgba(240,235,210,0.3))" }}
+      />
     </section>
   );
 }
@@ -1462,40 +1476,68 @@ export function HomeCampaign({
       <CampaignLoader />
       <CampaignHero hero={hero} />
 
-      {/* Hero → yellow tape */}
-      <div aria-hidden="true" className="bleed-ink-to-yellow" />
+      {/*
+        ── Hero (dark) → Marquee (yellow) ──
+        Hard cut. No bleed. Warna terlalu kontras untuk di-blend —
+        any intermediate color antara navy & yellow akan jadi warna kotor.
+        Hard edge justru terlihat dramatis dan intentional.
+      */}
       <CurvedMarquee />
 
-      {/* yellow tape → cream manifesto */}
-      <div aria-hidden="true" className="bleed-yellow-to-cream" />
+      {/* Marquee (yellow) → Manifesto (cream): short, same warm family */}
+      <div
+        aria-hidden="true"
+        style={{ height: "3rem", background: "linear-gradient(to bottom, var(--yellow), var(--cream))" }}
+      />
       <EditorialManifesto aboutCards={aboutCards} values={values} />
 
-      {/* cream → ink story */}
-      <div aria-hidden="true" className="bleed-cream-to-ink" />
+      {/* Manifesto (cream) → Story (dark): fade through white, drop to deep */}
+      <div
+        aria-hidden="true"
+        style={{ height: "6rem", background: "linear-gradient(to bottom, var(--cream), var(--navy-deep))" }}
+      />
       <StickyScrollStory hero={hero} />
 
-      {/* ink → warm cream benefits */}
-      <div aria-hidden="true" className="bleed-ink-to-cream-soft" />
+      {/* Story (dark) → Benefits (cream-soft): rise from deep */}
+      <div
+        aria-hidden="true"
+        style={{ height: "6rem", background: "linear-gradient(to bottom, var(--navy-deep), var(--cream-soft))" }}
+      />
       <BenefitsClaims divisions={divisions} />
 
-      {/* warm cream → ink robots */}
-      <div aria-hidden="true" className="bleed-cream-soft-to-ink" />
+      {/* Benefits (cream-soft) → Robots (dark) */}
+      <div
+        aria-hidden="true"
+        style={{ height: "6rem", background: "linear-gradient(to bottom, var(--cream-soft), var(--navy-deep))" }}
+      />
       <RobotLineupSlider robots={robots} />
 
-      {/* ink → abyss comparison */}
-      <div aria-hidden="true" className="h-px bg-gradient-to-r from-transparent via-[rgba(255,228,92,0.2)] to-transparent" />
+      {/* Robots (dark) → Comparison (abyss): same family, very subtle deepening */}
+      <div
+        aria-hidden="true"
+        style={{ height: "3rem", background: "linear-gradient(to bottom, var(--navy-deep), var(--navy-abyss))" }}
+      />
       <ComparisonTable />
 
-      {/* abyss → ink proof */}
-      <div aria-hidden="true" className="h-16 bg-gradient-to-b from-[var(--navy-abyss)] to-[var(--navy-deep)]" />
+      {/* Comparison (abyss) → Proof (dark): same family */}
+      <div
+        aria-hidden="true"
+        style={{ height: "3rem", background: "linear-gradient(to bottom, var(--navy-abyss), var(--navy-deep))" }}
+      />
       <InsiderProof achievements={achievements} teamLead={teamLead} teamStats={teamStats} teamYears={teamYears} />
 
-      {/* ink → cream gallery */}
-      <div aria-hidden="true" className="bleed-ink-to-cream" />
+      {/* Proof (dark) → Gallery (cream) */}
+      <div
+        aria-hidden="true"
+        style={{ height: "6rem", background: "linear-gradient(to bottom, var(--navy-deep), var(--cream))" }}
+      />
       <CampaignGallery gallery={gallery} />
 
-      {/* cream → abyss sponsor */}
-      <div aria-hidden="true" className="bleed-cream-to-navy" />
+      {/* Gallery (cream) → Sponsor (abyss) */}
+      <div
+        aria-hidden="true"
+        style={{ height: "6rem", background: "linear-gradient(to bottom, var(--cream), var(--navy-abyss))" }}
+      />
       <SponsorFinalCTA />
     </main>
   );
