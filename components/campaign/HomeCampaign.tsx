@@ -27,7 +27,6 @@ import {
   TrophyIcon,
 } from "@/components/shared/Icons";
 import { MagneticButton } from "@/components/shared/MagneticButton";
-import { RobotModelViewer } from "@/components/shared/RobotModelViewer";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import type {
   AboutCard,
@@ -223,6 +222,13 @@ function CampaignHero({ hero }: { hero: HeroData }) {
     { value: "3", label: "Robot Units" },
   ];
 
+  const hudLabels = [
+    { text: "Vision Lock ✓", style: { top: "28%", left: "54%"  } },
+    { text: "Match Ready",   style: { top: "44%", right: "3%"  } },
+    { text: "KRI 2024 ★",   style: { top: "68%", left: "50%"  } },
+    { text: "Autonomous",    style: { top: "76%", right: "5%"  } },
+  ];
+
   return (
     <section
       className="relative min-h-screen overflow-hidden"
@@ -238,45 +244,137 @@ function CampaignHero({ hero }: { hero: HeroData }) {
         });
       }}
       onPointerLeave={() => setTilt({ x: 0, y: 0 })}
-      style={{ perspective: "1400px" }}
     >
-      {/* ── Deep background ── */}
+      {/* ── Full-bleed hero image ── */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{
+          transform: `translate3d(${tilt.x * -8}px, ${tilt.y * -5}px, 0) scale(1.04)`,
+          transition: "transform 0.5s ease",
+          willChange: "transform",
+        }}
+      >
+        <Image
+          alt=""
+          className="object-cover object-center"
+          fill
+          priority
+          quality={95}
+          sizes="100vw"
+          src="/images/hero-integrated.png"
+        />
+      </div>
+
+      {/* ── Left gradient veil — keeps text readable ── */}
       <div
         aria-hidden="true"
         className="absolute inset-0"
         style={{
           background: `
-            radial-gradient(ellipse 100% 70% at 50% -5%, rgba(255,228,92,0.18), transparent 55%),
-            radial-gradient(ellipse 70% 50% at 80% 40%, rgba(38,55,122,0.55), transparent),
-            radial-gradient(ellipse 50% 40% at 10% 85%, rgba(15,22,55,0.9), transparent),
-            var(--navy-abyss)
+            linear-gradient(
+              to right,
+              rgba(5,8,22,0.97) 0%,
+              rgba(5,8,22,0.92) 22%,
+              rgba(5,8,22,0.72) 38%,
+              rgba(5,8,22,0.3) 52%,
+              transparent 68%
+            )
           `,
         }}
       />
 
-      {/* ── Dot-grid overlay ── */}
+      {/* ── Bottom vignette ── */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 bottom-0 h-40"
+        style={{
+          background: "linear-gradient(to top, rgba(5,8,22,0.85), transparent)",
+        }}
+      />
+
+      {/* ── Top vignette ── */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 top-0 h-32"
+        style={{
+          background: "linear-gradient(to bottom, rgba(5,8,22,0.7), transparent)",
+        }}
+      />
+
+      {/* ── Dot-grid overlay — left third only ── */}
       <div
         aria-hidden="true"
         className="absolute inset-0"
         style={{
-          backgroundImage: "radial-gradient(circle at 1.5px 1.5px, rgba(255,228,92,0.065) 1px, transparent 0)",
-          backgroundSize: "30px 30px",
-          maskImage: "linear-gradient(to bottom, black 40%, transparent 90%)",
+          backgroundImage: "radial-gradient(circle at 1.5px 1.5px, rgba(255,228,92,0.06) 1px, transparent 0)",
+          backgroundSize: "28px 28px",
+          maskImage: "linear-gradient(to right, black 0%, black 30%, transparent 55%)",
         }}
       />
 
       {/* ── Animated scan line ── */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[3px] overflow-hidden">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[2px] overflow-hidden">
         <div
-          className="h-full bg-gradient-to-r from-transparent via-[rgba(255,228,92,0.7)] to-transparent"
-          style={{ width: "40%", animation: "scan 4s ease-in-out infinite" }}
+          className="h-full bg-gradient-to-r from-transparent via-[rgba(255,228,92,0.6)] to-transparent"
+          style={{ width: "40%", animation: "scan 5s ease-in-out infinite" }}
         />
+      </div>
+
+      {/* ── HUD floating labels — right side (desktop only) ── */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden lg:block">
+        {hudLabels.map((l, i) => (
+          <div
+            key={l.text}
+            className="absolute"
+            style={l.style}
+          >
+            <span
+              className="float-y-slow inline-block rounded-full border border-[rgba(255,228,92,0.35)] bg-[rgba(5,8,22,0.78)] px-3 py-1.5 font-mono text-[0.6rem] font-black uppercase tracking-[0.16em] text-[var(--yellow)] shadow-[0_4px_24px_rgba(0,0,0,0.6)] backdrop-blur-xl"
+              style={{ animationDelay: `${i * 0.35}s` }}
+            >
+              {l.text}
+            </span>
+          </div>
+        ))}
+
+        {/* Scanning ring around robot — positioned right-center */}
+        <div
+          className="absolute rounded-full border border-dashed border-[rgba(255,228,92,0.2)]"
+          style={{
+            top: "15%", right: "8%",
+            width: "42%", paddingTop: "42%",
+            animation: "rotateSlow 28s linear infinite",
+          }}
+        />
+        <div
+          className="absolute rounded-full border border-[rgba(255,228,92,0.1)]"
+          style={{
+            top: "22%", right: "13%",
+            width: "30%", paddingTop: "30%",
+            animation: "rotateSlow 18s linear infinite reverse",
+          }}
+        />
+
+        {/* Small crosshair at ball position */}
+        <div
+          className="absolute"
+          style={{ bottom: "22%", left: "60%" }}
+        >
+          <svg aria-hidden="true" fill="none" viewBox="0 0 40 40" width="40">
+            <circle cx="20" cy="20" r="7" stroke="rgba(255,228,92,0.5)" strokeWidth="1" />
+            <line stroke="rgba(255,228,92,0.4)" strokeWidth="1" x1="20" x2="20" y1="0" y2="12" />
+            <line stroke="rgba(255,228,92,0.4)" strokeWidth="1" x1="20" x2="20" y1="28" y2="40" />
+            <line stroke="rgba(255,228,92,0.4)" strokeWidth="1" x1="0" x2="12" y1="20" y2="20" />
+            <line stroke="rgba(255,228,92,0.4)" strokeWidth="1" x1="28" x2="40" y1="20" y2="20" />
+          </svg>
+        </div>
       </div>
 
       {/* ── Main content ── */}
       <div className="relative z-10 flex min-h-screen flex-col pt-24 sm:pt-28">
 
-        {/* Top bar — kicker + badge */}
+        {/* Top bar */}
         <div className="mx-auto w-full max-w-[1320px] px-4 sm:px-8">
           <div className="flex items-center justify-between">
             <div className="champ-badge">
@@ -292,15 +390,14 @@ function CampaignHero({ hero }: { hero: HeroData }) {
           </div>
         </div>
 
-        {/* Hero body — headline left + robot right */}
-        <div className="mx-auto mt-6 grid w-full max-w-[1320px] flex-1 items-center gap-4 px-4 pb-10 sm:px-8 lg:grid-cols-[1fr_1.2fr] lg:gap-8">
+        {/* Headline area — left side only */}
+        <div className="mx-auto mt-8 w-full max-w-[1320px] flex-1 px-4 sm:px-8">
+          <div className="flex flex-col max-w-[44rem] lg:max-w-[46%]">
 
-          {/* ── Left: headline column ── */}
-          <div className="flex flex-col">
             {/* Giant headline */}
             <h1
               className="hero-wordmark"
-              style={{ fontSize: "clamp(4.5rem, 14vw, 11.5rem)" }}
+              style={{ fontSize: "clamp(4.5rem, 12vw, 10rem)" }}
             >
               <span className="block">Humanoid</span>
               <span
@@ -308,9 +405,9 @@ function CampaignHero({ hero }: { hero: HeroData }) {
                 style={{
                   color: "var(--yellow)",
                   textShadow: "0.04em 0.06em 0 var(--navy-black)",
-                  transform: `translate3d(${tilt.x * -8}px, 0, 0)`,
+                  transform: `translate3d(${tilt.x * -6}px, 0, 0)`,
                   display: "inline-block",
-                  transition: "transform 0.3s ease",
+                  transition: "transform 0.35s ease",
                 }}
               >
                 Robot
@@ -318,26 +415,26 @@ function CampaignHero({ hero }: { hero: HeroData }) {
               <span className="block">Soccer</span>
               <span
                 className="block"
-                style={{ fontSize: "0.55em", letterSpacing: "-0.04em", color: "rgba(248,247,240,0.5)", lineHeight: 1.1 }}
+                style={{ fontSize: "0.52em", letterSpacing: "-0.03em", color: "rgba(248,247,240,0.45)", lineHeight: 1.1 }}
               >
                 Team.
               </span>
             </h1>
 
-            {/* Decorative line */}
-            <div className="mt-6 flex items-center gap-4">
-              <div className="h-px flex-1 bg-gradient-to-r from-[rgba(255,228,92,0.5)] to-transparent" />
-              <span className="font-mono text-[0.6rem] font-black uppercase tracking-[0.22em] text-[rgba(248,247,240,0.4)]">
+            {/* Rule */}
+            <div className="mt-5 flex items-center gap-4">
+              <div className="h-px w-12 bg-gradient-to-r from-[rgba(255,228,92,0.6)] to-transparent" />
+              <span className="font-mono text-[0.58rem] font-black uppercase tracking-[0.22em] text-[rgba(248,247,240,0.38)]">
                 AROC_PL · Polinema
               </span>
             </div>
 
             {/* Description */}
-            <p className="mt-6 max-w-[28rem] text-[1rem] leading-[1.9] text-[rgba(248,247,240,0.68)] sm:text-[1.08rem]">
+            <p className="mt-5 max-w-[28rem] text-[1rem] leading-[1.85] text-[rgba(248,247,240,0.68)] sm:text-[1.05rem]">
               {hero.description}
             </p>
 
-            {/* CTA cluster */}
+            {/* CTA */}
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
               <MagneticButton className="btn-gold" href="#robots">
                 Lihat Robot
@@ -348,123 +445,30 @@ function CampaignHero({ hero }: { hero: HeroData }) {
               </Link>
             </div>
 
-            {/* Quick stats strip */}
+            {/* Quick stats */}
             <div className="mt-10 flex items-center gap-3">
-              {heroFacts.map((fact, i) => (
+              {heroFacts.map((fact) => (
                 <div key={fact.label} className="stat-pill">
-                  <span className="numeral text-[1.6rem] leading-none text-[var(--yellow)]">
+                  <span className="numeral text-[1.55rem] leading-none text-[var(--yellow)]">
                     {fact.value}
                   </span>
-                  <span className="font-mono text-[0.55rem] font-black uppercase tracking-[0.18em] text-[rgba(248,247,240,0.46)]">
+                  <span className="font-mono text-[0.53rem] font-black uppercase tracking-[0.18em] text-[rgba(248,247,240,0.44)]">
                     {fact.label}
                   </span>
                 </div>
               ))}
             </div>
           </div>
-
-          {/* ── Right: robot visual ── */}
-          <div className="relative">
-            {/* Outer glow */}
-            <div
-              aria-hidden="true"
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
-              style={{
-                width: "80%",
-                paddingTop: "80%",
-                background: "radial-gradient(circle, rgba(255,228,92,0.22), rgba(255,228,92,0.04) 55%, transparent 72%)",
-                filter: "blur(2px)",
-                transform: `translate(-50%, -50%) translate3d(${tilt.x * 20}px, ${tilt.y * 12}px, 0)`,
-                transition: "transform 0.4s ease",
-                animation: "glowPulse 4s ease-in-out infinite",
-              }}
-            />
-
-            {/* Ring decoration */}
-            <div
-              aria-hidden="true"
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[rgba(255,228,92,0.12)]"
-              style={{ width: "90%", paddingTop: "90%", animation: "rotateSlow 30s linear infinite" }}
-            />
-            <div
-              aria-hidden="true"
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-[rgba(255,228,92,0.06)]"
-              style={{ width: "106%", paddingTop: "106%", animation: "rotateSlow 50s linear infinite reverse" }}
-            />
-
-            {/* Floating labels — desktop */}
-            <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden lg:block">
-              {[
-                { text: "Vision lock ✓", top: "14%", left: "0%", delay: 0 },
-                { text: "Match ready", top: "30%", right: "-2%", delay: 0.6 },
-                { text: "KRI 2024 ★", bottom: "36%", left: "-2%", delay: 0.3 },
-                { text: "Autonomous", bottom: "22%", right: "1%", delay: 0.9 },
-              ].map((l) => (
-                <div
-                  key={l.text}
-                  className="absolute"
-                  style={{ top: l.top, bottom: l.bottom, left: l.left, right: l.right }}
-                >
-                  <span
-                    className="float-y-slow inline-block rounded-full border border-[rgba(255,228,92,0.28)] bg-[rgba(5,8,22,0.82)] px-3 py-1.5 font-mono text-[0.57rem] font-black uppercase tracking-[0.14em] text-[var(--yellow)] shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-xl"
-                    style={{ animationDelay: `${l.delay}s` }}
-                  >
-                    {l.text}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            {/* Robot model */}
-            <RobotModelViewer
-              alt="Robot humanoid AROC_PL"
-              className="relative z-10 mx-auto w-full max-w-[620px] drop-shadow-[0_50px_120px_rgba(0,0,0,0.85)]"
-              modelSrc={hero.robotModel}
-              posterSrc={hero.robotImage}
-              priority
-              style={{
-                transform: `translate3d(${tilt.x * -20}px, ${tilt.y * -12}px, 0) rotateY(${tilt.x * 6}deg) rotateX(${tilt.y * -3}deg)`,
-                transition: "transform 0.35s ease",
-              }}
-            />
-
-            {/* Bottom data card */}
-            <div
-              className="absolute bottom-0 left-1/2 z-20 w-[calc(100%-3rem)] max-w-[28rem] -translate-x-1/2 translate-y-[30%] rounded-2xl border border-[rgba(255,228,92,0.22)] bg-[rgba(5,8,22,0.88)] p-4 backdrop-blur-xl sm:p-5"
-              style={{ boxShadow: "0 24px 60px -30px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,228,92,0.1)" }}
-            >
-              <div className="flex items-center gap-4">
-                <div>
-                  <div className="font-mono text-[0.56rem] font-black uppercase tracking-[0.2em] text-[var(--yellow)]">
-                    {hero.systemCard.label}
-                  </div>
-                  <div className="mt-0.5 font-display text-[1.4rem] font-black uppercase leading-none text-[var(--cream)]">
-                    {hero.systemCard.title}
-                  </div>
-                </div>
-                <div className="ml-auto flex gap-5">
-                  {hero.systemCard.metrics.map((m) => (
-                    <div key={m.label} className="text-center">
-                      <div className="numeral text-[1.5rem] leading-none text-[var(--yellow)]">{m.value}</div>
-                      <div className="mt-1 font-mono text-[0.5rem] font-black uppercase tracking-[0.16em] text-[rgba(248,247,240,0.45)]">
-                        {m.label}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
-      {/* ── Bottom scroll prompt ── */}
+      {/* ── Scroll indicator ── */}
       <div className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2">
         <div className="flex flex-col items-center gap-2">
-          <span className="font-mono text-[0.55rem] font-black uppercase tracking-[0.2em] text-[rgba(248,247,240,0.35)]">
+          <span className="font-mono text-[0.52rem] font-black uppercase tracking-[0.2em] text-[rgba(248,247,240,0.3)]">
             Scroll
           </span>
-          <div className="flex h-8 w-5 items-start justify-center rounded-full border border-[rgba(248,247,240,0.18)] pt-1.5">
+          <div className="flex h-8 w-5 items-start justify-center rounded-full border border-[rgba(248,247,240,0.16)] pt-1.5">
             <div
               className="h-2 w-0.5 rounded-full bg-[var(--yellow)]"
               style={{ animation: "floatY 1.6s ease-in-out infinite" }}
@@ -475,6 +479,7 @@ function CampaignHero({ hero }: { hero: HeroData }) {
     </section>
   );
 }
+
 
 /* ===================================================================
    3. Yellow marquee tape
