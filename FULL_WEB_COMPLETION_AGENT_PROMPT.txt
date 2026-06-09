@@ -1,0 +1,198 @@
+You are working inside this repo:
+C:\Users\GabrielBatavia\Documents\github_project\arocws\web
+
+Your mission is to fully restore, complete, and polish the AROC_PL website so it feels production-ready, visually coherent, smooth, interactive, and premium on both desktop and mobile.
+
+Do not stop at partial cleanup. Implement the full pass.
+
+PRIMARY OBJECTIVE
+Turn the current site into a finished experience:
+- fix layout and overlay issues
+- repair broken or awkward responsive behavior
+- improve visual hierarchy and spacing
+- add smooth, tasteful animation
+- add much high-quality interactive visual asset that reacts to the user's mouse or pointer
+- make the site feel complete, not like a draft
+
+CURRENT STACK
+- Next.js 16 App Router
+- React 19
+- Tailwind CSS v4
+- TypeScript
+
+IMPORTANT ROUTES AND FILES
+- app/page.tsx
+- app/about/page.tsx
+- app/globals.css
+- components/layout/Navbar.tsx
+- components/layout/Footer.tsx
+- components/sections/Hero.tsx
+- components/sections/About.tsx
+- components/sections/Technology.tsx
+- components/sections/Robots.tsx
+- components/sections/Team.tsx
+- components/sections/Achievements.tsx
+- components/sections/Gallery.tsx
+- components/about/AboutHero.tsx
+- components/about/VisionMission.tsx
+- components/about/Mentors.tsx
+- components/about/TeamDirectory.tsx
+- data/aroc.ts
+- data/about.ts
+- public/images/*
+
+REAL ISSUES OBSERVED IN THE CURRENT BUILD
+These are not guesses. They were found from the current code and screenshot pass.
+
+1. Home hero is breaking badly on mobile.
+- Decorative glow and absolute-positioned visual elements bleed over the top-left area.
+- The hero composition is too large and unstable for small screens.
+- The title is oversized and dominates the viewport too aggressively.
+- CTA visibility suffers because the first screen is consumed by broken composition.
+
+2. Home hero composition is also awkward on desktop.
+- The floating status/system panels overlap the hero art in a cramped way.
+- The right-side hero stack feels cropped and visually disconnected from the main headline.
+- Decorative black masking blocks feel like hacks instead of intentional composition.
+
+3. Mobile bounds are unstable.
+- Full-page mobile capture of the home page failed because the rendered page exceeded screenshot dimension limits.
+- Treat this as a real overflow / blur / containment / runaway layout bug that must be fixed.
+
+4. Several assets and sections still feel unfinished or fake-complete.
+- Team section contains previous/next arrow controls that are not wired to real behavior.
+- Robot cards contain "View Details" buttons that do not lead anywhere meaningful.
+- About page still shows an example-data note pointing to /data/about.ts, which makes the page feel unfinished.
+
+5. Some image handling is incorrect.
+- Next.js warned that several member images are having width or height changed without preserving aspect ratio.
+- Fix image sizing so the warnings disappear and portraits render cleanly.
+
+6. Gallery reliability is weak.
+- In desktop full-page capture, gallery tiles appeared blank/dark instead of clearly readable media.
+- Make gallery rendering resilient and visually present during real scrolling and screenshot verification.
+
+7. Motion is currently too shallow.
+- The site mostly relies on static layout plus simple hover transitions.
+- It needs cohesive entrance motion, section reveal behavior, and higher-quality micro-interactions.
+
+8. The site needs a true interactive "wow" moment.
+- Add at least one meaningful interactive visual asset, ideally in the hero or another major showcase section.
+- It should react to mouse/pointer movement in a polished way.
+- It must still degrade gracefully on touch devices and respect reduced-motion preferences.
+
+NON-NEGOTIABLE OUTCOME
+When you finish, the website should feel like a real premium robotics brand site, not a student mockup with cool colors.
+
+DESIGN DIRECTION
+Keep and refine the existing AROC_PL identity:
+- futuristic
+- robotics / engineering
+- dark interface with cyan / blue / gold accents
+- crisp, technical, high-contrast
+
+But improve the composition so it feels intentional:
+- cleaner hierarchy
+- better breathing room
+- fewer hacky absolute overlays
+- stronger alignment
+- more controlled glow usage
+- better mobile restraint
+
+DO NOT
+- do not throw away the whole identity and replace it with a generic SaaS design
+- do not add random decorative clutter
+- do not leave non-functional buttons pretending to be features
+- do not create fragile animation that causes layout shift
+- do not let text, cards, or assets overlap in broken ways
+- do not invent fake achievements, fake team members, or fake institutional facts beyond what is already in the repo
+
+IMPLEMENTATION REQUIREMENTS
+1. Hero rebuild
+- Rework the home hero so it is stable on all breakpoints.
+- Keep it visually strong, but reduce the current overflow and collision problems.
+- Replace fragile absolute masking tricks with a cleaner layout system.
+- Ensure the first viewport shows a balanced composition on desktop and mobile.
+- Keep CTA buttons visible and important.
+
+2. Interactive asset
+- Add one polished interactive asset or visual system.
+- Preferred options:
+  - robot illustration / image stack with parallax tilt and cursor-follow glow
+  - layered field / grid / HUD scene reacting to pointer position
+  - interactive showcase card cluster that subtly shifts with mouse movement
+- Use performant transforms only.
+- Include reduced-motion fallback.
+- On mobile, adapt the interaction to touch-safe behavior or static enhanced state.
+
+3. Motion system
+- Add consistent entrance and scroll-reveal animation across sections.
+- Add smooth hover motion to cards, media, CTAs, and important stat blocks.
+- Keep motion restrained, premium, and performance-safe.
+- If needed, use a proven animation library with minimal footprint.
+
+4. Responsive cleanup
+- Fix all major layout issues on:
+  - 360x800
+  - 390x844
+  - 768x1024
+  - 1280x720
+  - 1440x900
+- No clipped headings.
+- No unreadable overlays.
+- No giant dead zones caused by broken spacing.
+- No horizontal overflow.
+
+5. Functional integrity
+- Either wire or redesign all currently fake-interactive controls.
+- Team arrows must either work properly or be removed/replaced.
+- Robot card actions must either open meaningful detail states, scroll to richer robot info, or be reworked into non-deceptive UI.
+- Any CTA must have a real destination or real interaction.
+
+6. About page completion
+- Make the About page feel as finished as the Home page.
+- Improve hierarchy, responsiveness, and motion there too.
+- Remove or redesign the obvious "example data" note so it no longer feels like unfinished scaffolding in the live UI.
+
+7. Image correctness
+- Fix image rendering so Next.js aspect ratio warnings go away.
+- Make portraits, mentors, and gallery images display intentionally and consistently.
+- Prefer layouts that preserve image integrity instead of cropping in awkward ways.
+
+8. Gallery completion
+- Ensure gallery media actually appears, feels alive, and has hover/focus polish.
+- Improve loading behavior and visual confirmation that the section is populated.
+- If useful, add lightbox or focused preview behavior, but only if it is implemented cleanly.
+
+TECHNICAL EXPECTATIONS
+- Follow existing repo structure unless a small refactor clearly improves maintainability.
+- Keep components modular and readable.
+- Use accessible semantics.
+- Respect prefers-reduced-motion.
+- Avoid layout thrashing and expensive effects.
+- Use GPU-friendly transforms and opacity for animation when possible.
+- Preserve good Lighthouse-style habits where practical.
+
+QUALITY BAR
+Before you are done, verify all of the following:
+- home page loads cleanly
+- about page loads cleanly
+- no broken overlap in the hero on desktop
+- no broken overlap in the hero on mobile
+- no obvious clipped text or uncontrolled overflow
+- gallery visibly renders content
+- major CTA/buttons feel intentional
+- interactive asset works with mouse/pointer
+- reduced-motion mode still feels clean
+- lint passes
+
+FINAL DELIVERABLES
+When you finish, provide:
+1. A short summary of what you changed
+2. The main files you edited
+3. The key interaction and animation decisions
+4. What you verified across breakpoints
+5. Any remaining gaps, if there are any
+
+EXECUTION STYLE
+Do the work end to end. Do not stop at analysis. Do not just suggest improvements. Implement them.

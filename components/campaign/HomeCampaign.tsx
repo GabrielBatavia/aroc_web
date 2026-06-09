@@ -69,30 +69,35 @@ const storySteps = [
     title: "Rangka yang siap jatuh, bangun, lalu jalan lagi.",
     body: "Hardware AROC_PL dibangun untuk realita pertandingan: benturan, recovery, servis cepat, dan iterasi tiap sesi uji.",
     icon: CpuIcon,
+    accentColor: "rgba(255, 228, 92, 0.9)",
   },
   {
     kicker: "02 / Vision",
     title: "Kamera membaca bola, garis, dan gawang.",
     body: "Pipeline persepsi memberi robot konteks lapangan supaya keputusan tidak hanya terlihat pintar di demo, tapi berguna di arena.",
     icon: EyeIcon,
+    accentColor: "rgba(255, 228, 92, 0.9)",
   },
   {
     kicker: "03 / Control",
     title: "Gerak humanoid dikunci oleh kontrol embedded.",
     body: "Motor, sensor, daya, dan komputasi onboard disatukan agar robot tetap stabil saat mengejar bola.",
     icon: RadioIcon,
+    accentColor: "rgba(255, 228, 92, 0.9)",
   },
   {
     kicker: "04 / Strategy",
     title: "Satu lineup, tiga peran, keputusan cepat.",
     body: "Penyerang, kiper, dan bek menjalankan perilaku berbeda agar pertandingan terasa seperti sepak bola.",
     icon: CodeIcon,
+    accentColor: "rgba(255, 228, 92, 0.9)",
   },
   {
     kicker: "05 / Match Ready",
     title: "Bukan demo. Sistem tanding.",
     body: "KRI, testing, tekanan kompetisi — setiap sistem diuji di arena nyata, bukan hanya di video presentasi.",
     icon: TrophyIcon,
+    accentColor: "rgba(255, 228, 92, 0.9)",
   },
 ];
 
@@ -180,9 +185,9 @@ function CampaignLoader() {
     <div
       aria-hidden="true"
       className={`fixed inset-0 z-[200] flex items-center justify-center transition-opacity duration-700 ${phase === "fading" ? "pointer-events-none opacity-0" : "opacity-100"}`}
-      style={{ background: "var(--navy-deep)" }}
+      style={{ background: "var(--navy-abyss)" }}
     >
-      <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(circle at 2px 2px, rgba(255,228,92,0.1) 1px, transparent 0)", backgroundSize: "28px 28px" }} />
+      <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(circle at 1.5px 1.5px, rgba(255,228,92,0.08) 1px, transparent 0)", backgroundSize: "28px 28px" }} />
       <div className="relative flex flex-col items-center gap-6">
         <span className="flex size-20 items-center justify-center rounded-full bg-[var(--yellow)] p-2 shadow-[0_0_0_8px_rgba(255,228,92,0.12),0_0_0_20px_rgba(255,228,92,0.04)]">
           <ArocGeneratedMark className="size-full" />
@@ -196,7 +201,7 @@ function CampaignLoader() {
 }
 
 /* ===================================================================
-   2. Hero stage
+   2. Hero — cinematic, robot-first
    =================================================================== */
 
 function CampaignHero({ hero }: { hero: HeroData }) {
@@ -212,109 +217,258 @@ function CampaignHero({ hero }: { hero: HeroData }) {
     return () => query.removeEventListener("change", update);
   }, []);
 
+  const heroFacts = [
+    { value: "2024", label: "KRI Champion" },
+    { value: "11+", label: "Engineers" },
+    { value: "3", label: "Robot Units" },
+  ];
+
   return (
-    <section className="campaign-stage relative min-h-screen overflow-hidden pt-28 sm:pt-32 lg:pt-36" id="top">
-      {/* Background glows */}
-      <div aria-hidden="true" className="absolute inset-0">
-        <div className="absolute left-[8%] top-[18%] h-72 w-72 rounded-full bg-[rgba(255,228,92,0.16)] blur-3xl" />
-        <div className="absolute right-[4%] top-[10%] h-[34rem] w-[34rem] rounded-full bg-[rgba(38,55,122,0.55)] blur-3xl" />
+    <section
+      className="relative min-h-screen overflow-hidden"
+      id="top"
+      ref={stageRef}
+      onPointerMove={(e) => {
+        if (!canMove) return;
+        const rect = stageRef.current?.getBoundingClientRect();
+        if (!rect) return;
+        setTilt({
+          x: (e.clientX - (rect.left + rect.width / 2)) / rect.width,
+          y: (e.clientY - (rect.top + rect.height / 2)) / rect.height,
+        });
+      }}
+      onPointerLeave={() => setTilt({ x: 0, y: 0 })}
+      style={{ perspective: "1400px" }}
+    >
+      {/* ── Deep background ── */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{
+          background: `
+            radial-gradient(ellipse 100% 70% at 50% -5%, rgba(255,228,92,0.18), transparent 55%),
+            radial-gradient(ellipse 70% 50% at 80% 40%, rgba(38,55,122,0.55), transparent),
+            radial-gradient(ellipse 50% 40% at 10% 85%, rgba(15,22,55,0.9), transparent),
+            var(--navy-abyss)
+          `,
+        }}
+      />
+
+      {/* ── Dot-grid overlay ── */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{
+          backgroundImage: "radial-gradient(circle at 1.5px 1.5px, rgba(255,228,92,0.065) 1px, transparent 0)",
+          backgroundSize: "30px 30px",
+          maskImage: "linear-gradient(to bottom, black 40%, transparent 90%)",
+        }}
+      />
+
+      {/* ── Animated scan line ── */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[3px] overflow-hidden">
+        <div
+          className="h-full bg-gradient-to-r from-transparent via-[rgba(255,228,92,0.7)] to-transparent"
+          style={{ width: "40%", animation: "scan 4s ease-in-out infinite" }}
+        />
       </div>
 
-      <div className="relative z-10 mx-auto grid max-w-[1280px] gap-8 px-4 pb-24 sm:px-8 lg:grid-cols-[0.88fr_1.12fr] lg:items-center lg:pb-28">
-        {/* ---- Text column ---- */}
-        <div className="relative z-20">
-          <div className="champ-badge">
-            <TrophyIcon className="size-4" />
-            KRI Humanoid Champion 2024
-          </div>
+      {/* ── Main content ── */}
+      <div className="relative z-10 flex min-h-screen flex-col pt-24 sm:pt-28">
 
-          <div className="relative mt-7">
-            <h1 className="campaign-title max-w-[7.4ch] text-[clamp(4.6rem,15vw,12rem)]">
-              Humanoid <span>meets</span> Football.
-            </h1>
-            <DoodleUnderline className="absolute -bottom-4 left-2 w-[17rem] rotate-[-1deg] text-[var(--yellow)] sm:w-[24rem]" />
-          </div>
-
-          <p className="mt-10 max-w-[35rem] text-[1.04rem] leading-[1.85] text-[rgba(248,247,240,0.76)] sm:text-[1.12rem]">
-            {hero.description}
-          </p>
-
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-            <MagneticButton className="btn-gold" href="#story">
-              Lihat Cara Kerja
-              <ArrowRightIcon className="size-5" />
-            </MagneticButton>
-            <Link className="btn-ghost-paper" href="#sponsor">
-              Jadi Sponsor
-            </Link>
+        {/* Top bar — kicker + badge */}
+        <div className="mx-auto w-full max-w-[1320px] px-4 sm:px-8">
+          <div className="flex items-center justify-between">
+            <div className="champ-badge">
+              <TrophyIcon className="size-4" />
+              <span>KRI Humanoid Champion 2024</span>
+            </div>
+            <div className="hidden items-center gap-2 sm:flex">
+              <span className="inline-block h-2 w-2 animate-ping rounded-full bg-[var(--yellow)] opacity-75" />
+              <span className="font-mono text-[0.6rem] font-black uppercase tracking-[0.22em] text-[rgba(248,247,240,0.55)]">
+                Sistem Aktif
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* ---- Robot stage ---- */}
-        <div className="relative z-10 mx-auto w-full max-w-[720px]">
-          <DoodleArrow className="absolute -left-6 top-8 z-20 hidden w-36 rotate-[-15deg] text-[var(--yellow)] md:block" />
-          <SensorCone className="absolute right-0 top-10 z-0 hidden w-56 text-[rgba(255,228,92,0.36)] md:block" />
-          <SoccerPath className="absolute -bottom-8 left-1/2 z-20 w-[94%] -translate-x-1/2 text-[rgba(255,228,92,0.45)]" />
+        {/* Hero body — headline left + robot right */}
+        <div className="mx-auto mt-6 grid w-full max-w-[1320px] flex-1 items-center gap-4 px-4 pb-10 sm:px-8 lg:grid-cols-[1fr_1.2fr] lg:gap-8">
 
-          <div
-            ref={stageRef}
-            className="relative min-h-[520px] overflow-visible rounded-[2.8rem] border border-[rgba(255,228,92,0.22)] bg-[rgba(17,26,61,0.42)] shadow-[0_48px_130px_-74px_rgba(0,0,0,1)] backdrop-blur sm:min-h-[660px]"
-            onPointerLeave={() => setTilt({ x: 0, y: 0 })}
-            onPointerMove={(e) => {
-              if (!canMove) return;
-              const rect = stageRef.current?.getBoundingClientRect();
-              if (!rect) return;
-              setTilt({ x: (e.clientX - (rect.left + rect.width / 2)) / rect.width, y: (e.clientY - (rect.top + rect.height / 2)) / rect.height });
-            }}
-            style={{ perspective: "1200px" }}
-          >
-            <div className="absolute inset-x-[12%] top-[8%] h-[60%] rounded-full bg-[radial-gradient(circle,rgba(255,228,92,0.26),rgba(255,228,92,0.06)_48%,transparent_72%)] blur-3xl" />
-            <div className="absolute inset-5 rounded-[2.2rem] border border-[rgba(248,247,240,0.08)]" />
+          {/* ── Left: headline column ── */}
+          <div className="flex flex-col">
+            {/* Giant headline */}
+            <h1
+              className="hero-wordmark"
+              style={{ fontSize: "clamp(4.5rem, 14vw, 11.5rem)" }}
+            >
+              <span className="block">Humanoid</span>
+              <span
+                className="block"
+                style={{
+                  color: "var(--yellow)",
+                  textShadow: "0.04em 0.06em 0 var(--navy-black)",
+                  transform: `translate3d(${tilt.x * -8}px, 0, 0)`,
+                  display: "inline-block",
+                  transition: "transform 0.3s ease",
+                }}
+              >
+                Robot
+              </span>
+              <span className="block">Soccer</span>
+              <span
+                className="block"
+                style={{ fontSize: "0.55em", letterSpacing: "-0.04em", color: "rgba(248,247,240,0.5)", lineHeight: 1.1 }}
+              >
+                Team.
+              </span>
+            </h1>
 
-            {/* Status + 3D badge */}
-            <div className="absolute left-5 top-5 z-20 rounded-2xl border border-[rgba(255,228,92,0.28)] bg-[rgba(5,8,22,0.72)] p-4 backdrop-blur-xl">
-              <div className="font-mono text-[0.58rem] font-black uppercase tracking-[0.2em] text-[var(--yellow)]">Status</div>
-              <div className="mt-1 font-display text-[1.7rem] font-black uppercase leading-none text-[var(--cream)]">Siap Tanding</div>
+            {/* Decorative line */}
+            <div className="mt-6 flex items-center gap-4">
+              <div className="h-px flex-1 bg-gradient-to-r from-[rgba(255,228,92,0.5)] to-transparent" />
+              <span className="font-mono text-[0.6rem] font-black uppercase tracking-[0.22em] text-[rgba(248,247,240,0.4)]">
+                AROC_PL · Polinema
+              </span>
             </div>
-            <div className="absolute right-5 top-5 z-20 rounded-full bg-[var(--yellow)] px-4 py-2 font-mono text-[0.62rem] font-black uppercase tracking-[0.18em] text-[var(--navy-deep)]">
-              Interactive 3D
+
+            {/* Description */}
+            <p className="mt-6 max-w-[28rem] text-[1rem] leading-[1.9] text-[rgba(248,247,240,0.68)] sm:text-[1.08rem]">
+              {hero.description}
+            </p>
+
+            {/* CTA cluster */}
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <MagneticButton className="btn-gold" href="#robots">
+                Lihat Robot
+                <ArrowRightIcon className="size-5" />
+              </MagneticButton>
+              <Link className="btn-ghost-paper" href="#story">
+                Cara Kerja
+              </Link>
             </div>
 
-            {/* Floating doodle labels — desktop only */}
-            <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-30 hidden md:block">
+            {/* Quick stats strip */}
+            <div className="mt-10 flex items-center gap-3">
+              {heroFacts.map((fact, i) => (
+                <div key={fact.label} className="stat-pill">
+                  <span className="numeral text-[1.6rem] leading-none text-[var(--yellow)]">
+                    {fact.value}
+                  </span>
+                  <span className="font-mono text-[0.55rem] font-black uppercase tracking-[0.18em] text-[rgba(248,247,240,0.46)]">
+                    {fact.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ── Right: robot visual ── */}
+          <div className="relative">
+            {/* Outer glow */}
+            <div
+              aria-hidden="true"
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
+              style={{
+                width: "80%",
+                paddingTop: "80%",
+                background: "radial-gradient(circle, rgba(255,228,92,0.22), rgba(255,228,92,0.04) 55%, transparent 72%)",
+                filter: "blur(2px)",
+                transform: `translate(-50%, -50%) translate3d(${tilt.x * 20}px, ${tilt.y * 12}px, 0)`,
+                transition: "transform 0.4s ease",
+                animation: "glowPulse 4s ease-in-out infinite",
+              }}
+            />
+
+            {/* Ring decoration */}
+            <div
+              aria-hidden="true"
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[rgba(255,228,92,0.12)]"
+              style={{ width: "90%", paddingTop: "90%", animation: "rotateSlow 30s linear infinite" }}
+            />
+            <div
+              aria-hidden="true"
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-[rgba(255,228,92,0.06)]"
+              style={{ width: "106%", paddingTop: "106%", animation: "rotateSlow 50s linear infinite reverse" }}
+            />
+
+            {/* Floating labels — desktop */}
+            <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden lg:block">
               {[
-                { text: "Vision locked", top: "22%", left: "4%", r: -4, d: 0 },
-                { text: "Match ready", top: "35%", right: "3%", r: 3, d: 0.5 },
-                { text: "KRI 2024", bottom: "38%", left: "3%", r: -2, d: 0.25 },
-                { text: "Autonomous play", bottom: "24%", right: "4%", r: 2, d: 0.7 },
+                { text: "Vision lock ✓", top: "14%", left: "0%", delay: 0 },
+                { text: "Match ready", top: "30%", right: "-2%", delay: 0.6 },
+                { text: "KRI 2024 ★", bottom: "36%", left: "-2%", delay: 0.3 },
+                { text: "Autonomous", bottom: "22%", right: "1%", delay: 0.9 },
               ].map((l) => (
-                <div key={l.text} className="absolute" style={{ top: l.top, bottom: l.bottom, left: l.left, right: l.right, transform: `rotate(${l.r}deg)` }}>
-                  <span className="float-y inline-block rounded-full border border-[rgba(255,228,92,0.3)] bg-[rgba(5,8,22,0.78)] px-3 py-1.5 font-mono text-[0.58rem] font-black uppercase tracking-[0.16em] text-[var(--yellow)] backdrop-blur-lg" style={{ animationDelay: `${l.d}s` }}>
+                <div
+                  key={l.text}
+                  className="absolute"
+                  style={{ top: l.top, bottom: l.bottom, left: l.left, right: l.right }}
+                >
+                  <span
+                    className="float-y-slow inline-block rounded-full border border-[rgba(255,228,92,0.28)] bg-[rgba(5,8,22,0.82)] px-3 py-1.5 font-mono text-[0.57rem] font-black uppercase tracking-[0.14em] text-[var(--yellow)] shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+                    style={{ animationDelay: `${l.delay}s` }}
+                  >
                     {l.text}
                   </span>
                 </div>
               ))}
             </div>
 
-            {/* 3D robot model */}
+            {/* Robot model */}
             <RobotModelViewer
               alt="Robot humanoid AROC_PL"
-              className="relative z-10 mx-auto max-w-[650px] drop-shadow-[0_38px_95px_rgba(0,0,0,0.76)] transition-transform duration-300"
+              className="relative z-10 mx-auto w-full max-w-[620px] drop-shadow-[0_50px_120px_rgba(0,0,0,0.85)]"
               modelSrc={hero.robotModel}
               posterSrc={hero.robotImage}
               priority
-              style={{ transform: `translate3d(${tilt.x * -18}px, ${tilt.y * -10}px, 0) rotateY(${tilt.x * 5}deg) rotateX(${tilt.y * -3}deg)` }}
+              style={{
+                transform: `translate3d(${tilt.x * -20}px, ${tilt.y * -12}px, 0) rotateY(${tilt.x * 6}deg) rotateX(${tilt.y * -3}deg)`,
+                transition: "transform 0.35s ease",
+              }}
             />
 
-            {/* Bottom fact annotations */}
-            <div className="absolute bottom-5 left-5 right-5 z-20 grid gap-3 sm:grid-cols-3">
-              {[["11+", "Engineers"], ["3", "Robots"], ["2024", "Champion"]].map(([v, lab]) => (
-                <div className="rounded-2xl border border-[rgba(248,247,240,0.12)] bg-[rgba(5,8,22,0.72)] p-4 backdrop-blur-xl" key={lab}>
-                  <div className="numeral text-[2.5rem] leading-none text-[var(--yellow)]">{v}</div>
-                  <div className="mt-2 font-mono text-[0.56rem] font-black uppercase tracking-[0.18em] text-[rgba(248,247,240,0.54)]">{lab}</div>
+            {/* Bottom data card */}
+            <div
+              className="absolute bottom-0 left-1/2 z-20 w-[calc(100%-3rem)] max-w-[28rem] -translate-x-1/2 translate-y-[30%] rounded-2xl border border-[rgba(255,228,92,0.22)] bg-[rgba(5,8,22,0.88)] p-4 backdrop-blur-xl sm:p-5"
+              style={{ boxShadow: "0 24px 60px -30px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,228,92,0.1)" }}
+            >
+              <div className="flex items-center gap-4">
+                <div>
+                  <div className="font-mono text-[0.56rem] font-black uppercase tracking-[0.2em] text-[var(--yellow)]">
+                    {hero.systemCard.label}
+                  </div>
+                  <div className="mt-0.5 font-display text-[1.4rem] font-black uppercase leading-none text-[var(--cream)]">
+                    {hero.systemCard.title}
+                  </div>
                 </div>
-              ))}
+                <div className="ml-auto flex gap-5">
+                  {hero.systemCard.metrics.map((m) => (
+                    <div key={m.label} className="text-center">
+                      <div className="numeral text-[1.5rem] leading-none text-[var(--yellow)]">{m.value}</div>
+                      <div className="mt-1 font-mono text-[0.5rem] font-black uppercase tracking-[0.16em] text-[rgba(248,247,240,0.45)]">
+                        {m.label}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Bottom scroll prompt ── */}
+      <div className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2">
+        <div className="flex flex-col items-center gap-2">
+          <span className="font-mono text-[0.55rem] font-black uppercase tracking-[0.2em] text-[rgba(248,247,240,0.35)]">
+            Scroll
+          </span>
+          <div className="flex h-8 w-5 items-start justify-center rounded-full border border-[rgba(248,247,240,0.18)] pt-1.5">
+            <div
+              className="h-2 w-0.5 rounded-full bg-[var(--yellow)]"
+              style={{ animation: "floatY 1.6s ease-in-out infinite" }}
+            />
           </div>
         </div>
       </div>
@@ -323,71 +477,134 @@ function CampaignHero({ hero }: { hero: HeroData }) {
 }
 
 /* ===================================================================
-   3. Curved SVG marquee
+   3. Yellow marquee tape
    =================================================================== */
 
 function CurvedMarquee() {
+  const words = ["AROC_PL", "Humanoid Soccer", "KRI 2024 Champion", "Polinema", "Built to Win", "Robot Soccer"];
   return (
-    <section aria-label="Marquee" className="relative overflow-hidden bg-[var(--yellow)] text-[var(--navy-deep)]">
-      <div aria-hidden="true" className="absolute inset-0 opacity-[0.15]" style={{ backgroundImage: "radial-gradient(circle at 2px 2px, #070c22 1px, transparent 0)", backgroundSize: "18px 18px" }} />
-      <div className="relative overflow-hidden py-2">
-        <div className="flex w-[200%]" style={{ animation: "marquee 40s linear infinite" }}>
-          {[0, 1].map((i) => (
-            <svg key={i} aria-hidden="true" className="-my-6 h-[14rem] w-1/2 shrink-0 overflow-visible sm:h-[22rem]" viewBox="0 0 1440 320">
-              <path d="M-80 240C160 100 460 20 720 130S1200 270 1520 160" fill="none" id={`aroc-curve-${i}`} />
-              <text className="fill-current font-display text-[7rem] font-black uppercase sm:text-[10rem]" style={{ letterSpacing: "-0.04em" }}>
-                <textPath href={`#aroc-curve-${i}`}>Built to Play · Built to Win · Built in Polinema · </textPath>
-              </text>
-            </svg>
-          ))}
-        </div>
+    <section aria-label="Marquee" className="relative overflow-hidden bg-[var(--yellow)] py-4 text-[var(--navy-deep)]">
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 opacity-[0.12]"
+        style={{ backgroundImage: "radial-gradient(circle at 2px 2px, #070c22 1.2px, transparent 0)", backgroundSize: "18px 18px" }}
+      />
+      <div className="relative flex w-[200%] gap-0" style={{ animation: "marquee 30s linear infinite" }}>
+        {[0, 1].map((i) => (
+          <div key={i} className="flex shrink-0 items-center gap-8 pr-8" style={{ width: "50%" }}>
+            {words.map((w) => (
+              <span
+                key={w}
+                className="shrink-0 font-display font-black uppercase"
+                style={{ fontSize: "clamp(2.4rem, 5vw, 4rem)", letterSpacing: "-0.04em", lineHeight: 1 }}
+              >
+                {w} <span className="mx-1 text-[0.7em] opacity-40">/</span>
+              </span>
+            ))}
+          </div>
+        ))}
       </div>
     </section>
   );
 }
 
 /* ===================================================================
-   4. Editorial manifesto
+   4. Editorial manifesto — full-bleed statement
    =================================================================== */
 
 function EditorialManifesto({ aboutCards, values }: { aboutCards: AboutCard[]; values: ValueCard[] }) {
   const { ref, isVisible } = useScrollReveal();
 
   return (
-    <section className="relative bg-[var(--cream)]" id="about">
-      <div aria-hidden="true" className="paper-grain absolute inset-0" />
-      <div ref={ref} className={`relative z-10 mx-auto max-w-[1240px] px-4 py-20 sm:px-8 sm:py-28 reveal-base reveal-up ${isVisible ? "revealed" : ""}`}>
-        <div className="grid gap-10 lg:grid-cols-[1fr_0.85fr] lg:items-end">
+    <section className="relative section-paper overflow-hidden" id="about">
+      <div aria-hidden="true" className="dot-grid-paper absolute inset-0" />
+
+      {/* Giant background word */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-[-2%] top-[5%] select-none font-display font-black uppercase leading-none text-[var(--navy-deep)] opacity-[0.03]"
+        style={{ fontSize: "clamp(8rem, 28vw, 22rem)", letterSpacing: "-0.06em" }}
+      >
+        AROC
+      </div>
+
+      <div
+        ref={ref}
+        className={`relative z-10 mx-auto max-w-[1280px] px-4 py-20 sm:px-8 sm:py-32 reveal-base reveal-up ${isVisible ? "revealed" : ""}`}
+      >
+        {/* Oversize statement headline */}
+        <div className="kicker mb-8">Campaign Manifesto</div>
+
+        <div className="grid gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:gap-16 lg:items-start">
           <div>
-            <div className="kicker">Campaign Manifesto</div>
-            <h2 className="headline mt-5 max-w-[11ch] text-[clamp(3.2rem,9vw,7.2rem)] text-[var(--navy-deep)]">
-              Robot yang bukan demo. Robot yang bertanding.
+            <h2
+              className="headline text-[var(--navy-deep)]"
+              style={{ fontSize: "clamp(3.4rem, 10vw, 8rem)", lineHeight: 0.88 }}
+            >
+              Robot yang bukan{" "}
+              <span
+                className="inline-block"
+                style={{
+                  color: "var(--gold-deep)",
+                  WebkitTextStroke: "1px var(--gold-deep)",
+                  textShadow: "none",
+                }}
+              >
+                demo.
+              </span>
+              <br />
+              Robot yang
+              <br />
+              <span style={{ color: "var(--navy-bright)" }}>bertanding.</span>
             </h2>
-          </div>
-          <div className="rounded-[2rem] bg-[var(--navy-deep)] p-6 text-[var(--cream)] sm:p-8">
-            <p className="text-[1.08rem] leading-[1.85] text-[rgba(248,247,240,0.78)]">
-              AROC_PL adalah tempat hardware, software, dan strategi dipaksa menyatu. Targetnya bukan terlihat futuristik, tapi mencetak robot humanoid yang bisa bermain, gagal, diperbaiki, lalu kembali menang.
-            </p>
-          </div>
-        </div>
 
-        <div className="relative mt-12 grid gap-5 md:grid-cols-3">
-          <DoodleArrow className="absolute -right-4 -top-10 hidden w-28 rotate-[195deg] text-[var(--gold-deep)] opacity-60 md:block" />
-          {aboutCards.map((card, i) => (
-            <article className="card-paper card-hover-lift rounded-[1.6rem] p-6" key={card.title}>
-              <div className="numeral text-[3rem] leading-none text-[var(--gold-deep)]">0{i + 1}</div>
-              <h3 className="mt-6 font-display text-[2rem] font-black uppercase leading-none tracking-[-0.03em] text-[var(--navy-deep)]">{card.title}</h3>
-              <p className="mt-4 text-[0.96rem] leading-[1.8] text-[var(--muted-dark)]">{card.description}</p>
-            </article>
-          ))}
-        </div>
+            {/* Value tags */}
+            <div className="mt-10 flex flex-wrap gap-2">
+              {values.map((v) => (
+                <span
+                  className="rounded-full border border-[rgba(7,12,34,0.14)] bg-[var(--navy-deep)] px-4 py-2 font-mono text-[0.65rem] font-black uppercase tracking-[0.16em] text-[var(--yellow)]"
+                  key={v.title}
+                >
+                  {v.title}
+                </span>
+              ))}
+            </div>
+          </div>
 
-        <div className="mt-8 flex flex-wrap gap-3">
-          {values.map((v) => (
-            <span className="rounded-full bg-[var(--yellow)] px-4 py-2 font-mono text-[0.68rem] font-black uppercase tracking-[0.16em] text-[var(--navy-deep)]" key={v.title}>
-              {v.title}
-            </span>
-          ))}
+          <div className="flex flex-col gap-5">
+            {/* Manifesto quote block */}
+            <div className="rounded-[2rem] bg-[var(--navy-deep)] p-7 text-[var(--cream)]">
+              <div className="font-mono text-[0.6rem] font-black uppercase tracking-[0.2em] text-[var(--yellow)] mb-4">
+                — Misi Kami
+              </div>
+              <p className="text-[1.05rem] leading-[1.9] text-[rgba(248,247,240,0.78)]">
+                AROC_PL adalah tempat hardware, software, dan strategi dipaksa menyatu. Targetnya bukan terlihat futuristik, tapi mencetak robot humanoid yang bisa bermain, gagal, diperbaiki, lalu kembali menang.
+              </p>
+            </div>
+
+            {/* About cards stacked */}
+            <div className="grid gap-4">
+              {aboutCards.map((card, i) => (
+                <article
+                  className="card-paper card-hover-lift flex items-start gap-5 rounded-[1.4rem] p-5"
+                  key={card.title}
+                >
+                  <div
+                    className="numeral mt-0.5 shrink-0 leading-none text-[var(--gold-deep)]"
+                    style={{ fontSize: "2rem" }}
+                  >
+                    0{i + 1}
+                  </div>
+                  <div>
+                    <h3 className="font-display text-[1.35rem] font-black uppercase leading-none tracking-[-0.03em] text-[var(--navy-deep)]">
+                      {card.title}
+                    </h3>
+                    <p className="mt-2 text-[0.9rem] leading-[1.75] text-[var(--muted-dark)]">{card.description}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -427,16 +644,38 @@ function StickyScrollStory({ hero }: { hero: HeroData }) {
     3: <SoccerPath className="absolute inset-x-4 bottom-[10%] text-[rgba(255,228,92,0.3)]" />,
   };
 
+  // Progress bar percentage
+  const progress = ((activeStep + 1) / storySteps.length) * 100;
+
   return (
     <section className="relative bg-[var(--navy-deep)]" id="story">
-      <div aria-hidden="true" className="campaign-shell absolute inset-0" />
+      {/* Subtle grid */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 opacity-40"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(255,228,92,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,228,92,0.04) 1px, transparent 1px)",
+          backgroundSize: "5rem 5rem",
+          maskImage: "linear-gradient(to bottom, black, transparent 90%)",
+        }}
+      />
+
+      {/* Progress bar — top of section */}
+      <div className="sticky top-0 z-30 h-0.5 w-full bg-[rgba(255,228,92,0.1)]">
+        <div
+          className="h-full bg-[var(--yellow)] transition-all duration-500"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+
       <div className="relative z-10 mx-auto max-w-[1280px] px-4 sm:px-8">
         <div className="lg:grid lg:grid-cols-2 lg:gap-16">
-          {/* ---- Sticky visual — desktop ---- */}
+          {/* ── Sticky visual ── */}
           <div className="hidden lg:block">
-            <div className="sticky top-0 flex h-screen items-center py-10">
+            <div className="sticky top-4 flex h-screen items-center py-12">
               <div className="relative w-full">
-                <div className="relative aspect-[3/4] overflow-hidden rounded-[2.4rem] border border-[rgba(255,228,92,0.18)] bg-[rgba(17,26,61,0.45)]">
+                <div className="relative aspect-[3/4] overflow-hidden rounded-[2.4rem] border border-[rgba(255,228,92,0.16)] bg-[rgba(12,18,45,0.7)]">
                   <Image
                     alt="AROC_PL robot"
                     className="object-contain drop-shadow-[0_34px_80px_rgba(0,0,0,0.7)]"
@@ -444,31 +683,33 @@ function StickyScrollStory({ hero }: { hero: HeroData }) {
                     sizes="520px"
                     src={hero.robotImage}
                   />
-                  {/* Dynamic overlays per step */}
                   {storySteps.map((_, i) => (
-                    <div className={`absolute inset-0 transition-opacity duration-500 ${i === activeStep ? "opacity-100" : "opacity-0"}`} key={i}>
+                    <div
+                      className={`absolute inset-0 transition-opacity duration-600 ${i === activeStep ? "opacity-100" : "opacity-0"}`}
+                      key={i}
+                    >
                       {overlays[i] ?? null}
                     </div>
                   ))}
-                  {/* Champion glow for step 5 */}
                   {activeStep === 4 && (
                     <div className="absolute inset-0 flex items-center justify-center bg-[rgba(5,8,22,0.4)]">
-                      <div className="rounded-full bg-[var(--yellow)] p-6 shadow-[0_0_0_14px_rgba(255,228,92,0.12)]">
+                      <div className="rounded-full bg-[var(--yellow)] p-6 shadow-[0_0_0_16px_rgba(255,228,92,0.1),0_0_0_32px_rgba(255,228,92,0.05)]">
                         <TrophyIcon className="size-12 text-[var(--navy-deep)]" />
                       </div>
                     </div>
                   )}
-                  {/* Active kicker label */}
+                  {/* Step label */}
                   <div className="absolute bottom-5 left-5 z-10 rounded-full bg-[var(--yellow)] px-4 py-2 font-mono text-[0.62rem] font-black uppercase tracking-[0.18em] text-[var(--navy-deep)] transition-all duration-300">
                     {storySteps[activeStep]?.kicker ?? ""}
                   </div>
                 </div>
-                {/* Step indicator dots */}
+
+                {/* Step dots — vertical */}
                 <div className="absolute -right-10 top-1/2 flex -translate-y-1/2 flex-col items-center gap-2">
                   {storySteps.map((_, i) => (
                     <button
                       aria-label={`Step ${i + 1}`}
-                      className={`rounded-full transition-all duration-300 ${i === activeStep ? "h-8 w-3 bg-[var(--yellow)]" : "size-3 bg-[rgba(248,247,240,0.2)] hover:bg-[rgba(248,247,240,0.4)]"}`}
+                      className={`rounded-full transition-all duration-300 ${i === activeStep ? "h-8 w-3 bg-[var(--yellow)]" : "size-3 bg-[rgba(248,247,240,0.18)] hover:bg-[rgba(248,247,240,0.38)]"}`}
                       key={i}
                       onClick={() => panelRefs.current[i]?.scrollIntoView({ behavior: "smooth", block: "center" })}
                       type="button"
@@ -479,17 +720,20 @@ function StickyScrollStory({ hero }: { hero: HeroData }) {
             </div>
           </div>
 
-          {/* ---- Scrolling panels ---- */}
+          {/* ── Scrolling panels ── */}
           <div>
-            <div className="pb-8 pt-20 lg:pt-[40vh]">
+            <div className="pb-8 pt-20 lg:pt-[38vh]">
               <div className="kicker kicker-on-ink">Scroll Story</div>
-              <h2 className="headline mt-5 max-w-[10ch] text-[clamp(3.2rem,8vw,6.5rem)] text-[var(--cream)]">
-                From lab bench to kick off.
+              <h2
+                className="headline mt-5 text-[var(--cream)]"
+                style={{ fontSize: "clamp(3rem, 8vw, 6rem)" }}
+              >
+                From lab bench<br />to kick off.
               </h2>
             </div>
 
             {/* Mobile robot image */}
-            <div className="relative mb-8 aspect-[3/4] max-h-[28rem] overflow-hidden rounded-[2rem] border border-[rgba(255,228,92,0.18)] bg-[rgba(17,26,61,0.45)] lg:hidden">
+            <div className="relative mb-8 aspect-[3/4] max-h-[28rem] overflow-hidden rounded-[2rem] border border-[rgba(255,228,92,0.16)] bg-[rgba(12,18,45,0.7)] lg:hidden">
               <Image
                 alt="AROC_PL robot"
                 className="object-contain drop-shadow-[0_28px_60px_rgba(0,0,0,0.7)]"
@@ -507,17 +751,35 @@ function StickyScrollStory({ hero }: { hero: HeroData }) {
                   ref={(el) => { panelRefs.current[i] = el; }}
                   className="flex items-center py-14 lg:min-h-screen lg:py-0"
                 >
-                  <div className={`max-w-[36rem] transition-all duration-500 ${i === activeStep ? "opacity-100" : "lg:opacity-30"}`}>
+                  <div
+                    className={`max-w-[38rem] transition-all duration-500 ${i === activeStep ? "opacity-100 translate-x-0" : "lg:opacity-25 lg:translate-x-4"}`}
+                  >
                     <div className="flex items-center gap-3">
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--yellow)] text-[var(--navy-deep)]">
-                        <Icon className="size-6" />
+                      <div
+                        className="flex size-14 shrink-0 items-center justify-center rounded-2xl text-[var(--navy-deep)]"
+                        style={{ background: i === activeStep ? "var(--yellow)" : "rgba(255,228,92,0.15)", transition: "background 0.4s ease" }}
+                      >
+                        <Icon className="size-6" style={{ color: i === activeStep ? "var(--navy-deep)" : "var(--yellow)" }} />
                       </div>
-                      <div className="font-mono text-[0.68rem] font-black uppercase tracking-[0.2em] text-[var(--yellow)]">{step.kicker}</div>
+                      <div className="font-mono text-[0.68rem] font-black uppercase tracking-[0.2em] text-[var(--yellow)]">
+                        {step.kicker}
+                      </div>
                     </div>
-                    <h3 className="mt-6 font-display text-[clamp(2.4rem,5vw,4.5rem)] font-black uppercase leading-[0.86] tracking-[-0.04em] text-[var(--cream)]">
+                    <h3
+                      className="mt-6 font-display font-black uppercase leading-[0.86] tracking-[-0.04em] text-[var(--cream)]"
+                      style={{ fontSize: "clamp(2.2rem, 4.5vw, 4.2rem)" }}
+                    >
                       {step.title}
                     </h3>
-                    <p className="mt-6 text-[1rem] leading-[1.85] text-[rgba(248,247,240,0.66)]">{step.body}</p>
+                    <p className="mt-6 text-[1rem] leading-[1.85] text-[rgba(248,247,240,0.62)]">{step.body}</p>
+
+                    {/* Step counter */}
+                    <div className="mt-8 flex items-center gap-3">
+                      <div className="h-px flex-none w-8 bg-[rgba(255,228,92,0.4)]" />
+                      <span className="font-mono text-[0.58rem] font-black uppercase tracking-[0.18em] text-[rgba(248,247,240,0.3)]">
+                        {i + 1} / {storySteps.length}
+                      </span>
+                    </div>
                   </div>
                 </div>
               );
@@ -531,47 +793,119 @@ function StickyScrollStory({ hero }: { hero: HeroData }) {
 }
 
 /* ===================================================================
-   6. Benefits / technology claims
+   6. Benefits — horizontal split, not card grid
    =================================================================== */
 
 function BenefitsClaims({ divisions }: { divisions: DivisionCard[] }) {
   const { ref, isVisible } = useScrollReveal();
+  const [activeFeature, setActiveFeature] = useState(0);
 
   return (
-    <section className="relative bg-[var(--cream-soft)]" id="technology">
-      <div aria-hidden="true" className="paper-grain absolute inset-0" />
-      <div ref={ref} className={`relative z-10 mx-auto max-w-[1240px] px-4 py-20 sm:px-8 sm:py-28 reveal-base reveal-up ${isVisible ? "revealed" : ""}`}>
-        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+    <section className="relative section-paper-warm overflow-hidden" id="technology">
+      <div aria-hidden="true" className="dot-grid-paper absolute inset-0" />
+
+      <div
+        ref={ref}
+        className={`relative z-10 mx-auto max-w-[1280px] px-4 py-20 sm:px-8 sm:py-32 reveal-base reveal-up ${isVisible ? "revealed" : ""}`}
+      >
+        {/* Section header */}
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <div className="kicker">Benefits</div>
-            <h2 className="headline mt-5 max-w-[10ch] text-[clamp(3.2rem,8vw,6.5rem)] text-[var(--navy-deep)]">
-              More control. Less guesswork.
+            <div className="kicker">Core Capabilities</div>
+            <h2
+              className="headline mt-4 text-[var(--navy-deep)]"
+              style={{ fontSize: "clamp(3rem, 8vw, 6.5rem)" }}
+            >
+              More control.<br />Less guesswork.
             </h2>
           </div>
-          <p className="max-w-[34rem] text-[1.05rem] leading-[1.85] text-[var(--muted-dark)]">
-            Kapabilitas AROC_PL datang dari dua divisi besar: {divisions.map((d) => d.title).join(" dan ")}. Keduanya dibuat untuk satu tujuan: robot siap bertanding.
+          <p className="max-w-[26rem] pb-2 text-[1rem] leading-[1.85] text-[var(--muted-dark)] sm:text-right">
+            Dua divisi, satu misi: robot siap tanding.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {benefitClaims.map((c, i) => {
-            const Icon = c.icon;
-            return (
-              <article
-                className="group relative overflow-hidden rounded-[2rem] border border-[var(--rule)] bg-white/80 p-5 shadow-[0_2px_0_rgba(7,12,34,0.04)] transition hover:-translate-y-1 hover:shadow-[0_28px_60px_-38px_rgba(7,12,34,0.5)] sm:p-6"
-                key={c.title}
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="numeral text-[2.6rem] leading-none text-[var(--gold-deep)]">0{i + 1}</div>
-                  <div className="flex size-12 items-center justify-center rounded-full bg-[var(--navy-deep)] text-[var(--yellow)]">
+        {/* Interactive feature selector */}
+        <div className="mt-14 grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-12">
+          {/* Left: feature list */}
+          <div className="flex flex-col gap-3">
+            {benefitClaims.map((c, i) => {
+              const Icon = c.icon;
+              const isActive = i === activeFeature;
+              return (
+                <button
+                  key={c.title}
+                  type="button"
+                  onClick={() => setActiveFeature(i)}
+                  className={`group flex items-start gap-5 rounded-[1.6rem] border p-5 text-left transition-all duration-300 ${
+                    isActive
+                      ? "border-[rgba(7,12,34,0.18)] bg-[var(--navy-deep)] text-[var(--cream)] shadow-[0_24px_60px_-36px_rgba(7,12,34,0.7)]"
+                      : "border-[rgba(7,12,34,0.08)] bg-white/60 text-[var(--navy-deep)] hover:border-[rgba(7,12,34,0.14)] hover:bg-white/90"
+                  }`}
+                >
+                  <div
+                    className={`flex size-12 shrink-0 items-center justify-center rounded-xl transition-colors duration-300 ${
+                      isActive ? "bg-[var(--yellow)] text-[var(--navy-deep)]" : "bg-[var(--navy-deep)] text-[var(--yellow)]"
+                    }`}
+                  >
                     <Icon className="size-6" />
                   </div>
+                  <div className="min-w-0">
+                    <div
+                      className={`font-display text-[1.4rem] font-black uppercase leading-none tracking-[-0.03em] transition-colors duration-300 ${
+                        isActive ? "text-[var(--cream)]" : "text-[var(--navy-deep)]"
+                      }`}
+                    >
+                      {c.title}
+                    </div>
+                    <p
+                      className={`mt-2 text-[0.88rem] leading-[1.7] transition-colors duration-300 ${
+                        isActive ? "text-[rgba(248,247,240,0.65)]" : "text-[var(--muted-dark)]"
+                      }`}
+                    >
+                      {c.body}
+                    </p>
+                  </div>
+                  <div className={`ml-auto mt-1 shrink-0 font-mono text-[0.58rem] font-black uppercase tracking-[0.14em] transition-colors ${isActive ? "text-[var(--yellow)]" : "text-[var(--muted)]"}`}>
+                    0{i + 1}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Right: division details */}
+          <div className="sticky top-24 flex flex-col gap-5">
+            {divisions.map((div) => (
+              <div
+                className="tech-card rounded-[2rem] p-6 sm:p-8"
+                key={div.title}
+              >
+                <div className="kicker kicker-on-ink">{div.eyebrow}</div>
+                <h3
+                  className="headline mt-4 text-[var(--cream)]"
+                  style={{ fontSize: "clamp(2.4rem, 5vw, 4rem)" }}
+                >
+                  {div.title}
+                </h3>
+                <p className="mt-4 text-[0.95rem] leading-[1.8] text-[rgba(248,247,240,0.62)]">{div.description}</p>
+                <div className="mt-6 flex flex-col gap-3">
+                  {div.items.map((item) => (
+                    <div className="flex items-start gap-3" key={item.title}>
+                      <div className="mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--yellow)]" />
+                      <div>
+                        <div className="font-mono text-[0.64rem] font-black uppercase tracking-[0.16em] text-[var(--yellow)]">
+                          {item.title}
+                        </div>
+                        <div className="mt-0.5 text-[0.85rem] leading-[1.6] text-[rgba(248,247,240,0.55)]">
+                          {item.description}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <h3 className="mt-8 font-display text-[1.8rem] font-black uppercase leading-none tracking-[-0.04em] text-[var(--navy-deep)]">{c.title}</h3>
-                <p className="mt-4 text-[0.95rem] leading-[1.75] text-[var(--muted-dark)]">{c.body}</p>
-              </article>
-            );
-          })}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -579,7 +913,7 @@ function BenefitsClaims({ divisions }: { divisions: DivisionCard[] }) {
 }
 
 /* ===================================================================
-   7. Robot lineup slider
+   7. Robot lineup — full attention on the machines
    =================================================================== */
 
 function RobotLineupSlider({ robots }: { robots: RobotCard[] }) {
@@ -592,63 +926,141 @@ function RobotLineupSlider({ robots }: { robots: RobotCard[] }) {
   const go = (d: number) => setActiveIndex((c) => (c + d + robots.length) % robots.length);
 
   return (
-    <section className="relative scroll-mt-24 bg-[var(--navy-deep)]" id="robots">
-      <div aria-hidden="true" className="campaign-shell absolute inset-0" />
-      <div ref={ref} className={`relative z-10 mx-auto max-w-[1240px] px-4 py-20 sm:px-8 sm:py-28 reveal-base reveal-up ${isVisible ? "revealed" : ""}`}>
-        <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
+    <section className="relative overflow-hidden scroll-mt-24 bg-[var(--navy-deep)]" id="robots">
+      {/* Ambient glow */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background: `radial-gradient(ellipse 60% 50% at 50% 30%, rgba(255,228,92,0.1), transparent 60%)`,
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-30"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(255,228,92,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,228,92,0.04) 1px, transparent 1px)",
+          backgroundSize: "4rem 4rem",
+        }}
+      />
+
+      <div
+        ref={ref}
+        className={`relative z-10 mx-auto max-w-[1280px] px-4 py-20 sm:px-8 sm:py-28 reveal-base reveal-up ${isVisible ? "revealed" : ""}`}
+      >
+        {/* Header */}
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between mb-12">
           <div>
             <div className="kicker kicker-on-ink">Robot Lineup</div>
-            <h2 className="headline mt-5 max-w-[9ch] text-[clamp(3.2rem,8vw,6.8rem)] text-[var(--cream)]">Choose your player.</h2>
+            <h2
+              className="headline mt-4 text-[var(--cream)]"
+              style={{ fontSize: "clamp(3rem, 8vw, 6.5rem)" }}
+            >
+              Choose your<br />player.
+            </h2>
           </div>
-          <p className="max-w-[34rem] text-[1.05rem] leading-[1.85] text-[rgba(248,247,240,0.72)]">
-            Tiga unit robot humanoid, masing-masing dengan peran spesifik: menyerang, menjaga gawang, dan bertahan.
+          <p className="max-w-[26rem] pb-2 text-[1rem] leading-[1.85] text-[rgba(248,247,240,0.62)]">
+            Tiga unit robot humanoid, masing-masing dengan peran spesifik.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-6 overflow-hidden rounded-[2.6rem] border border-[rgba(255,228,92,0.24)] bg-[rgba(17,26,61,0.62)] p-5 sm:p-8 lg:grid-cols-[1fr_0.9fr] lg:items-center">
-          {/* Robot images — crossfade */}
-          <div className="relative min-h-[32rem] overflow-hidden rounded-[2rem] bg-[radial-gradient(circle_at_50%_14%,rgba(255,228,92,0.24),transparent_24rem)]">
+        {/* Tab selector */}
+        <div className="mb-8 flex gap-3">
+          {robots.map((r, i) => (
+            <button
+              aria-label={`Pilih ${r.name}`}
+              className={`rounded-full border px-5 py-2.5 font-mono text-[0.68rem] font-black uppercase tracking-[0.16em] transition-all duration-300 ${
+                i === activeIndex
+                  ? "border-[var(--yellow)] bg-[var(--yellow)] text-[var(--navy-deep)] shadow-[0_6px_0_var(--navy-black)]"
+                  : "border-[rgba(248,247,240,0.18)] bg-[rgba(248,247,240,0.05)] text-[rgba(248,247,240,0.55)] hover:border-[rgba(255,228,92,0.36)] hover:text-[var(--yellow)]"
+              }`}
+              key={r.name}
+              onClick={() => setActiveIndex(i)}
+              type="button"
+            >
+              {r.name}
+            </button>
+          ))}
+        </div>
+
+        {/* Main robot display */}
+        <div className="grid gap-6 overflow-hidden rounded-[2.8rem] border border-[rgba(255,228,92,0.2)] bg-[rgba(10,15,38,0.7)] p-5 sm:p-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+          {/* Robot image */}
+          <div className="relative min-h-[28rem] sm:min-h-[38rem] overflow-hidden rounded-[2rem] bg-[radial-gradient(ellipse_60%_40%_at_50%_20%,rgba(255,228,92,0.22),transparent_55%)]">
             {robots.map((r, i) => (
               <Image
                 key={r.name}
                 alt={`${r.name} robot`}
-                className={`absolute inset-0 object-cover transition-all duration-500 ${i === activeIndex ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}
+                className={`absolute inset-0 object-cover transition-all duration-600 ${i === activeIndex ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}
                 fill
                 sizes="(max-width: 1024px) 100vw, 620px"
                 src={r.image}
               />
             ))}
-            <div className="absolute left-5 top-5 z-10 rounded-full bg-[var(--yellow)] px-4 py-2 font-mono text-[0.64rem] font-black uppercase tracking-[0.18em] text-[var(--navy-deep)]">
-              Unit {String(activeIndex + 1).padStart(2, "0")}
+            <div className="absolute left-4 top-4 z-10 rounded-full bg-[var(--yellow)] px-4 py-2 font-mono text-[0.64rem] font-black uppercase tracking-[0.18em] text-[var(--navy-deep)]">
+              {active.role}
             </div>
           </div>
 
           {/* Active robot info */}
-          <div className="relative">
-            <div className="font-mono text-[0.7rem] font-black uppercase tracking-[0.2em] text-[var(--yellow)]">{active.role}</div>
-            <h3 className="mt-4 font-display text-[clamp(4rem,10vw,8rem)] font-black uppercase leading-[0.78] tracking-[-0.06em] text-[var(--cream)]">{active.name}</h3>
-            <p className="mt-6 max-w-[32rem] text-[1rem] leading-[1.85] text-[rgba(248,247,240,0.7)]">{active.description}</p>
+          <div className="flex flex-col">
+            <div className="font-mono text-[0.68rem] font-black uppercase tracking-[0.22em] text-[rgba(255,228,92,0.5)]">
+              Unit {String(activeIndex + 1).padStart(2, "0")}
+            </div>
+            <h3
+              className="mt-2 font-display font-black uppercase leading-[0.78] tracking-[-0.06em] text-[var(--cream)]"
+              style={{ fontSize: "clamp(4.5rem, 11vw, 8.5rem)" }}
+            >
+              {active.name}
+            </h3>
+            <p className="mt-5 text-[1rem] leading-[1.85] text-[rgba(248,247,240,0.66)]">{active.description}</p>
 
-            <div className="mt-8 grid gap-3 sm:grid-cols-2">
+            {/* Stats bars */}
+            <div className="mt-8 grid gap-4">
               {active.stats.map((s) => (
-                <div className="rounded-2xl border border-[rgba(248,247,240,0.12)] bg-[rgba(248,247,240,0.06)] p-4" key={s.label}>
-                  <div className="numeral text-[2.3rem] leading-none text-[var(--yellow)]">{s.value}</div>
-                  <div className="mt-2 font-mono text-[0.62rem] font-black uppercase tracking-[0.18em] text-[rgba(248,247,240,0.52)]">{s.label}</div>
+                <div key={s.label}>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="font-mono text-[0.6rem] font-black uppercase tracking-[0.16em] text-[rgba(248,247,240,0.5)]">
+                      {s.label}
+                    </span>
+                    <span className="numeral text-[0.95rem] text-[var(--yellow)]">{s.value}</span>
+                  </div>
+                  <div className="h-1.5 rounded-full bg-[rgba(248,247,240,0.08)]">
+                    <div
+                      className="h-full rounded-full transition-all duration-700"
+                      style={{
+                        width: `${s.value}%`,
+                        background: s.value > 85
+                          ? "linear-gradient(90deg, var(--yellow), var(--gold))"
+                          : "linear-gradient(90deg, rgba(255,228,92,0.6), rgba(255,228,92,0.3))",
+                      }}
+                    />
+                  </div>
                 </div>
               ))}
             </div>
 
+            {/* Navigation arrows */}
             <div className="mt-8 flex items-center gap-3">
-              <button aria-label="Robot sebelumnya" className="flex size-12 items-center justify-center rounded-full border border-[rgba(248,247,240,0.18)] bg-[rgba(248,247,240,0.06)] text-[var(--cream)] transition hover:bg-[var(--yellow)] hover:text-[var(--navy-deep)]" onClick={() => go(-1)} type="button">
+              <button
+                aria-label="Robot sebelumnya"
+                className="flex size-12 items-center justify-center rounded-full border border-[rgba(248,247,240,0.16)] bg-[rgba(248,247,240,0.05)] text-[var(--cream)] transition hover:bg-[var(--yellow)] hover:text-[var(--navy-deep)] hover:border-[var(--yellow)]"
+                onClick={() => go(-1)}
+                type="button"
+              >
                 <ChevronLeftIcon className="size-5" />
               </button>
-              <button aria-label="Robot berikutnya" className="flex size-12 items-center justify-center rounded-full border border-[rgba(248,247,240,0.18)] bg-[rgba(248,247,240,0.06)] text-[var(--cream)] transition hover:bg-[var(--yellow)] hover:text-[var(--navy-deep)]" onClick={() => go(1)} type="button">
+              <button
+                aria-label="Robot berikutnya"
+                className="flex size-12 items-center justify-center rounded-full border border-[rgba(248,247,240,0.16)] bg-[rgba(248,247,240,0.05)] text-[var(--cream)] transition hover:bg-[var(--yellow)] hover:text-[var(--navy-deep)] hover:border-[var(--yellow)]"
+                onClick={() => go(1)}
+                type="button"
+              >
                 <ChevronRightIcon className="size-5" />
               </button>
-              <div className="ml-2 flex gap-2">
-                {robots.map((r, i) => (
-                  <button aria-label={`Pilih ${r.name}`} className={`h-2.5 rounded-full transition-all ${i === activeIndex ? "w-8 bg-[var(--yellow)]" : "w-2.5 bg-[rgba(248,247,240,0.3)]"}`} key={r.name} onClick={() => setActiveIndex(i)} type="button" />
-                ))}
+              <div className="ml-auto font-mono text-[0.58rem] font-black uppercase tracking-[0.2em] text-[rgba(248,247,240,0.3)]">
+                {String(activeIndex + 1).padStart(2, "0")} / {String(robots.length).padStart(2, "0")}
               </div>
             </div>
           </div>
@@ -659,46 +1071,94 @@ function RobotLineupSlider({ robots }: { robots: RobotCard[] }) {
 }
 
 /* ===================================================================
-   8. Comparison table
+   8. Comparison — dark, dramatic, full-width
    =================================================================== */
 
 function ComparisonTable() {
   const { ref, isVisible } = useScrollReveal();
 
   return (
-    <section className="relative bg-[var(--cream)]">
-      <div aria-hidden="true" className="paper-grain absolute inset-0" />
-      <div ref={ref} className={`relative z-10 mx-auto max-w-[1120px] px-4 py-20 sm:px-8 sm:py-28 reveal-base reveal-up ${isVisible ? "revealed" : ""}`}>
+    <section className="relative overflow-hidden bg-[var(--navy-abyss)]">
+      {/* Dramatic top light */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(255,228,92,0.5)] to-transparent"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-0 h-72 w-[60%] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse,rgba(255,228,92,0.12),transparent_70%)] blur-2xl"
+      />
+
+      <div
+        ref={ref}
+        className={`relative z-10 mx-auto max-w-[1120px] px-4 py-20 sm:px-8 sm:py-28 reveal-base reveal-up ${isVisible ? "revealed" : ""}`}
+      >
         <div className="text-center">
-          <div className="kicker kicker-centered">See the Difference</div>
-          <h2 className="headline mx-auto mt-5 max-w-[11ch] text-[clamp(3.2rem,8vw,6.5rem)] text-[var(--navy-deep)]">
+          <div className="kicker kicker-centered kicker-on-ink">See the Difference</div>
+          <h2
+            className="headline mx-auto mt-5 text-[var(--cream)]"
+            style={{ fontSize: "clamp(3rem, 8vw, 6.5rem)", maxWidth: "11ch" }}
+          >
             Bukan sekadar prototype.
           </h2>
         </div>
 
-        <div className="mt-12 overflow-hidden rounded-[2rem] border border-[var(--rule)] bg-white/[0.82] shadow-[0_30px_80px_-58px_rgba(7,12,34,0.75)]">
+        <div
+          className="mt-14 overflow-hidden rounded-[2.2rem] border border-[rgba(255,228,92,0.2)]"
+          style={{ boxShadow: "0 0 0 1px rgba(255,228,92,0.06), 0 40px 100px -60px rgba(0,0,0,0.9)" }}
+        >
           {/* Header */}
-          <div className="grid grid-cols-[1fr_0.65fr_0.65fr] bg-[var(--navy-deep)] text-[var(--cream)]">
-            <div className="p-4 font-mono text-[0.7rem] font-black uppercase tracking-[0.18em] sm:p-5">Capability</div>
-            <div className="bg-[var(--yellow)] p-4 text-center font-display text-[1.3rem] font-black uppercase leading-none tracking-[-0.03em] text-[var(--navy-deep)] sm:p-5 sm:text-[1.5rem]">AROC_PL</div>
-            <div className="p-4 text-center font-display text-[1.3rem] font-black uppercase leading-none tracking-[-0.03em] sm:p-5 sm:text-[1.5rem]">Prototype</div>
+          <div className="grid grid-cols-[1fr_0.6fr_0.6fr] bg-[rgba(10,15,40,0.95)]">
+            <div className="p-5 font-mono text-[0.7rem] font-black uppercase tracking-[0.18em] text-[rgba(248,247,240,0.4)]">
+              Capability
+            </div>
+            <div
+              className="p-5 text-center font-display font-black uppercase leading-none tracking-[-0.03em] text-[var(--navy-deep)]"
+              style={{
+                fontSize: "clamp(1.2rem, 3vw, 1.6rem)",
+                background: "var(--yellow)",
+                boxShadow: "0 4px 24px rgba(255,228,92,0.3)",
+              }}
+            >
+              AROC_PL
+            </div>
+            <div
+              className="p-5 text-center font-display font-black uppercase leading-none tracking-[-0.03em] text-[rgba(248,247,240,0.4)]"
+              style={{ fontSize: "clamp(1.2rem, 3vw, 1.6rem)" }}
+            >
+              Prototype
+            </div>
           </div>
+
           {/* Rows */}
-          {comparisonRows.map((row) => (
-            <div className="grid grid-cols-[1fr_0.65fr_0.65fr] border-t border-[var(--rule)]" key={row.capability}>
-              <div className="p-4 text-[0.92rem] font-semibold text-[var(--navy-deep)] sm:p-5">{row.capability}</div>
-              <div className="grid place-items-center bg-[rgba(255,228,92,0.15)] p-4 sm:p-5"><StatusMark status={row.aroc} /></div>
-              <div className="grid place-items-center p-4 sm:p-5"><StatusMark status={row.generic} /></div>
+          {comparisonRows.map((row, i) => (
+            <div
+              className="grid grid-cols-[1fr_0.6fr_0.6fr] border-t border-[rgba(255,228,92,0.08)]"
+              key={row.capability}
+              style={{ background: i % 2 === 0 ? "rgba(255,255,255,0.01)" : "transparent" }}
+            >
+              <div className="p-4 text-[0.92rem] font-semibold text-[rgba(248,247,240,0.7)] sm:p-5">
+                {row.capability}
+              </div>
+              <div className="grid place-items-center bg-[rgba(255,228,92,0.06)] p-4 sm:p-5">
+                <StatusMark status={row.aroc} />
+              </div>
+              <div className="grid place-items-center p-4 sm:p-5">
+                <StatusMark status={row.generic} />
+              </div>
             </div>
           ))}
         </div>
       </div>
+
+      {/* Bottom light */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[rgba(255,228,92,0.2)] to-transparent" />
     </section>
   );
 }
 
 /* ===================================================================
-   9. Insider proof / testimonial / video placeholders
+   9. Insider proof — staggered, not uniform grid
    =================================================================== */
 
 function InsiderProof({ achievements, teamLead, teamStats, teamYears }: { achievements: Achievement[]; teamLead: TeamLead; teamStats: TeamStat[]; teamYears: TeamYear[] }) {
@@ -706,56 +1166,120 @@ function InsiderProof({ achievements, teamLead, teamStats, teamYears }: { achiev
 
   return (
     <section className="relative bg-[var(--navy-deep)]" id="team">
-      <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(255,228,92,0.12),transparent_28rem)]" />
-      <div ref={ref} className={`relative z-10 mx-auto max-w-[1240px] px-4 py-20 sm:px-8 sm:py-28 reveal-base reveal-up ${isVisible ? "revealed" : ""}`}>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{ background: "radial-gradient(ellipse 70% 40% at 20% 10%, rgba(255,228,92,0.1), transparent 50%)" }}
+      />
+
+      <div
+        ref={ref}
+        className={`relative z-10 mx-auto max-w-[1280px] px-4 py-20 sm:px-8 sm:py-28 reveal-base reveal-up ${isVisible ? "revealed" : ""}`}
+      >
         {/* Header */}
-        <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-end">
+        <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-end mb-14">
           <div>
             <div className="kicker kicker-on-ink">Insider Proof</div>
-            <h2 className="headline mt-5 max-w-[10ch] text-[clamp(3.2rem,8vw,6.5rem)] text-[var(--cream)]">People behind the machine.</h2>
+            <h2
+              className="headline mt-5 text-[var(--cream)]"
+              style={{ fontSize: "clamp(3rem, 8vw, 6.5rem)" }}
+            >
+              People behind<br />the machine.
+            </h2>
           </div>
-          <p className="max-w-[34rem] text-[1.05rem] leading-[1.85] text-[rgba(248,247,240,0.72)]">
-            Dipimpin oleh {teamLead.name}, tim ini berisi {teamStats[0]?.value ?? "11+"} personel aktif dari {teamYears.length} angkatan yang mengubah jam lab menjadi hasil kompetisi.
+          <p className="max-w-[34rem] pb-2 text-[1.05rem] leading-[1.85] text-[rgba(248,247,240,0.62)]">
+            Dipimpin oleh {teamLead.name}, tim ini berisi {teamStats[0]?.value ?? "11+"} personel aktif dari{" "}
+            {teamYears.length} angkatan yang mengubah jam lab menjadi hasil kompetisi.
           </p>
         </div>
 
-        {/* Captain quote + video placeholders */}
-        <div className="mt-12 grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="card-ink rounded-[2rem] p-6 sm:p-8">
-            <div className="font-mono text-[0.7rem] font-black uppercase tracking-[0.2em] text-[var(--yellow)]">Captain Quote</div>
-            <blockquote className="mt-6 font-display text-[clamp(2.2rem,5.5vw,4.5rem)] font-black uppercase leading-[0.9] tracking-[-0.05em] text-[var(--cream)]">
+        {/* Staggered layout: large quote + 3 video cards different sizes */}
+        <div className="grid gap-5 lg:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr] lg:grid-rows-[auto_auto]">
+
+          {/* Captain quote — spans full height on desktop */}
+          <div className="card-ink rounded-[2rem] p-6 sm:p-8 lg:row-span-2">
+            <div className="font-mono text-[0.7rem] font-black uppercase tracking-[0.2em] text-[var(--yellow)]">
+              Captain Quote
+            </div>
+            <blockquote
+              className="mt-6 font-display font-black uppercase leading-[0.88] tracking-[-0.05em] text-[var(--cream)]"
+              style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}
+            >
               {teamLead.intro}
             </blockquote>
-            <div className="mt-8 font-mono text-[0.72rem] font-black uppercase tracking-[0.2em] text-[rgba(248,247,240,0.56)]">{teamLead.name} / {teamLead.role}</div>
-          </div>
+            <div className="mt-8 font-mono text-[0.68rem] font-black uppercase tracking-[0.18em] text-[rgba(248,247,240,0.45)]">
+              {teamLead.name} / {teamLead.role}
+            </div>
 
-          <div className="grid gap-5 sm:grid-cols-3">
-            {videoSlots.map((slot) => (
-              <article className="group relative min-h-[24rem] overflow-hidden rounded-[2rem] border border-[rgba(248,247,240,0.14)] bg-[rgba(248,247,240,0.07)] p-5 backdrop-blur transition hover:-translate-y-2 hover:rotate-[-1deg]" key={slot}>
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,228,92,0.1),transparent_45%,rgba(5,8,22,0.85))]" />
-                <div aria-hidden="true" className="absolute inset-0 opacity-20" style={{ backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(248,247,240,0.08) 3px, rgba(248,247,240,0.08) 4px)", backgroundSize: "100% 4px" }} />
-                <div className="relative z-10 flex h-full min-h-[21rem] flex-col justify-between">
-                  <div className="flex size-12 items-center justify-center rounded-full bg-[var(--yellow)] text-[var(--navy-deep)] shadow-[0_0_0_6px_rgba(255,228,92,0.12)]">
-                    <PlayIcon className="size-5" />
-                  </div>
-                  <div>
-                    <div className="font-mono text-[0.62rem] font-black uppercase tracking-[0.18em] text-[var(--yellow)]">Video placeholder</div>
-                    <h3 className="mt-3 font-display text-[2rem] font-black uppercase leading-[0.86] tracking-[-0.04em] text-[var(--cream)]">{slot}</h3>
+            {/* Team stats mini-grid */}
+            <div className="mt-8 grid grid-cols-2 gap-3">
+              {teamStats.map((stat) => (
+                <div
+                  className="rounded-xl border border-[rgba(255,228,92,0.12)] bg-[rgba(255,228,92,0.05)] p-3"
+                  key={stat.label}
+                >
+                  <div className="numeral text-[1.8rem] leading-none text-[var(--yellow)]">{stat.value}</div>
+                  <div className="mt-1 font-mono text-[0.55rem] font-black uppercase tracking-[0.14em] text-[rgba(248,247,240,0.4)]">
+                    {stat.label}
                   </div>
                 </div>
-              </article>
-            ))}
+              ))}
+            </div>
           </div>
+
+          {/* 3 video placeholders — varying height */}
+          {videoSlots.map((slot, i) => (
+            <article
+              className="group relative overflow-hidden rounded-[2rem] border border-[rgba(248,247,240,0.1)] bg-[rgba(248,247,240,0.04)] transition hover:-translate-y-1"
+              key={slot}
+              style={{ minHeight: i === 0 ? "18rem" : i === 1 ? "22rem" : "14rem" }}
+            >
+              <div className="absolute inset-0 bg-[linear-gradient(160deg,rgba(255,228,92,0.08),transparent_50%,rgba(5,8,22,0.8))]" />
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 opacity-10"
+                style={{
+                  backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(248,247,240,0.06) 3px, rgba(248,247,240,0.06) 4px)",
+                }}
+              />
+              <div className="relative z-10 flex h-full flex-col justify-between p-5">
+                <div className="flex size-11 items-center justify-center rounded-full bg-[var(--yellow)] text-[var(--navy-deep)] shadow-[0_0_0_6px_rgba(255,228,92,0.1)]">
+                  <PlayIcon className="size-4" />
+                </div>
+                <div>
+                  <div className="font-mono text-[0.58rem] font-black uppercase tracking-[0.18em] text-[var(--yellow)]">
+                    Video 0{i + 1}
+                  </div>
+                  <h3
+                    className="mt-2 font-display font-black uppercase leading-[0.88] tracking-[-0.03em] text-[var(--cream)]"
+                    style={{ fontSize: "clamp(1.4rem, 3vw, 2rem)" }}
+                  >
+                    {slot}
+                  </h3>
+                </div>
+              </div>
+            </article>
+          ))}
         </div>
 
-        {/* Achievements */}
-        <div className="mt-8 grid gap-4 md:grid-cols-4" id="achievements">
+        {/* Achievements strip */}
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-4" id="achievements">
           {achievements.map((a) => (
-            <article className="group rounded-[1.5rem] border border-[rgba(248,247,240,0.12)] bg-[rgba(248,247,240,0.06)] p-5 transition hover:border-[rgba(255,228,92,0.3)]" key={`${a.year}-${a.title}`}>
+            <article
+              className="group rounded-[1.6rem] border border-[rgba(248,247,240,0.1)] bg-[rgba(248,247,240,0.04)] p-5 transition hover:border-[rgba(255,228,92,0.28)] hover:bg-[rgba(255,228,92,0.04)]"
+              key={`${a.year}-${a.title}`}
+            >
               <StarIcon className="size-5 text-[var(--yellow)]" />
-              <div className="numeral mt-5 text-[3rem] leading-none text-[var(--yellow)]">{a.year}</div>
-              <h3 className="mt-3 font-display text-[1.6rem] font-black uppercase leading-none tracking-[-0.03em] text-[var(--cream)]">{a.title}</h3>
-              <p className="mt-2 font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-[rgba(248,247,240,0.48)]">{a.subtitle}</p>
+              <div className="numeral mt-4 text-[2.6rem] leading-none text-[var(--yellow)]">{a.year}</div>
+              <h3
+                className="mt-3 font-display font-black uppercase leading-none tracking-[-0.03em] text-[var(--cream)]"
+                style={{ fontSize: "1.4rem" }}
+              >
+                {a.title}
+              </h3>
+              <p className="mt-2 font-mono text-[0.58rem] font-black uppercase tracking-[0.14em] text-[rgba(248,247,240,0.4)]">
+                {a.subtitle}
+              </p>
             </article>
           ))}
         </div>
@@ -765,7 +1289,7 @@ function InsiderProof({ achievements, teamLead, teamStats, teamYears }: { achiev
 }
 
 /* ===================================================================
-   10. Flowing gallery
+   10. Gallery — editorial grid
    =================================================================== */
 
 function CampaignGallery({ gallery }: { gallery: GalleryItem[] }) {
@@ -779,37 +1303,56 @@ function CampaignGallery({ gallery }: { gallery: GalleryItem[] }) {
   ];
 
   return (
-    <section className="relative bg-[var(--cream)]" id="gallery">
-      <div aria-hidden="true" className="paper-grain absolute inset-0" />
-      <div ref={ref} className={`relative z-10 mx-auto max-w-[1240px] px-4 py-20 sm:px-8 sm:py-28 reveal-base reveal-up ${isVisible ? "revealed" : ""}`}>
-        <div className="grid gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-end">
+    <section className="relative section-paper overflow-hidden" id="gallery">
+      <div aria-hidden="true" className="dot-grid-paper absolute inset-0" />
+
+      <div
+        ref={ref}
+        className={`relative z-10 mx-auto max-w-[1280px] px-4 py-20 sm:px-8 sm:py-28 reveal-base reveal-up ${isVisible ? "revealed" : ""}`}
+      >
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between mb-12">
           <div>
             <div className="kicker">Lab Gallery</div>
-            <h2 className="headline mt-5 max-w-[11ch] text-[clamp(3.2rem,8vw,6.5rem)] text-[var(--navy-deep)]">Real lab. Real iteration.</h2>
+            <h2
+              className="headline mt-4 text-[var(--navy-deep)]"
+              style={{ fontSize: "clamp(3rem, 8vw, 6.5rem)" }}
+            >
+              Real lab.<br />Real iteration.
+            </h2>
           </div>
-          <p className="max-w-[32rem] text-[1.05rem] leading-[1.85] text-[var(--muted-dark)]">
+          <p className="max-w-[28rem] pb-2 text-[1rem] leading-[1.85] text-[var(--muted-dark)]">
             Dokumentasi kerja AROC_PL: prototipe, wiring, diskusi, dan proses iterasi di lab.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-4 sm:grid-cols-12 sm:grid-rows-[280px_280px_240px]">
+        <div className="grid gap-4 sm:grid-cols-12 sm:grid-rows-[280px_280px_240px]">
           {gallery.map((item, i) => (
             <figure
               className={`group relative min-h-[14rem] overflow-hidden rounded-[2rem] bg-[var(--navy-deep)] ${spans[i] ?? ""}`}
               key={item.src}
-              style={i === 0 ? { transform: "rotate(-0.5deg)" } : i === 3 ? { transform: "rotate(0.3deg)" } : undefined}
+              style={
+                i === 0
+                  ? { transform: "rotate(-0.4deg)" }
+                  : i === 3
+                    ? { transform: "rotate(0.25deg)" }
+                    : undefined
+              }
             >
               <Image
                 alt={item.alt}
-                className="object-cover transition duration-[900ms] group-hover:scale-[1.06]"
+                className="object-cover transition duration-[900ms] group-hover:scale-[1.05]"
                 fill
                 sizes="(max-width: 640px) 100vw, 50vw"
                 src={item.src}
               />
-              <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,rgba(5,8,22,0.88))]" />
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,rgba(3,6,16,0.9))]" />
               <figcaption className="absolute inset-x-0 bottom-0 p-5 text-[var(--cream)]">
-                <div className="font-mono text-[0.64rem] font-black uppercase tracking-[0.18em] text-[var(--yellow)]">Frame 0{i + 1}</div>
-                <p className="mt-2 max-w-[34rem] text-[0.94rem] leading-[1.6] text-[rgba(248,247,240,0.78)]">{item.alt}</p>
+                <div className="font-mono text-[0.62rem] font-black uppercase tracking-[0.18em] text-[var(--yellow)]">
+                  Frame 0{i + 1}
+                </div>
+                <p className="mt-1.5 max-w-[34rem] text-[0.9rem] leading-[1.6] text-[rgba(248,247,240,0.72)]">
+                  {item.alt}
+                </p>
               </figcaption>
             </figure>
           ))}
@@ -820,37 +1363,75 @@ function CampaignGallery({ gallery }: { gallery: GalleryItem[] }) {
 }
 
 /* ===================================================================
-   11. Final sponsor CTA
+   11. Sponsor CTA — bold, centred, full-width feel
    =================================================================== */
 
 function SponsorFinalCTA() {
   const { ref, isVisible } = useScrollReveal();
 
   return (
-    <section className="relative bg-[var(--navy-deep)]" id="sponsor">
-      <div aria-hidden="true" className="campaign-shell absolute inset-0" />
-      <div ref={ref} className={`relative z-10 mx-auto max-w-[1240px] px-4 py-20 sm:px-8 sm:py-28 reveal-base reveal-up ${isVisible ? "revealed" : ""}`}>
-        <div className="relative overflow-hidden rounded-[2.8rem] border border-[rgba(255,228,92,0.24)] bg-[rgba(17,26,61,0.7)] p-6 sm:p-10 lg:p-12">
-          <DoodleArrow className="absolute right-8 top-8 hidden w-40 rotate-[-10deg] text-[var(--yellow)] lg:block" />
-          <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-            <div className="mx-auto flex aspect-square w-full max-w-[22rem] items-center justify-center rounded-full bg-[var(--yellow)] p-8 shadow-[0_0_0_1rem_rgba(255,228,92,0.08)]">
-              <ArocGeneratedMark className="h-full w-full max-w-[15rem]" />
+    <section className="relative overflow-hidden bg-[var(--navy-abyss)]" id="sponsor">
+      {/* Top accent line */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(255,228,92,0.45)] to-transparent" />
+
+      {/* Background glow */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-1/3 h-[32rem] w-[32rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[rgba(255,228,92,0.08)] blur-3xl"
+      />
+
+      <div
+        ref={ref}
+        className={`relative z-10 mx-auto max-w-[1280px] px-4 py-20 sm:px-8 sm:py-28 reveal-base reveal-up ${isVisible ? "revealed" : ""}`}
+      >
+        {/* Inner container */}
+        <div
+          className="relative overflow-hidden rounded-[3rem] border border-[rgba(255,228,92,0.22)] p-8 sm:p-12 lg:p-16"
+          style={{
+            background: "linear-gradient(150deg, rgba(20,28,66,0.95), rgba(5,8,22,0.98))",
+            boxShadow: "0 0 0 1px rgba(255,228,92,0.06), 0 60px 120px -60px rgba(0,0,0,0.95)",
+          }}
+        >
+          {/* Decorative doodle */}
+          <DoodleArrow className="absolute right-8 top-8 hidden w-36 rotate-[-10deg] text-[var(--yellow)] opacity-60 lg:block" />
+
+          <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
+            {/* Logo mark */}
+            <div className="mx-auto flex aspect-square w-full max-w-[18rem] items-center justify-center rounded-full bg-[var(--yellow)] p-8 shadow-[0_0_0_1.5rem_rgba(255,228,92,0.07),0_0_0_3rem_rgba(255,228,92,0.03)]">
+              <ArocGeneratedMark className="h-full w-full max-w-[12rem]" />
             </div>
+
+            {/* Copy */}
             <div>
               <div className="champ-badge-outline">Sponsor Call</div>
-              <h2 className="headline mt-6 max-w-[11ch] text-[clamp(3.3rem,8vw,7rem)] text-[var(--cream)]">Back the team building them.</h2>
-              <p className="mt-8 max-w-[36rem] text-[1.05rem] leading-[1.85] text-[rgba(248,247,240,0.74)]">
+              <h2
+                className="headline mt-6 text-[var(--cream)]"
+                style={{ fontSize: "clamp(3rem, 8vw, 7rem)", maxWidth: "11ch" }}
+              >
+                Back the team building them.
+              </h2>
+              <p className="mt-8 max-w-[36rem] text-[1.05rem] leading-[1.9] text-[rgba(248,247,240,0.68)]">
                 Jangan cuma nonton robot. Dukung tim yang membangun, menguji, dan membawa nama Polinema ke arena robot humanoid nasional.
               </p>
-              {/* Partner value badges */}
+
               <div className="mt-6 flex flex-wrap gap-2">
                 {["Lab Access", "Competition Exposure", "Talent Pipeline", "Brand on Podium"].map((b) => (
-                  <span className="rounded-full border border-[rgba(255,228,92,0.3)] bg-[rgba(255,228,92,0.08)] px-3 py-1.5 font-mono text-[0.6rem] font-black uppercase tracking-[0.14em] text-[var(--yellow)]" key={b}>{b}</span>
+                  <span
+                    className="rounded-full border border-[rgba(255,228,92,0.28)] bg-[rgba(255,228,92,0.07)] px-3 py-1.5 font-mono text-[0.6rem] font-black uppercase tracking-[0.14em] text-[var(--yellow)]"
+                    key={b}
+                  >
+                    {b}
+                  </span>
                 ))}
               </div>
-              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-                <Link className="btn-gold" href="mailto:hello@arocpl.com?subject=Kemitraan%20AROC_PL">Mulai Kemitraan</Link>
-                <Link className="btn-ghost-paper" href="/#gallery">Lihat Dokumentasi</Link>
+
+              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+                <Link className="btn-gold" href="mailto:hello@arocpl.com?subject=Kemitraan%20AROC_PL">
+                  Mulai Kemitraan
+                </Link>
+                <Link className="btn-ghost-paper" href="/#gallery">
+                  Lihat Dokumentasi
+                </Link>
               </div>
             </div>
           </div>
@@ -861,7 +1442,7 @@ function SponsorFinalCTA() {
 }
 
 /* ===================================================================
-   Main export — continuous campaign flow
+   Main export
    =================================================================== */
 
 export function HomeCampaign({
@@ -880,32 +1461,41 @@ export function HomeCampaign({
     <main>
       <CampaignLoader />
       <CampaignHero hero={hero} />
-      {/* Bleed: dark → yellow */}
-      <div aria-hidden="true" className="h-20 bg-gradient-to-b from-[var(--navy-black)] to-[var(--yellow)]" />
+
+      {/* Hero → yellow tape */}
+      <div aria-hidden="true" className="bleed-ink-to-yellow" />
       <CurvedMarquee />
-      {/* Bleed: yellow → cream */}
-      <div aria-hidden="true" className="h-20 bg-gradient-to-b from-[var(--yellow)] to-[var(--cream)]" />
+
+      {/* yellow tape → cream manifesto */}
+      <div aria-hidden="true" className="bleed-yellow-to-cream" />
       <EditorialManifesto aboutCards={aboutCards} values={values} />
-      {/* Bleed: cream → dark */}
-      <div aria-hidden="true" className="h-20 bg-gradient-to-b from-[var(--cream)] to-[var(--navy-deep)]" />
+
+      {/* cream → ink story */}
+      <div aria-hidden="true" className="bleed-cream-to-ink" />
       <StickyScrollStory hero={hero} />
-      {/* Bleed: dark → cream-soft */}
-      <div aria-hidden="true" className="h-20 bg-gradient-to-b from-[var(--navy-deep)] to-[var(--cream-soft)]" />
+
+      {/* ink → warm cream benefits */}
+      <div aria-hidden="true" className="bleed-ink-to-cream-soft" />
       <BenefitsClaims divisions={divisions} />
-      {/* Bleed: cream-soft → dark */}
-      <div aria-hidden="true" className="h-20 bg-gradient-to-b from-[var(--cream-soft)] to-[var(--navy-deep)]" />
+
+      {/* warm cream → ink robots */}
+      <div aria-hidden="true" className="bleed-cream-soft-to-ink" />
       <RobotLineupSlider robots={robots} />
-      {/* Bleed: dark → cream */}
-      <div aria-hidden="true" className="h-20 bg-gradient-to-b from-[var(--navy-deep)] to-[var(--cream)]" />
+
+      {/* ink → abyss comparison */}
+      <div aria-hidden="true" className="h-px bg-gradient-to-r from-transparent via-[rgba(255,228,92,0.2)] to-transparent" />
       <ComparisonTable />
-      {/* Bleed: cream → dark */}
-      <div aria-hidden="true" className="h-20 bg-gradient-to-b from-[var(--cream)] to-[var(--navy-deep)]" />
+
+      {/* abyss → ink proof */}
+      <div aria-hidden="true" className="h-16 bg-gradient-to-b from-[var(--navy-abyss)] to-[var(--navy-deep)]" />
       <InsiderProof achievements={achievements} teamLead={teamLead} teamStats={teamStats} teamYears={teamYears} />
-      {/* Bleed: dark → cream */}
-      <div aria-hidden="true" className="h-20 bg-gradient-to-b from-[var(--navy-deep)] to-[var(--cream)]" />
+
+      {/* ink → cream gallery */}
+      <div aria-hidden="true" className="bleed-ink-to-cream" />
       <CampaignGallery gallery={gallery} />
-      {/* Bleed: cream → dark */}
-      <div aria-hidden="true" className="h-20 bg-gradient-to-b from-[var(--cream)] to-[var(--navy-deep)]" />
+
+      {/* cream → abyss sponsor */}
+      <div aria-hidden="true" className="bleed-cream-to-navy" />
       <SponsorFinalCTA />
     </main>
   );
