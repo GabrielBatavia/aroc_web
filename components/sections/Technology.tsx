@@ -105,9 +105,9 @@ export function Technology({ divisions }: TechnologyProps) {
 
         <div className="mt-8 grid gap-6 lg:grid-cols-[0.85fr_1.15fr]">
           <div className={`card-ink rounded-[2rem] p-6 sm:p-8 reveal-base reveal-left ${cardsVisible ? "revealed reveal-delay-3" : ""}`}>
-            <div className="champ-badge-outline">Match Ready Stack</div>
+            <div className="champ-badge-outline">Sistem Kompetisi</div>
             <h3 className="headline mt-6 text-[clamp(2.8rem,6vw,5rem)] text-[var(--cream)]">
-              Bukan demo. Ini sistem tanding.
+              Dikembangkan untuk ajang bergengsi.
             </h3>
           </div>
           <div className={`overflow-hidden rounded-[2rem] border border-[var(--rule)] bg-white/80 reveal-base reveal-right ${cardsVisible ? "revealed reveal-delay-4" : ""}`}>

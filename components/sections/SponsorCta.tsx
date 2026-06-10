@@ -38,12 +38,12 @@ export function SponsorCta() {
               </div>
               <div className="relative mt-7">
                 <h2 className="headline max-w-[10ch] text-[clamp(3.3rem,9vw,7.7rem)] text-[var(--cream)]">
-                  Taruh brand kamu di podium.
+                  Dukung Development Team AROC_PL.
                 </h2>
                 <DoodleUnderline className="absolute -bottom-5 left-2 w-72 text-[var(--yellow)]" />
               </div>
               <p className="mt-11 max-w-[36rem] text-[1.05rem] leading-[1.85] text-[rgba(248,247,240,0.76)]">
-                AROC_PL sedang mencari partner yang percaya pada engineering Indonesia. Kita bisa merancang kemitraan untuk brand visibility, recruitment pipeline, riset, atau dukungan kompetisi.
+                AROC_PL membuka peluang kemitraan untuk mendukung pengembangan robot humanoid, dokumentasi kegiatan, talent pipeline, dan partisipasi kompetisi.
               </p>
               <div className="mt-9 flex flex-col gap-3 sm:flex-row">
                 <MagneticButton className="btn-gold" href="mailto:hello@arocpl.com?subject=Permintaan%20Kemitraan%20AROC_PL">

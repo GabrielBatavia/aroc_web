@@ -8,7 +8,6 @@ import {
   ArocGeneratedMark,
   CircuitPath,
   DoodleArrow,
-  DoodleUnderline,
   SensorCone,
   SoccerPath,
 } from "@/components/shared/BrandAssets";
@@ -65,15 +64,15 @@ type HomeCampaignProps = {
 const storySteps = [
   {
     kicker: "01 / Frame",
-    title: "Rangka yang siap jatuh, bangun, lalu jalan lagi.",
-    body: "Hardware AROC_PL dibangun untuk realita pertandingan: benturan, recovery, servis cepat, dan iterasi tiap sesi uji.",
+    title: "Rangka humanoid yang dirancang untuk pengujian berulang.",
+    body: "Hardware AROC_PL dikembangkan untuk kebutuhan pertandingan: ketahanan struktur, pemulihan gerak, servis cepat, dan iterasi di setiap sesi uji.",
     icon: CpuIcon,
     accentColor: "rgba(255, 228, 92, 0.9)",
   },
   {
     kicker: "02 / Vision",
     title: "Kamera membaca bola, garis, dan gawang.",
-    body: "Pipeline persepsi memberi robot konteks lapangan supaya keputusan tidak hanya terlihat pintar di demo, tapi berguna di arena.",
+    body: "Pipeline persepsi memberi robot konteks lapangan agar keputusan dapat digunakan secara konsisten di arena.",
     icon: EyeIcon,
     accentColor: "rgba(255, 228, 92, 0.9)",
   },
@@ -86,42 +85,42 @@ const storySteps = [
   },
   {
     kicker: "04 / Strategy",
-    title: "Satu lineup, tiga peran, keputusan cepat.",
-    body: "Penyerang, kiper, dan bek menjalankan perilaku berbeda agar pertandingan terasa seperti sepak bola.",
+    title: "Satu sistem, tiga peran, keputusan terarah.",
+    body: "Penyerang, kiper, dan bek menjalankan perilaku berbeda sesuai strategi pertandingan robot humanoid.",
     icon: CodeIcon,
     accentColor: "rgba(255, 228, 92, 0.9)",
   },
   {
-    kicker: "05 / Match Ready",
-    title: "Bukan demo. Sistem tanding.",
-    body: "KRI, testing, tekanan kompetisi — setiap sistem diuji di arena nyata, bukan hanya di video presentasi.",
+    kicker: "05 / Competition",
+    title: "Dikembangkan dan dipertandingkan di ajang bergengsi.",
+    body: "Setiap sistem diuji melalui sesi pengembangan, evaluasi teknis, dan kompetisi robot humanoid.",
     icon: TrophyIcon,
     accentColor: "rgba(255, 228, 92, 0.9)",
   },
 ];
 
 const benefitClaims = [
-  { title: "Autonomous Vision", body: "Deteksi bola, gawang, dan lapangan sebagai dasar keputusan match-ready.", icon: EyeIcon },
-  { title: "Stable Locomotion", body: "Kontrol gerak humanoid untuk stance, recovery, dan transisi saat bertanding.", icon: BoltIcon },
-  { title: "Embedded Control", body: "Koordinasi sensor, aktuator, motor driver, dan power system onboard.", icon: CpuIcon },
-  { title: "Match Strategy", body: "Perilaku role-based untuk menyerang, bertahan, menjaga area, dan kembali ke posisi.", icon: ShieldIcon },
+  { title: "Vision Otonom", body: "Deteksi bola, gawang, dan lapangan sebagai dasar pengambilan keputusan robot.", icon: EyeIcon },
+  { title: "Lokomosi Stabil", body: "Kontrol gerak humanoid untuk posisi berdiri, pemulihan, dan transisi saat bertanding.", icon: BoltIcon },
+  { title: "Kontrol Embedded", body: "Koordinasi sensor, aktuator, motor driver, dan sistem daya onboard.", icon: CpuIcon },
+  { title: "Strategi Pertandingan", body: "Perilaku berbasis peran untuk menyerang, bertahan, menjaga area, dan kembali ke posisi.", icon: ShieldIcon },
 ];
 
 type ComparisonStatus = true | false | "partial";
 
 const comparisonRows: { capability: string; aroc: ComparisonStatus; generic: ComparisonStatus }[] = [
-  { capability: "KRI-tested system", aroc: true, generic: false },
-  { capability: "Humanoid soccer role", aroc: true, generic: "partial" },
-  { capability: "Vision pipeline", aroc: true, generic: "partial" },
-  { capability: "Hardware & software integration", aroc: true, generic: false },
-  { capability: "Iteration under match pressure", aroc: true, generic: false },
-  { capability: "Sponsor-ready story", aroc: true, generic: false },
+  { capability: "Sistem teruji KRI", aroc: true, generic: false },
+  { capability: "Peran sepak bola humanoid", aroc: true, generic: "partial" },
+  { capability: "Pipeline vision", aroc: true, generic: "partial" },
+  { capability: "Integrasi hardware dan software", aroc: true, generic: false },
+  { capability: "Iterasi dalam tekanan kompetisi", aroc: true, generic: false },
+  { capability: "Materi kemitraan yang terukur", aroc: true, generic: false },
 ];
 
 const videoSlots = [
-  "Match day recap",
-  "Lab sprint behind the scenes",
-  "Robot test session",
+  "Dokumentasi pertandingan",
+  "Proses pengembangan di lab",
+  "Sesi pengujian robot",
 ];
 
 /* ===================================================================
@@ -217,16 +216,16 @@ function CampaignHero({ hero }: { hero: HeroData }) {
   }, []);
 
   const heroFacts = [
-    { value: "2024", label: "KRI Champion" },
-    { value: "11+", label: "Engineers" },
-    { value: "3", label: "Robot Units" },
+    { value: "2024", label: "Juara KRI" },
+    { value: "11+", label: "Personel" },
+    { value: "3", label: "Unit Robot" },
   ];
 
   const hudLabels = [
-    { text: "Vision Lock ✓", style: { top: "28%", left: "54%"  } },
-    { text: "Match Ready",   style: { top: "44%", right: "3%"  } },
+    { text: "Vision Terkunci", style: { top: "28%", left: "54%"  } },
+    { text: "Siap Bertanding",   style: { top: "44%", right: "3%"  } },
     { text: "KRI 2024 ★",   style: { top: "68%", left: "50%"  } },
-    { text: "Autonomous",    style: { top: "76%", right: "5%"  } },
+    { text: "Otonom",    style: { top: "76%", right: "5%"  } },
   ];
 
   return (
@@ -486,7 +485,7 @@ function CampaignHero({ hero }: { hero: HeroData }) {
    =================================================================== */
 
 function CurvedMarquee() {
-  const words = ["AROC_PL", "Humanoid Soccer", "KRI 2024 Champion", "Polinema", "Built to Win", "Robot Soccer"];
+  const words = ["AROC_PL", "Humanoid Soccer", "Juara KRI 2024", "Polinema", "Robot Humanoid", "Development Team"];
   return (
     <section
       aria-label="Marquee"
@@ -552,7 +551,7 @@ function EditorialManifesto({ aboutCards, values }: { aboutCards: AboutCard[]; v
         className={`relative z-10 mx-auto max-w-[1280px] px-4 py-20 sm:px-8 sm:py-32 reveal-base reveal-up ${isVisible ? "revealed" : ""}`}
       >
         {/* Oversize statement headline */}
-        <div className="kicker mb-8">Campaign Manifesto</div>
+        <div className="kicker mb-8">Profil Pengembangan</div>
 
         <div className="grid gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:gap-16 lg:items-start">
           <div>
@@ -560,7 +559,7 @@ function EditorialManifesto({ aboutCards, values }: { aboutCards: AboutCard[]; v
               className="headline text-[var(--navy-deep)]"
               style={{ fontSize: "clamp(3.4rem, 10vw, 8rem)", lineHeight: 0.88 }}
             >
-              Robot yang bukan{" "}
+              Dikembangkan dan{" "}
               <span
                 className="inline-block"
                 style={{
@@ -569,12 +568,12 @@ function EditorialManifesto({ aboutCards, values }: { aboutCards: AboutCard[]; v
                   textShadow: "none",
                 }}
               >
-                demo.
+                dipertandingkan
               </span>
               <br />
-              Robot yang
+              di ajang
               <br />
-              <span style={{ color: "var(--navy-bright)" }}>bertanding.</span>
+              <span style={{ color: "var(--navy-bright)" }}>bergengsi.</span>
             </h2>
 
             {/* Value tags */}
@@ -597,7 +596,7 @@ function EditorialManifesto({ aboutCards, values }: { aboutCards: AboutCard[]; v
                 — Misi Kami
               </div>
               <p className="text-[1.05rem] leading-[1.9] text-[rgba(248,247,240,0.78)]">
-                AROC_PL adalah tempat hardware, software, dan strategi dipaksa menyatu. Targetnya bukan terlihat futuristik, tapi mencetak robot humanoid yang bisa bermain, gagal, diperbaiki, lalu kembali menang.
+                AROC_PL adalah Development Team robot humanoid Politeknik Negeri Malang yang mengintegrasikan hardware, software, dan strategi pertandingan. Fokus kami adalah menghasilkan sistem robot yang siap diuji, dievaluasi, dan dipertandingkan pada ajang robotik bergengsi.
               </p>
             </div>
 
@@ -742,12 +741,12 @@ function StickyScrollStory({ hero }: { hero: HeroData }) {
           {/* ── Scrolling panels ── */}
           <div>
             <div className="pb-8 pt-20 lg:pt-[38vh]">
-              <div className="kicker kicker-on-ink">Scroll Story</div>
+              <div className="kicker kicker-on-ink">Proses Pengembangan</div>
               <h2
                 className="headline mt-5 text-[var(--cream)]"
                 style={{ fontSize: "clamp(3rem, 8vw, 6rem)" }}
               >
-                From lab bench<br />to kick off.
+                Dari lab menuju<br />arena kompetisi.
               </h2>
             </div>
 
@@ -830,12 +829,12 @@ function BenefitsClaims({ divisions }: { divisions: DivisionCard[] }) {
         {/* Section header */}
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <div className="kicker">Core Capabilities</div>
+            <div className="kicker">Kapabilitas Inti</div>
             <h2
               className="headline mt-4 text-[var(--navy-deep)]"
               style={{ fontSize: "clamp(3rem, 8vw, 6.5rem)" }}
             >
-              More control.<br />Less guesswork.
+              Kontrol terukur.<br />Keputusan terarah.
             </h2>
           </div>
           <p className="max-w-[26rem] pb-2 text-[1rem] leading-[1.85] text-[var(--muted-dark)] sm:text-right">
@@ -971,12 +970,12 @@ function RobotLineupSlider({ robots }: { robots: RobotCard[] }) {
         {/* Header */}
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between mb-12">
           <div>
-            <div className="kicker kicker-on-ink">Robot Lineup</div>
+            <div className="kicker kicker-on-ink">Unit Robot</div>
             <h2
               className="headline mt-4 text-[var(--cream)]"
               style={{ fontSize: "clamp(3rem, 8vw, 6.5rem)" }}
             >
-              Choose your<br />player.
+              Pilih unit<br />robot.
             </h2>
           </div>
           <p className="max-w-[26rem] pb-2 text-[1rem] leading-[1.85] text-[rgba(248,247,240,0.62)]">
@@ -1113,12 +1112,12 @@ function ComparisonTable() {
         className={`relative z-10 mx-auto max-w-[1120px] px-4 py-20 sm:px-8 sm:py-28 reveal-base reveal-up ${isVisible ? "revealed" : ""}`}
       >
         <div className="text-center">
-          <div className="kicker kicker-centered kicker-on-ink">See the Difference</div>
+          <div className="kicker kicker-centered kicker-on-ink">Pembeda AROC_PL</div>
           <h2
             className="headline mx-auto mt-5 text-[var(--cream)]"
             style={{ fontSize: "clamp(3rem, 8vw, 6.5rem)", maxWidth: "11ch" }}
           >
-            Bukan sekadar prototype.
+            Bukan sekadar prototipe.
           </h2>
         </div>
 
@@ -1129,7 +1128,7 @@ function ComparisonTable() {
           {/* Header */}
           <div className="grid grid-cols-[1fr_0.6fr_0.6fr] bg-[rgba(10,15,40,0.95)]">
             <div className="p-5 font-mono text-[0.7rem] font-black uppercase tracking-[0.18em] text-[rgba(248,247,240,0.4)]">
-              Capability
+              Kapabilitas
             </div>
             <div
               className="p-5 text-center font-display font-black uppercase leading-none tracking-[-0.03em] text-[var(--navy-deep)]"
@@ -1145,7 +1144,7 @@ function ComparisonTable() {
               className="p-5 text-center font-display font-black uppercase leading-none tracking-[-0.03em] text-[rgba(248,247,240,0.4)]"
               style={{ fontSize: "clamp(1.2rem, 3vw, 1.6rem)" }}
             >
-              Prototype
+              Prototipe Umum
             </div>
           </div>
 
@@ -1198,12 +1197,12 @@ function InsiderProof({ achievements, teamLead, teamStats, teamYears }: { achiev
         {/* Header */}
         <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-end mb-14">
           <div>
-            <div className="kicker kicker-on-ink">Insider Proof</div>
+            <div className="kicker kicker-on-ink">Profil Tim</div>
             <h2
               className="headline mt-5 text-[var(--cream)]"
               style={{ fontSize: "clamp(3rem, 8vw, 6.5rem)" }}
             >
-              People behind<br />the machine.
+              Development Team<br />di balik robot.
             </h2>
           </div>
           <p className="max-w-[34rem] pb-2 text-[1.05rem] leading-[1.85] text-[rgba(248,247,240,0.62)]">
@@ -1218,7 +1217,7 @@ function InsiderProof({ achievements, teamLead, teamStats, teamYears }: { achiev
           {/* Captain quote — spans full height on desktop */}
           <div className="card-ink rounded-[2rem] p-6 sm:p-8 lg:row-span-2">
             <div className="font-mono text-[0.7rem] font-black uppercase tracking-[0.2em] text-[var(--yellow)]">
-              Captain Quote
+              Pernyataan Ketua Tim
             </div>
             <blockquote
               className="mt-6 font-display font-black uppercase leading-[0.88] tracking-[-0.05em] text-[var(--cream)]"
@@ -1331,12 +1330,12 @@ function CampaignGallery({ gallery }: { gallery: GalleryItem[] }) {
       >
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between mb-12">
           <div>
-            <div className="kicker">Lab Gallery</div>
+            <div className="kicker">Dokumentasi Lab</div>
             <h2
               className="headline mt-4 text-[var(--navy-deep)]"
               style={{ fontSize: "clamp(3rem, 8vw, 6.5rem)" }}
             >
-              Real lab.<br />Real iteration.
+              Proses pengembangan<br />dan evaluasi.
             </h2>
           </div>
           <p className="max-w-[28rem] pb-2 text-[1rem] leading-[1.85] text-[var(--muted-dark)]">
@@ -1422,19 +1421,19 @@ function SponsorFinalCTA() {
 
             {/* Copy */}
             <div>
-              <div className="champ-badge-outline">Sponsor Call</div>
+              <div className="champ-badge-outline">Peluang Kemitraan</div>
               <h2
                 className="headline mt-6 text-[var(--cream)]"
                 style={{ fontSize: "clamp(3rem, 8vw, 7rem)", maxWidth: "11ch" }}
               >
-                Back the team building them.
+                Dukung Development Team AROC_PL.
               </h2>
               <p className="mt-8 max-w-[36rem] text-[1.05rem] leading-[1.9] text-[rgba(248,247,240,0.68)]">
-                Jangan cuma nonton robot. Dukung tim yang membangun, menguji, dan membawa nama Polinema ke arena robot humanoid nasional.
+                Kemitraan bersama AROC_PL mendukung pengembangan robot humanoid Polinema, dokumentasi kegiatan, dan partisipasi tim dalam kompetisi robotik bergengsi.
               </p>
 
               <div className="mt-6 flex flex-wrap gap-2">
-                {["Lab Access", "Competition Exposure", "Talent Pipeline", "Brand on Podium"].map((b) => (
+                {["Akses Kegiatan Lab", "Eksposur Kompetisi", "Talent Pipeline", "Publikasi Kemitraan"].map((b) => (
                   <span
                     className="rounded-full border border-[rgba(255,228,92,0.28)] bg-[rgba(255,228,92,0.07)] px-3 py-1.5 font-mono text-[0.6rem] font-black uppercase tracking-[0.14em] text-[var(--yellow)]"
                     key={b}
@@ -1446,7 +1445,7 @@ function SponsorFinalCTA() {
 
               <div className="mt-10 flex flex-col gap-3 sm:flex-row">
                 <Link className="btn-gold" href="mailto:hello@arocpl.com?subject=Kemitraan%20AROC_PL">
-                  Mulai Kemitraan
+                  Ajukan Kemitraan
                 </Link>
                 <Link className="btn-ghost-paper" href="/#gallery">
                   Lihat Dokumentasi

@@ -34,7 +34,7 @@ export function Footer({ sponsors, navigation, contact }: FooterProps) {
       <div className={`relative z-10 mx-auto max-w-[1240px] px-4 py-16 sm:px-8 lg:py-20 reveal-base reveal-up ${isVisible ? "revealed" : ""}`}>
         <div className="border-y border-[rgba(248,247,240,0.1)] py-7">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-            <div className="kicker kicker-on-ink">Current Backing</div>
+            <div className="kicker kicker-on-ink">Dukungan Saat Ini</div>
             <div className="flex flex-wrap items-center gap-x-10 gap-y-3">
               {sponsors.map((sponsor) => (
                 <span className="font-display text-[1.55rem] font-black uppercase tracking-[0.12em] text-[rgba(248,247,240,0.82)]" key={sponsor}>
@@ -42,7 +42,7 @@ export function Footer({ sponsors, navigation, contact }: FooterProps) {
                 </span>
               ))}
               <Link className="font-mono text-[0.72rem] font-black uppercase tracking-[0.2em] text-[var(--yellow)] underline-offset-4 hover:underline" href="/#sponsor">
-                + logo kamu di sini
+                + logo mitra di sini
               </Link>
             </div>
           </div>
@@ -64,7 +64,7 @@ export function Footer({ sponsors, navigation, contact }: FooterProps) {
               </span>
             </Link>
             <p className="mt-6 max-w-[26rem] text-[0.98rem] leading-[1.85] text-[rgba(248,247,240,0.62)]">
-              Advance Robosoccer Polinema. Kami membangun robot, menguji strategi, dan membawa karya mahasiswa ke arena nasional.
+              Advance Robosoccer Polinema. Development Team robot humanoid Politeknik Negeri Malang untuk riset, pengembangan, dan kompetisi.
             </p>
           </div>
 
@@ -110,7 +110,7 @@ export function Footer({ sponsors, navigation, contact }: FooterProps) {
 
         <div className="flex flex-col gap-3 border-t border-[rgba(248,247,240,0.1)] pt-6 text-[0.82rem] text-[rgba(248,247,240,0.48)] sm:flex-row sm:items-center sm:justify-between">
           <p>&copy; 2026 AROC_PL / Politeknik Negeri Malang</p>
-          <p className="font-mono uppercase tracking-[0.18em]">Built for robots that play to win.</p>
+          <p className="font-mono uppercase tracking-[0.18em]">Development Team robot humanoid Polinema.</p>
         </div>
       </div>
     </footer>

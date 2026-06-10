@@ -32,7 +32,7 @@ export function Achievements({ items }: AchievementsProps) {
             <div>
               <div className="kicker">Ruang Piala</div>
               <h2 className="headline mt-5 max-w-[11ch] text-[clamp(3.2rem,8vw,6.4rem)] text-[var(--navy-deep)]">
-                Empat tahun di podium.
+                Rekam prestasi nasional.
               </h2>
             </div>
             <p className="max-w-[34rem] text-[1.05rem] leading-[1.85] text-[var(--muted-dark)] lg:pb-4">

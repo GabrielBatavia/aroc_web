@@ -23,7 +23,7 @@ const barlowCondensed = Barlow_Condensed({
 export const metadata: Metadata = {
   title: "AROC_PL — Advance Robosoccer Polinema | Tim Robotik Juara Nasional",
   description:
-    "Tim robotik humanoid Politeknik Negeri Malang. Juara Nasional KRI Humanoid League 2024. Kami bangun robot, kami pulang bawa piala.",
+    "Development Team robot humanoid Politeknik Negeri Malang. Juara Nasional KRI Humanoid League 2024 dan aktif mengembangkan sistem robot untuk kompetisi bergengsi.",
 };
 
 export default function RootLayout({

@@ -74,7 +74,7 @@ export function Hero({ data }: HeroProps) {
           </div>
 
           <p className="mt-10 max-w-[34rem] text-[1.04rem] leading-[1.85] text-[rgba(248,247,240,0.74)] sm:text-[1.12rem]">
-            {data.description} Tiga angkatan, satu lab, dan satu misi: membuat robot humanoid yang benar-benar bermain untuk menang.
+            {data.description} Tiga angkatan, satu lab, dan satu misi: mengembangkan robot humanoid yang siap dipertandingkan.
           </p>
 
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">

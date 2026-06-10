@@ -30,7 +30,7 @@ export const aboutHero = {
   titlePrefix: "Tentang",
   titleAccent: "AROC_PL",
   description:
-    "Tim robotik humanoid kompetitif dari Politeknik Negeri Malang. Membangun teknologi, mencetak prestasi, bersama lintas angkatan.",
+    "Development Team robot humanoid Politeknik Negeri Malang yang berfokus pada riset, pengembangan, dan partisipasi di kompetisi robotik bergengsi.",
   stats: [
     { value: "2", label: "Dosen Pembimbing", tone: "cyan" },
     { value: "11", label: "Total Anggota", tone: "orange" },
@@ -41,7 +41,7 @@ export const aboutHero = {
 export const aboutVision = {
   title: "VISI",
   description:
-    "Menjadi tim robotik humanoid terdepan di Indonesia yang mampu bersaing di level internasional, mendorong inovasi teknologi, dan mencetak generasi engineer unggul dari Politeknik Negeri Malang.",
+    "Menjadi Development Team robot humanoid yang unggul di Indonesia, mampu bersaing di tingkat internasional, serta mendorong inovasi teknologi dari Politeknik Negeri Malang.",
 };
 
 export const aboutMission = {
@@ -49,7 +49,7 @@ export const aboutMission = {
   items: [
     "Mengembangkan robot humanoid cerdas berbasis AI dan computer vision.",
     "Aktif berkompetisi di KRI (Kontes Robot Indonesia) dan FIRA HuroCup.",
-    "Membangun ekosistem riset & pengembangan robotik yang berkelanjutan.",
+    "Membangun ekosistem riset dan pengembangan robotik yang berkelanjutan.",
     "Memberdayakan mahasiswa melalui kolaborasi lintas disiplin ilmu.",
   ],
 };
@@ -57,7 +57,7 @@ export const aboutMission = {
 export const aboutValues = [
   {
     title: "Inovasi",
-    description: "Selalu berpikir di luar batas teknologi saat ini.",
+    description: "Mengembangkan solusi teknis yang relevan dengan kebutuhan kompetisi.",
     tone: "gold",
     icon: "star",
   },
@@ -69,7 +69,7 @@ export const aboutValues = [
   },
   {
     title: "Kolaborasi",
-    description: "Satu tim, satu tujuan — lintas angkatan.",
+    description: "Bekerja lintas angkatan dan disiplin ilmu dalam satu tujuan pengembangan.",
     tone: "blue",
     icon: "users",
   },

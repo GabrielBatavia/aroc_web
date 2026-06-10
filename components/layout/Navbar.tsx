@@ -24,9 +24,6 @@ export function Navbar({ links }: NavbarProps) {
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  // Close menu on route change
-  useEffect(() => { setOpen(false); }, [pathname]);
-
   const isActive = (link: NavLink) => {
     if (!link.matchPath) return false;
     return pathname === link.matchPath;
@@ -89,7 +86,7 @@ export function Navbar({ links }: NavbarProps) {
             className="btn-gold hidden min-h-[2.4rem] px-4 text-[0.72rem] sm:inline-flex"
             href="/#sponsor"
           >
-            Jadi Sponsor
+            Kemitraan
           </Link>
           {/* Hamburger — hidden on lg */}
           <button
@@ -129,7 +126,7 @@ export function Navbar({ links }: NavbarProps) {
                 href="/#sponsor"
                 onClick={() => setOpen(false)}
               >
-                Jadi Sponsor
+                Kemitraan
               </Link>
             </div>
           </div>

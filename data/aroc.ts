@@ -131,38 +131,38 @@ export const navLinks: NavLink[] = [
 ];
 
 export const campaignNavLinks: NavLink[] = [
-  { label: "Story", href: "/#story" },
-  { label: "Robots", href: "/#robots" },
-  { label: "Proof", href: "/#achievements" },
-  { label: "Team", href: "/#team" },
-  { label: "Gallery", href: "/#gallery" },
-  { label: "Sponsor", href: "/#sponsor" },
+  { label: "Proses", href: "/#story" },
+  { label: "Robot", href: "/#robots" },
+  { label: "Prestasi", href: "/#achievements" },
+  { label: "Tim", href: "/#team" },
+  { label: "Galeri", href: "/#gallery" },
+  { label: "Kemitraan", href: "/#sponsor" },
 ];
 
 export const footerNavigation: NavLink[] = [
   { label: "Tentang Kami", href: "/about", matchPath: "/about" },
   { label: "Tim Kami", href: "/#team" },
   { label: "Armada Robot", href: "/#robots" },
-  { label: "Ruang Piala", href: "/#achievements" },
+  { label: "Prestasi", href: "/#achievements" },
   { label: "Galeri", href: "/#gallery" },
-  { label: "Jadi Sponsor", href: "/#sponsor" },
+  { label: "Kemitraan", href: "/#sponsor" },
 ];
 
 export const heroData: HeroData = {
-  eyebrow: "AROC_PL JUARA!!!",
+  eyebrow: "Development Team Robot Humanoid",
   statusLabel: "Status",
-  statusValue: "Siap Tanding",
+  statusValue: "Siap Bertanding",
   titleLines: {
-    top: "Kami bangun",
+    top: "Kami mengembangkan",
     accent: "robot",
     middle: "",
     bottomPrefix: "yang",
-    bottomAccent: "menang.",
+    bottomAccent: "kompetitif.",
   },
   description:
-    "AROC_PL adalah Advance Robosoccer Polinema. Kami merakit masa depan sepak bola robot humanoid — dengan presisi hardware, kecerdasan di lapangan, dan kerja tim tanpa henti.",
-  primaryCta: { label: "Kenali Tim Kami", href: "#team" },
-  secondaryCta: { label: "Jadi Sponsor", href: "#sponsor" },
+    "AROC_PL adalah Development Team robot humanoid Politeknik Negeri Malang yang berfokus pada riset, pengembangan, dan kompetisi sepak bola robot tingkat nasional.",
+  primaryCta: { label: "Lihat Robot", href: "#robots" },
+  secondaryCta: { label: "Ajukan Kemitraan", href: "#sponsor" },
   robotImage: "/images/hero-robot.png",
   robotModel: "/images/3DHumanoid.optimized.glb",
   systemCard: {
@@ -180,19 +180,19 @@ export const aboutCards: AboutCard[] = [
   {
     title: "Siapa Kami",
     description:
-      "Tim robotika dari Politeknik Negeri Malang yang fokus membangun sistem humanoid otonom untuk kompetisi sepak bola robot tingkat nasional.",
+      "Development Team robot humanoid Politeknik Negeri Malang yang fokus mengembangkan sistem otonom untuk kompetisi sepak bola robot tingkat nasional.",
     icon: "users",
   },
   {
     title: "Fokus Kami",
     description:
-      "Spesialisasi pengembangan robot humanoid — mulai dari kontrol gerak, elektronika, persepsi, strategi lapangan, hingga keandalan di pertandingan.",
+      "Spesialisasi pengembangan robot humanoid meliputi kontrol gerak, elektronika, persepsi, strategi lapangan, dan keandalan saat bertanding.",
     icon: "target",
   },
   {
     title: "Visi Kami",
     description:
-      "Menjadi kekuatan terdepan di robotika cerdas dengan mencetak engineer yang mampu merancang, menguji, dan berkompetisi dengan tujuan.",
+      "Menjadi tim robot humanoid yang unggul melalui pengembangan teknologi, disiplin pengujian, dan partisipasi aktif di ajang kompetisi bergengsi.",
     icon: "shield",
   },
 ];
@@ -335,7 +335,7 @@ export const teamLead: TeamLead = {
   image: "/images/team-lead.png",
   badge: "Kapten",
   intro:
-    "Membangun robot bukan sekadar merakit komponen. Ini soal kepercayaan, presisi, disiplin, dan semangat untuk terus belajar di bawah tekanan.",
+    "Pengembangan robot humanoid membutuhkan presisi, disiplin, dan evaluasi berkelanjutan agar setiap sistem siap dipertandingkan.",
   facts: [
     { label: "Periode", value: "2024-2025", icon: "trophy" },
     { label: "Jurusan", value: "Teknik Elektro", icon: "cpu" },
@@ -456,7 +456,7 @@ export const teamStats = [
   { value: "11+", label: "Personel Aktif", tone: "cyan" },
   { value: "6", label: "Divisi Spesialis", tone: "orange" },
   { value: "3", label: "Angkatan", tone: "blue" },
-  { value: "100%", label: "Semangat Juang", tone: "gold" },
+  { value: "100%", label: "Komitmen Pengembangan", tone: "gold" },
 ] satisfies TeamStat[];
 
 export const achievements: Achievement[] = [
@@ -515,7 +515,7 @@ export const galleryItems: GalleryItem[] = [
 
 export const footerData = {
   description:
-    "Advance Robosoccer Polinema. Kami membangun robot humanoid cerdas untuk bertanding dan mendorong batas teknologi Indonesia.",
+    "Advance Robosoccer Polinema. Development Team robot humanoid Politeknik Negeri Malang untuk riset, pengembangan, dan kompetisi.",
   sponsors: ["POLINEMA", "ROBOTICS"],
   contact: [
     {

@@ -19,7 +19,7 @@ import { footerData, footerNavigation, navLinks } from "@/data/aroc";
 export const metadata: Metadata = {
   title: "Tentang Kami | AROC_PL",
   description:
-    "Tentang AROC_PL — visi, misi, dosen pembimbing, dan daftar lengkap anggota tim robotik humanoid Politeknik Negeri Malang.",
+    "Tentang AROC_PL, Development Team robot humanoid Politeknik Negeri Malang: visi, misi, dosen pembimbing, dan anggota tim.",
 };
 
 export default function AboutPage() {
