@@ -139,7 +139,7 @@ export function Gallery({ items }: GalleryProps) {
 
       {lightboxSrc ? (
         <div aria-label="Pratinjau gambar" aria-modal="true" className="lightbox-overlay" onClick={closeLightbox} role="dialog">
-          <button ref={closeButtonRef} aria-label="Tutup pratinjau" className="absolute right-4 top-4 z-[101] flex size-12 items-center justify-center rounded-full border border-[rgba(248,247,240,0.2)] bg-[rgba(5,8,22,0.7)] text-[var(--cream)] backdrop-blur-sm transition hover:bg-[rgba(5,8,22,0.9)]" onClick={closeLightbox} type="button">
+          <button ref={closeButtonRef} aria-label="Tutup pratinjau" className="luxury-chip absolute right-4 top-4 z-[101] flex size-12 items-center justify-center rounded-full border border-[rgba(248,247,240,0.2)] bg-[rgba(5,8,22,0.7)] text-[var(--cream)] backdrop-blur-sm transition hover:border-[rgba(255,228,92,0.45)] hover:bg-[rgba(5,8,22,0.9)] hover:text-[var(--yellow)]" onClick={closeLightbox} type="button">
             <CloseIcon className="size-6" />
           </button>
           <Image

@@ -35,7 +35,7 @@ export function Navbar({ links }: NavbarProps) {
       <nav
         aria-label="Main navigation"
         className={[
-          "mx-auto flex max-w-[1280px] items-center gap-3 rounded-full border px-3 py-2 shadow-[0_24px_64px_-40px_rgba(0,0,0,0.95)] backdrop-blur-2xl transition-all duration-300 sm:px-4",
+          "nav-shell mx-auto flex max-w-[1280px] items-center gap-3 rounded-full border px-3 py-2 shadow-[0_24px_64px_-40px_rgba(0,0,0,0.95)] backdrop-blur-2xl transition-all duration-300 sm:px-4",
           scrolled
             ? "border-[rgba(255,228,92,0.28)] bg-[rgba(5,8,22,0.92)]"
             : "border-[rgba(248,247,240,0.12)] bg-[rgba(5,8,22,0.6)]",
@@ -47,7 +47,7 @@ export function Navbar({ links }: NavbarProps) {
           className="group flex shrink-0 items-center gap-2.5"
           href="/"
         >
-          <span className="relative flex size-10 shrink-0 items-center justify-center rounded-full bg-[var(--yellow)] p-1 shadow-[0_0_0_3px_rgba(255,228,92,0.14)] transition-transform duration-300 group-hover:rotate-[-5deg] group-hover:scale-95 sm:size-11">
+          <span className="nav-brand-mark relative flex size-10 shrink-0 items-center justify-center rounded-full bg-[var(--yellow)] p-1 shadow-[0_0_0_3px_rgba(255,228,92,0.14)] sm:size-11">
             <ArocGeneratedMark className="size-full" />
           </span>
           <span className="hidden leading-none sm:block">
@@ -65,7 +65,7 @@ export function Navbar({ links }: NavbarProps) {
           {links.map((link, index) => (
             <Link
               className={[
-                "group rounded-full px-3.5 py-2 text-[0.76rem] font-black uppercase tracking-[0.13em] transition-all duration-200",
+                "nav-link-luxury group rounded-full px-3.5 py-2 text-[0.76rem] font-black uppercase tracking-[0.13em] transition-all duration-300",
                 isActive(link)
                   ? "bg-[var(--yellow)] text-[var(--navy-deep)]"
                   : "text-[rgba(248,247,240,0.72)] hover:bg-[rgba(248,247,240,0.08)] hover:text-[var(--yellow)]",
@@ -83,7 +83,7 @@ export function Navbar({ links }: NavbarProps) {
         {/* ── Right: CTA + mobile hamburger ── */}
         <div className="ml-auto flex shrink-0 items-center gap-2 lg:ml-0">
           <Link
-            className="btn-gold hidden min-h-[2.4rem] px-4 text-[0.72rem] sm:inline-flex"
+            className="btn-gold luxury-shimmer hidden min-h-[2.4rem] px-4 text-[0.72rem] sm:inline-flex"
             href="/#sponsor"
           >
             Kemitraan
@@ -92,7 +92,7 @@ export function Navbar({ links }: NavbarProps) {
           <button
             aria-expanded={open}
             aria-label={open ? "Tutup menu" : "Buka menu"}
-            className="flex size-10 items-center justify-center rounded-full border border-[rgba(255,228,92,0.32)] bg-[rgba(255,228,92,0.08)] text-[var(--yellow)] transition hover:bg-[rgba(255,228,92,0.18)] lg:hidden"
+            className="luxury-chip flex size-10 items-center justify-center rounded-full border border-[rgba(255,228,92,0.32)] bg-[rgba(255,228,92,0.08)] text-[var(--yellow)] transition hover:bg-[rgba(255,228,92,0.18)] lg:hidden"
             onClick={() => setOpen((v) => !v)}
             type="button"
           >
@@ -103,12 +103,12 @@ export function Navbar({ links }: NavbarProps) {
 
       {/* ── Mobile dropdown ── */}
       {open && (
-        <div className="mx-auto mt-2 max-w-[1280px] overflow-hidden rounded-[1.6rem] border border-[rgba(255,228,92,0.2)] bg-[rgba(5,8,22,0.97)] shadow-[0_32px_80px_-40px_rgba(0,0,0,0.95)] backdrop-blur-2xl lg:hidden">
+        <div className="nav-mobile-panel mx-auto mt-2 max-w-[1280px] overflow-hidden rounded-[1.6rem] border border-[rgba(255,228,92,0.2)] bg-[rgba(5,8,22,0.97)] shadow-[0_32px_80px_-40px_rgba(0,0,0,0.95)] backdrop-blur-2xl lg:hidden">
           <div className="grid gap-1.5 p-4">
             {links.map((link) => (
               <Link
                 className={[
-                  "rounded-xl px-4 py-3 text-[0.9rem] font-black uppercase tracking-[0.12em] transition-colors duration-150",
+                  "nav-link-luxury rounded-xl px-4 py-3 text-[0.9rem] font-black uppercase tracking-[0.12em] transition-colors duration-200",
                   isActive(link)
                     ? "bg-[var(--yellow)] text-[var(--navy-deep)]"
                     : "text-[var(--cream)] hover:bg-[rgba(248,247,240,0.07)] hover:text-[var(--yellow)]",
@@ -122,7 +122,7 @@ export function Navbar({ links }: NavbarProps) {
             ))}
             <div className="mt-1 border-t border-[rgba(248,247,240,0.08)] pt-3">
               <Link
-                className="btn-gold w-full"
+                className="btn-gold luxury-shimmer w-full"
                 href="/#sponsor"
                 onClick={() => setOpen(false)}
               >

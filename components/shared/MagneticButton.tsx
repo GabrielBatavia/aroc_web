@@ -28,7 +28,7 @@ export function MagneticButton({
     const rect = el.getBoundingClientRect();
     const x = e.clientX - (rect.left + rect.width / 2);
     const y = e.clientY - (rect.top + rect.height / 2);
-    el.style.transform = `translate(${x * strength}px, ${y * strength}px)`;
+    el.style.transform = `translate3d(${x * strength}px, ${y * strength}px, 0)`;
   };
 
   const handleMouseLeave = () => {
@@ -41,7 +41,7 @@ export function MagneticButton({
     <Link
       ref={ref}
       href={href}
-      className={`${className} will-change-transform transition-transform duration-200 ease-out`}
+      className={`${className} will-change-transform transition-transform duration-500 ease-[var(--ease-luxury)]`}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
