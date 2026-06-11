@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { type CSSProperties, useCallback, useEffect, useRef, useState } from "react";
 
 import {
   ArocGeneratedMark,
@@ -11,11 +11,13 @@ import {
   SensorCone,
   SoccerPath,
 } from "@/components/shared/BrandAssets";
+import { ChapterRail } from "@/components/shared/ChapterRail";
 import {
   ArrowRightIcon,
   BoltIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  CloseIcon,
   CodeIcon,
   CpuIcon,
   EyeIcon,
@@ -121,6 +123,17 @@ const videoSlots = [
   "Dokumentasi pertandingan",
   "Proses pengembangan di lab",
   "Sesi pengujian robot",
+];
+
+const campaignChapters = [
+  { id: "top", label: "Hero" },
+  { id: "about", label: "About" },
+  { id: "story", label: "Story" },
+  { id: "technology", label: "Tech" },
+  { id: "robots", label: "Robots" },
+  { id: "team", label: "Proof" },
+  { id: "gallery", label: "Gallery" },
+  { id: "sponsor", label: "Sponsor" },
 ];
 
 /* ===================================================================
@@ -376,11 +389,11 @@ function CampaignHero({ hero }: { hero: HeroData }) {
         {/* Top bar */}
         <div className="mx-auto w-full max-w-[1320px] px-4 sm:px-8">
           <div className="flex items-center justify-between">
-            <div className="champ-badge">
+            <div className="champ-badge hero-sequence" style={{ "--sequence-delay": "0.1s" } as CSSProperties}>
               <TrophyIcon className="size-4" />
               <span>KRI Humanoid Champion 2024</span>
             </div>
-            <div className="hidden items-center gap-2 sm:flex">
+            <div className="hero-sequence hidden items-center gap-2 sm:flex" style={{ "--sequence-delay": "0.24s" } as CSSProperties}>
               <span className="inline-block h-2 w-2 animate-ping rounded-full bg-[var(--yellow)] opacity-75" />
               <span className="font-mono text-[0.6rem] font-black uppercase tracking-[0.22em] text-[rgba(248,247,240,0.55)]">
                 Sistem Aktif
@@ -398,30 +411,31 @@ function CampaignHero({ hero }: { hero: HeroData }) {
               className="hero-wordmark"
               style={{ fontSize: "clamp(4.5rem, 12vw, 10rem)" }}
             >
-              <span className="block">Humanoid</span>
+              <span className="hero-sequence-word block" style={{ "--sequence-delay": "0.26s" } as CSSProperties}>Humanoid</span>
               <span
-                className="block"
+                className="hero-sequence-word block"
                 style={{
+                  "--sequence-delay": "0.38s",
                   color: "var(--yellow)",
                    textShadow: "0.04em 0.06em 0 var(--navy-black)",
                    transform: `translate3d(${tilt.x * -6}px, 0, 0)`,
                    display: "inline-block",
                    transition: "transform 0.75s var(--ease-luxury)",
-                 }}
+                 } as CSSProperties}
               >
                 Robot
               </span>
-              <span className="block">Soccer</span>
+              <span className="hero-sequence-word block" style={{ "--sequence-delay": "0.5s" } as CSSProperties}>Soccer</span>
               <span
-                className="block"
-                style={{ fontSize: "0.52em", letterSpacing: "-0.03em", color: "rgba(248,247,240,0.45)", lineHeight: 1.1 }}
+                className="hero-sequence-word block"
+                style={{ "--sequence-delay": "0.62s", fontSize: "0.52em", letterSpacing: "-0.03em", color: "rgba(248,247,240,0.45)", lineHeight: 1.1 } as CSSProperties}
               >
                 Team.
               </span>
             </h1>
 
             {/* Rule */}
-            <div className="mt-5 flex items-center gap-4">
+            <div className="hero-sequence mt-5 flex items-center gap-4" style={{ "--sequence-delay": "0.76s" } as CSSProperties}>
               <div className="h-px w-12 bg-gradient-to-r from-[rgba(255,228,92,0.6)] to-transparent" />
               <span className="font-mono text-[0.58rem] font-black uppercase tracking-[0.22em] text-[rgba(248,247,240,0.38)]">
                 AROC_PL · Polinema
@@ -429,12 +443,12 @@ function CampaignHero({ hero }: { hero: HeroData }) {
             </div>
 
             {/* Description */}
-            <p className="mt-5 max-w-[28rem] text-[1rem] leading-[1.85] text-[rgba(248,247,240,0.68)] sm:text-[1.05rem]">
+            <p className="hero-sequence mt-5 max-w-[28rem] text-[1rem] leading-[1.85] text-[rgba(248,247,240,0.68)] sm:text-[1.05rem]" style={{ "--sequence-delay": "0.86s" } as CSSProperties}>
               {hero.description}
             </p>
 
             {/* CTA */}
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="hero-sequence mt-8 flex flex-col gap-3 sm:flex-row sm:items-center" style={{ "--sequence-delay": "0.96s" } as CSSProperties}>
               <MagneticButton className="btn-gold luxury-shimmer" href="#robots">
                 Lihat Robot
                 <ArrowRightIcon className="size-5" />
@@ -445,7 +459,7 @@ function CampaignHero({ hero }: { hero: HeroData }) {
             </div>
 
             {/* Quick stats */}
-            <div className="mt-10 flex items-center gap-3">
+            <div className="hero-sequence mt-10 flex items-center gap-3" style={{ "--sequence-delay": "1.08s" } as CSSProperties}>
               {heroFacts.map((fact) => (
                 <div key={fact.label} className="stat-pill luxury-surface">
                   <span className="numeral text-[1.55rem] leading-none text-[var(--yellow)]">
@@ -988,7 +1002,7 @@ function RobotLineupSlider({ robots }: { robots: RobotCard[] }) {
           {robots.map((r, i) => (
             <button
               aria-label={`Pilih ${r.name}`}
-              className={`rounded-full border px-5 py-2.5 font-mono text-[0.68rem] font-black uppercase tracking-[0.16em] transition-all duration-300 ${
+              className={`luxury-chip rounded-full border px-5 py-2.5 font-mono text-[0.68rem] font-black uppercase tracking-[0.16em] transition-all duration-300 ${
                 i === activeIndex
                   ? "border-[var(--yellow)] bg-[var(--yellow)] text-[var(--navy-deep)] shadow-[0_6px_0_var(--navy-black)]"
                   : "border-[rgba(248,247,240,0.18)] bg-[rgba(248,247,240,0.05)] text-[rgba(248,247,240,0.55)] hover:border-[rgba(255,228,92,0.36)] hover:text-[var(--yellow)]"
@@ -1003,14 +1017,19 @@ function RobotLineupSlider({ robots }: { robots: RobotCard[] }) {
         </div>
 
         {/* Main robot display */}
-        <div className="luxury-surface soft-glow grid gap-6 overflow-hidden rounded-[2.8rem] border border-[rgba(255,228,92,0.2)] bg-[rgba(10,15,38,0.7)] p-5 sm:p-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+        <div className="robot-cinematic-stage luxury-surface soft-glow grid gap-6 overflow-hidden rounded-[2.8rem] border border-[rgba(255,228,92,0.2)] bg-[rgba(10,15,38,0.7)] p-5 sm:p-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute top-10 z-0 h-56 w-56 -translate-x-1/2 rounded-full bg-[rgba(255,228,92,0.16)] blur-3xl transition-[left,opacity] duration-700"
+            style={{ left: `${28 + activeIndex * 18}%` }}
+          />
           {/* Robot image */}
           <div className="luxury-image-frame relative min-h-[28rem] overflow-hidden rounded-[2rem] bg-[radial-gradient(ellipse_60%_40%_at_50%_20%,rgba(255,228,92,0.22),transparent_55%)] sm:min-h-[38rem]">
             {robots.map((r, i) => (
               <Image
                 key={r.name}
                 alt={`${r.name} robot`}
-                className={`luxury-image absolute inset-0 object-cover transition-all duration-600 ${i === activeIndex ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}
+                className={`robot-cinematic-image luxury-image absolute inset-0 object-cover transition-all duration-600 ${i === activeIndex ? "is-active scale-100 opacity-100" : "scale-95 opacity-0"}`}
                 fill
                 sizes="(max-width: 1024px) 100vw, 620px"
                 src={r.image}
@@ -1022,7 +1041,7 @@ function RobotLineupSlider({ robots }: { robots: RobotCard[] }) {
           </div>
 
           {/* Active robot info */}
-          <div className="flex flex-col">
+          <div className="robot-cinematic-info flex flex-col" key={active.name}>
             <div className="font-mono text-[0.68rem] font-black uppercase tracking-[0.22em] text-[rgba(255,228,92,0.5)]">
               Unit {String(activeIndex + 1).padStart(2, "0")}
             </div>
@@ -1036,7 +1055,7 @@ function RobotLineupSlider({ robots }: { robots: RobotCard[] }) {
 
             {/* Stats bars */}
             <div className="mt-8 grid gap-4">
-              {active.stats.map((s) => (
+              {active.stats.map((s, statIndex) => (
                 <div key={s.label}>
                   <div className="flex items-center justify-between mb-1.5">
                     <span className="font-mono text-[0.6rem] font-black uppercase tracking-[0.16em] text-[rgba(248,247,240,0.5)]">
@@ -1046,9 +1065,10 @@ function RobotLineupSlider({ robots }: { robots: RobotCard[] }) {
                   </div>
                   <div className="h-1.5 rounded-full bg-[rgba(248,247,240,0.08)]">
                     <div
-                      className="h-full rounded-full transition-all duration-700"
+                      className="robot-stat-fill h-full rounded-full transition-all duration-700"
                       style={{
                         width: `${s.value}%`,
+                        animationDelay: `${statIndex * 0.09}s`,
                         background: s.value > 85
                           ? "linear-gradient(90deg, var(--yellow), var(--gold))"
                           : "linear-gradient(90deg, rgba(255,228,92,0.6), rgba(255,228,92,0.3))",
@@ -1312,6 +1332,51 @@ function InsiderProof({ achievements, teamLead, teamStats, teamYears }: { achiev
 
 function CampaignGallery({ gallery }: { gallery: GalleryItem[] }) {
   const { ref, isVisible } = useScrollReveal();
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  const activeItem = lightboxIndex === null ? null : gallery[lightboxIndex];
+
+  const openLightbox = useCallback((index: number) => {
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+    setLightboxIndex(index);
+  }, []);
+
+  const closeLightbox = useCallback(() => {
+    setLightboxIndex(null);
+    window.requestAnimationFrame(() => previousFocusRef.current?.focus());
+  }, []);
+
+  const goLightbox = useCallback((direction: number) => {
+    setLightboxIndex((current) => {
+      if (current === null || gallery.length === 0) return current;
+      return (current + direction + gallery.length) % gallery.length;
+    });
+  }, [gallery.length]);
+
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+    const handler = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeLightbox();
+      if (event.key === "ArrowLeft") goLightbox(-1);
+      if (event.key === "ArrowRight") goLightbox(1);
+      if (event.key === "Tab") {
+        event.preventDefault();
+        closeButtonRef.current?.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [lightboxIndex, closeLightbox, goLightbox]);
+
+  useEffect(() => {
+    if (lightboxIndex !== null) closeButtonRef.current?.focus();
+    document.body.style.overflow = lightboxIndex === null ? "" : "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [lightboxIndex]);
 
   const spans = [
     "sm:col-span-7 sm:row-span-2",
@@ -1346,8 +1411,17 @@ function CampaignGallery({ gallery }: { gallery: GalleryItem[] }) {
         <div className="grid gap-4 sm:grid-cols-12 sm:grid-rows-[280px_280px_240px]">
           {gallery.map((item, i) => (
             <figure
-              className={`luxury-surface luxury-image-frame group relative min-h-[14rem] overflow-hidden rounded-[2rem] bg-[var(--navy-deep)] ${spans[i] ?? ""}`}
+              className={`luxury-surface luxury-image-frame group relative min-h-[14rem] cursor-pointer overflow-hidden rounded-[2rem] bg-[var(--navy-deep)] ${spans[i] ?? ""}`}
               key={item.src}
+              onClick={() => openLightbox(i)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  openLightbox(i);
+                }
+              }}
+              role="button"
+              tabIndex={0}
               style={
                 i === 0
                   ? { transform: "rotate(-0.4deg)" }
@@ -1376,6 +1450,50 @@ function CampaignGallery({ gallery }: { gallery: GalleryItem[] }) {
           ))}
         </div>
       </div>
+
+      {activeItem ? (
+        <div aria-label="Pratinjau dokumentasi" aria-modal="true" className="lightbox-overlay" onClick={closeLightbox} role="dialog">
+          <button ref={closeButtonRef} aria-label="Tutup pratinjau" className="luxury-chip absolute right-4 top-4 z-[103] flex size-12 items-center justify-center rounded-full border border-[rgba(248,247,240,0.2)] bg-[rgba(5,8,22,0.7)] text-[var(--cream)] backdrop-blur-sm transition hover:border-[rgba(255,228,92,0.45)] hover:bg-[rgba(5,8,22,0.9)] hover:text-[var(--yellow)]" onClick={closeLightbox} type="button">
+            <CloseIcon className="size-6" />
+          </button>
+          <button aria-label="Gambar sebelumnya" className="lightbox-control lightbox-control-left" onClick={(event) => { event.stopPropagation(); goLightbox(-1); }} type="button">
+            <ChevronLeftIcon className="size-5" />
+          </button>
+          <button aria-label="Gambar berikutnya" className="lightbox-control lightbox-control-right" onClick={(event) => { event.stopPropagation(); goLightbox(1); }} type="button">
+            <ChevronRightIcon className="size-5" />
+          </button>
+          <div className="lightbox-filmstrip" onClick={(event) => event.stopPropagation()}>
+            {gallery.map((item, index) => (
+              <button
+                aria-label={`Buka frame ${index + 1}`}
+                className={`lightbox-thumb ${index === lightboxIndex ? "is-active" : ""}`}
+                key={item.src}
+                onClick={() => setLightboxIndex(index)}
+                type="button"
+              >
+                <Image alt="" className="object-cover" fill sizes="64px" src={item.src} />
+              </button>
+            ))}
+          </div>
+          <div className="lightbox-stage" onClick={(event) => event.stopPropagation()}>
+            <Image
+              alt={activeItem.alt}
+              className="max-h-[82vh] max-w-[90vw] object-contain"
+              height={1080}
+              key={activeItem.src}
+              src={activeItem.src}
+              width={1920}
+              style={{ width: "auto", height: "auto" }}
+            />
+          </div>
+          <div className="lightbox-caption-panel">
+            <div className="font-mono text-[0.58rem] font-black uppercase tracking-[0.2em] text-[var(--yellow)]">
+              Frame {String((lightboxIndex ?? 0) + 1).padStart(2, "0")} / {String(gallery.length).padStart(2, "0")}
+            </div>
+            <p className="mt-2 text-sm leading-[1.6]">{activeItem.alt}</p>
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }
@@ -1477,6 +1595,7 @@ export function HomeCampaign({
 }: HomeCampaignProps) {
   return (
     <main>
+      <ChapterRail chapters={campaignChapters} />
       <CampaignLoader />
       <CampaignHero hero={hero} />
 

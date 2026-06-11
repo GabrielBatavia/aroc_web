@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { DoodleArrow } from "@/components/shared/BrandAssets";
-import { CloseIcon, PlayIcon } from "@/components/shared/Icons";
+import { ChevronLeftIcon, ChevronRightIcon, CloseIcon, PlayIcon } from "@/components/shared/Icons";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import type { GalleryItem } from "@/data/aroc";
 
@@ -22,23 +22,35 @@ const layoutMap = {
 const videoSlots = ["Match day recap", "Lab sprint BTS"];
 
 export function Gallery({ items }: GalleryProps) {
-  const [lightboxSrc, setLightboxSrc] = useState<{ src: string; alt: string } | null>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const { ref, isVisible } = useScrollReveal();
-  const openLightbox = useCallback((item: { src: string; alt: string }) => {
+  const activeItem = activeIndex === null ? null : items[activeIndex];
+
+  const openLightbox = useCallback((index: number) => {
     previousFocusRef.current = document.activeElement as HTMLElement | null;
-    setLightboxSrc(item);
+    setActiveIndex(index);
   }, []);
+
   const closeLightbox = useCallback(() => {
-    setLightboxSrc(null);
+    setActiveIndex(null);
     window.requestAnimationFrame(() => previousFocusRef.current?.focus());
   }, []);
 
+  const goLightbox = useCallback((direction: number) => {
+    setActiveIndex((current) => {
+      if (current === null || items.length === 0) return current;
+      return (current + direction + items.length) % items.length;
+    });
+  }, [items.length]);
+
   useEffect(() => {
-    if (!lightboxSrc) return;
+    if (activeIndex === null) return;
     const handler = (event: KeyboardEvent) => {
       if (event.key === "Escape") closeLightbox();
+      if (event.key === "ArrowLeft") goLightbox(-1);
+      if (event.key === "ArrowRight") goLightbox(1);
       if (event.key === "Tab") {
         event.preventDefault();
         closeButtonRef.current?.focus();
@@ -46,15 +58,15 @@ export function Gallery({ items }: GalleryProps) {
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [lightboxSrc, closeLightbox]);
+  }, [activeIndex, closeLightbox, goLightbox]);
 
   useEffect(() => {
-    if (lightboxSrc) closeButtonRef.current?.focus();
-    document.body.style.overflow = lightboxSrc ? "hidden" : "";
+    if (activeIndex !== null) closeButtonRef.current?.focus();
+    document.body.style.overflow = activeIndex === null ? "" : "hidden";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [lightboxSrc]);
+  }, [activeIndex]);
 
   return (
     <>
@@ -86,11 +98,11 @@ export function Gallery({ items }: GalleryProps) {
                   `reveal-base reveal-scale ${isVisible ? `revealed reveal-delay-${index + 1}` : ""}`,
                 ].join(" ")}
                 key={item.src}
-                onClick={() => openLightbox({ src: item.src, alt: item.alt })}
+                onClick={() => openLightbox(index)}
                 onKeyDown={(event) => {
                   if (event.key === "Enter" || event.key === " ") {
                     event.preventDefault();
-                    openLightbox({ src: item.src, alt: item.alt });
+                    openLightbox(index);
                   }
                 }}
                 role="button"
@@ -137,23 +149,47 @@ export function Gallery({ items }: GalleryProps) {
         </div>
       </section>
 
-      {lightboxSrc ? (
+      {activeItem ? (
         <div aria-label="Pratinjau gambar" aria-modal="true" className="lightbox-overlay" onClick={closeLightbox} role="dialog">
           <button ref={closeButtonRef} aria-label="Tutup pratinjau" className="luxury-chip absolute right-4 top-4 z-[101] flex size-12 items-center justify-center rounded-full border border-[rgba(248,247,240,0.2)] bg-[rgba(5,8,22,0.7)] text-[var(--cream)] backdrop-blur-sm transition hover:border-[rgba(255,228,92,0.45)] hover:bg-[rgba(5,8,22,0.9)] hover:text-[var(--yellow)]" onClick={closeLightbox} type="button">
             <CloseIcon className="size-6" />
           </button>
-          <Image
-            alt={lightboxSrc.alt}
-            className="max-h-[85vh] max-w-[90vw] object-contain"
-            height={1080}
-            onClick={(event) => event.stopPropagation()}
-            src={lightboxSrc.src}
-            width={1920}
-            style={{ width: "auto", height: "auto" }}
-          />
-          <p className="absolute bottom-6 left-1/2 max-w-[80vw] -translate-x-1/2 text-center text-sm text-[rgba(248,247,240,0.7)]">
-            {lightboxSrc.alt}
-          </p>
+          <button aria-label="Gambar sebelumnya" className="lightbox-control lightbox-control-left" onClick={(event) => { event.stopPropagation(); goLightbox(-1); }} type="button">
+            <ChevronLeftIcon className="size-5" />
+          </button>
+          <button aria-label="Gambar berikutnya" className="lightbox-control lightbox-control-right" onClick={(event) => { event.stopPropagation(); goLightbox(1); }} type="button">
+            <ChevronRightIcon className="size-5" />
+          </button>
+          <div className="lightbox-filmstrip" onClick={(event) => event.stopPropagation()}>
+            {items.map((item, index) => (
+              <button
+                aria-label={`Buka frame ${index + 1}`}
+                className={`lightbox-thumb ${index === activeIndex ? "is-active" : ""}`}
+                key={item.src}
+                onClick={() => setActiveIndex(index)}
+                type="button"
+              >
+                <Image alt="" className="object-cover" fill sizes="64px" src={item.src} />
+              </button>
+            ))}
+          </div>
+          <div className="lightbox-stage" onClick={(event) => event.stopPropagation()}>
+            <Image
+              alt={activeItem.alt}
+              className="max-h-[82vh] max-w-[90vw] object-contain"
+              height={1080}
+              key={activeItem.src}
+              src={activeItem.src}
+              width={1920}
+              style={{ width: "auto", height: "auto" }}
+            />
+          </div>
+          <div className="lightbox-caption-panel">
+            <div className="font-mono text-[0.58rem] font-black uppercase tracking-[0.2em] text-[var(--yellow)]">
+              Frame {String((activeIndex ?? 0) + 1).padStart(2, "0")} / {String(items.length).padStart(2, "0")}
+            </div>
+            <p className="mt-2 text-sm leading-[1.6]">{activeItem.alt}</p>
+          </div>
         </div>
       ) : null}
     </>

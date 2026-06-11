@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Barlow_Condensed, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
+import { ScrollAtmosphere } from "@/components/shared/ScrollAtmosphere";
 import { ScrollProgress } from "@/components/shared/ScrollProgress";
 
 const geistSans = Geist({
@@ -37,6 +38,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${barlowCondensed.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <ScrollAtmosphere />
         <ScrollProgress />
         {children}
       </body>
