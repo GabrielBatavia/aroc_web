@@ -28,6 +28,7 @@ import {
   TrophyIcon,
 } from "@/components/shared/Icons";
 import { MagneticButton } from "@/components/shared/MagneticButton";
+import { DivisionGallery } from "@/components/sections/DivisionGallery";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import type {
   AboutCard,
@@ -1649,7 +1650,14 @@ export function HomeCampaign({
       />
       <InsiderProof achievements={achievements} teamLead={teamLead} teamStats={teamStats} teamYears={teamYears} />
 
-      {/* Proof (dark) → Gallery (cream) */}
+      {/* Proof (dark) → DivisionGallery (dark): same family, seamless */}
+      <div
+        aria-hidden="true"
+        style={{ height: "3rem", background: "linear-gradient(to bottom, var(--navy-deep), var(--navy-abyss))" }}
+      />
+      <DivisionGallery />
+
+      {/* DivisionGallery (dark) → Gallery (cream) */}
       <div
         aria-hidden="true"
         style={{ height: "6rem", background: "linear-gradient(to bottom, var(--navy-deep), var(--cream))" }}
