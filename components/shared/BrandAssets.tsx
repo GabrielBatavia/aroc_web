@@ -1,39 +1,20 @@
+import Image from "next/image";
 import type { SVGProps } from "react";
 
 type SvgProps = SVGProps<SVGSVGElement>;
 
-export function ArocGeneratedMark({ className, ...props }: SvgProps) {
+export function ArocGeneratedMark({ className }: { className?: string }) {
   return (
-    <svg
-      aria-hidden="true"
-      className={className}
-      fill="none"
-      viewBox="0 0 96 112"
-      {...props}
-    >
-      <path
-        d="M9 8h78v55c0 24-18 37-39 45C27 100 9 87 9 63V8Z"
-        fill="#070C22"
-        stroke="#F8F7F0"
-        strokeWidth="4"
+    <div className={`relative ${className || ""}`}>
+      <Image
+        src="/images/logoAROC.jpg"
+        alt="AROC Logo"
+        fill
+        sizes="(max-width: 768px) 150px, 300px"
+        className="object-contain"
+        priority
       />
-      <path
-        d="M15 16h66v46c0 20-15 31-33 38-18-7-33-18-33-38V16Z"
-        fill="#111A3D"
-        stroke="#FFE45C"
-        strokeWidth="3"
-      />
-      <path d="M20 21h14v53l-14-8V21Z" fill="#FFE45C" />
-      <path d="M62 21h14v45l-14 8V21Z" fill="#FFE45C" />
-      <path d="M41 21h14v78l-7 3-7-3V21Z" fill="#FFE45C" />
-      <circle cx="48" cy="56" r="16" fill="#F8F7F0" stroke="#070C22" strokeWidth="3" />
-      <path
-        d="m48 41 7 5-3 8h-8l-3-8 7-5ZM34 56l8-5 5 5-4 8h-9v-8ZM62 56v8h-9l-4-8 5-5 8 5ZM39 70l6-5h6l6 5-4 8H43l-4-8Z"
-        fill="#070C22"
-      />
-      <path d="M22 5 24.5 10 30 10.7 26 14.5 27 20 22 17.4 17 20 18 14.5 14 10.7 19.5 10 22 5Z" fill="#FFE45C" />
-      <path d="M74 5 76.5 10 82 10.7 78 14.5 79 20 74 17.4 69 20 70 14.5 66 10.7 71.5 10 74 5Z" fill="#FFE45C" />
-    </svg>
+    </div>
   );
 }
 
