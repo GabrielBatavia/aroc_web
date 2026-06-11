@@ -1,10 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState, useCallback } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  type CSSProperties,
+} from "react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
-/* ─── Data ─── */
+/* ═══════════════════════════════════════════════
+   DATA
+═══════════════════════════════════════════════ */
 interface DivisionMember {
   name: string;
   role: string;
@@ -14,7 +22,10 @@ interface DivisionMember {
 interface Division {
   id: string;
   label: string;
+  shortLabel: string;
   color: string;
+  colorRgb: string; // "r,g,b" for rgba()
+  icon: string;     // emoji or SVG label
   members: DivisionMember[];
 }
 
@@ -22,7 +33,10 @@ const divisions: Division[] = [
   {
     id: "ketua",
     label: "Ketua Tim",
+    shortLabel: "Lead",
     color: "#ffe45c",
+    colorRgb: "255,228,92",
+    icon: "★",
     members: [
       {
         name: "Fasha Rafi Islamey",
@@ -34,223 +48,512 @@ const divisions: Division[] = [
   {
     id: "manager",
     label: "Divisi Manager",
+    shortLabel: "Manager",
     color: "#f2c94c",
+    colorRgb: "242,201,76",
+    icon: "◈",
     members: [
       {
         name: "Hannunah Qiblatin",
         role: "Divisi Manager",
-        image: "/images/KRSBI-H/2. Divisi Manager/Hannunah Qiblatin_Divisi Manager.JPG",
+        image:
+          "/images/KRSBI-H/2. Divisi Manager/Hannunah Qiblatin_Divisi Manager.JPG",
       },
       {
         name: "Naomi Phoan Alodia Edgina",
         role: "Divisi Manager",
-        image: "/images/KRSBI-H/2. Divisi Manager/Naomi Phoan Alodia Edgina_Divisi Manager.JPG",
+        image:
+          "/images/KRSBI-H/2. Divisi Manager/Naomi Phoan Alodia Edgina_Divisi Manager.JPG",
       },
     ],
   },
   {
     id: "image-processing",
     label: "Divisi Image Processing",
-    color: "#c79820",
+    shortLabel: "Vision",
+    color: "#e8c53a",
+    colorRgb: "232,197,58",
+    icon: "◉",
     members: [
       {
         name: "Aprillo Firos Nugroho",
-        role: "Divisi Image Processing",
-        image: "/images/KRSBI-H/3. Divisi Image Processing/Aprillo Firos Nugroho_ Divisi Image Processing.jpeg",
+        role: "Image Processing",
+        image:
+          "/images/KRSBI-H/3. Divisi Image Processing/Aprillo Firos Nugroho_ Divisi Image Processing.jpeg",
       },
       {
         name: "Gabriel Batavia Xaverius",
-        role: "Divisi Image Processing",
-        image: "/images/KRSBI-H/3. Divisi Image Processing/Gabriel Batavia Xaverius_Divisi Image Processing.JPG",
+        role: "Image Processing",
+        image:
+          "/images/KRSBI-H/3. Divisi Image Processing/Gabriel Batavia Xaverius_Divisi Image Processing.JPG",
       },
       {
         name: "Muh. Fatih Assayuti",
-        role: "Divisi Image Processing",
-        image: "/images/KRSBI-H/3. Divisi Image Processing/Muh. Fatih Assayuti_Divisi Image Processing.JPG",
+        role: "Image Processing",
+        image:
+          "/images/KRSBI-H/3. Divisi Image Processing/Muh. Fatih Assayuti_Divisi Image Processing.JPG",
       },
       {
         name: "Noor Ishmata Choirun Eilmi",
-        role: "Divisi Image Processing",
-        image: "/images/KRSBI-H/3. Divisi Image Processing/Noor Ishmata Choirun Eilmi_Divisi image processing.jpg",
+        role: "Image Processing",
+        image:
+          "/images/KRSBI-H/3. Divisi Image Processing/Noor Ishmata Choirun Eilmi_Divisi image processing.jpg",
       },
     ],
   },
   {
     id: "communication",
     label: "Divisi Communication",
-    color: "#2a3d82",
+    shortLabel: "Comms",
+    color: "#7b93e8",
+    colorRgb: "123,147,232",
+    icon: "◎",
     members: [
       {
         name: "Alfarel Putra Ridho",
-        role: "Divisi Communication",
-        image: "/images/KRSBI-H/4.  Divisi Communication/Alfarel Putra Ridho _ Divisi Communication.JPG",
+        role: "Communication",
+        image:
+          "/images/KRSBI-H/4.  Divisi Communication/Alfarel Putra Ridho _ Divisi Communication.JPG",
       },
       {
         name: "Fiqi Raihan Hubbi M.",
-        role: "Divisi Communication",
-        image: "/images/KRSBI-H/4.  Divisi Communication/Fiqi Raihan Hubbi M._Divisi Communication.JPG",
+        role: "Communication",
+        image:
+          "/images/KRSBI-H/4.  Divisi Communication/Fiqi Raihan Hubbi M._Divisi Communication.JPG",
       },
       {
         name: "Muhammad Afifi",
-        role: "Divisi Communication",
-        image: "/images/KRSBI-H/4.  Divisi Communication/Muhammad Afifi_Divisi Communication.JPG",
+        role: "Communication",
+        image:
+          "/images/KRSBI-H/4.  Divisi Communication/Muhammad Afifi_Divisi Communication.JPG",
       },
       {
         name: "Rio Zefa Artasena",
-        role: "Divisi Communication",
-        image: "/images/KRSBI-H/4.  Divisi Communication/Rio Zefa Artasena_Divisi Communication.JPG",
+        role: "Communication",
+        image:
+          "/images/KRSBI-H/4.  Divisi Communication/Rio Zefa Artasena_Divisi Communication.JPG",
       },
     ],
   },
   {
     id: "maneuvering",
     label: "Divisi Maneuvering",
+    shortLabel: "Motion",
     color: "#d9dde8",
+    colorRgb: "217,221,232",
+    icon: "⬡",
     members: [
       {
         name: "Adetin Dewi Cantika",
-        role: "Divisi Maneuvering",
-        image: "/images/KRSBI-H/5. Divisi Maneuvering/Adetin Dewi Cantika_Divisi Maneuvering.jpeg",
+        role: "Maneuvering",
+        image:
+          "/images/KRSBI-H/5. Divisi Maneuvering/Adetin Dewi Cantika_Divisi Maneuvering.jpeg",
       },
       {
         name: "Ahmad Habibullah",
-        role: "Divisi Maneuvering",
-        image: "/images/KRSBI-H/5. Divisi Maneuvering/Ahmad Habibullah_Divisi Maneuvering.JPG",
+        role: "Maneuvering",
+        image:
+          "/images/KRSBI-H/5. Divisi Maneuvering/Ahmad Habibullah_Divisi Maneuvering.JPG",
       },
       {
         name: "Bayu Kurniawan",
-        role: "Divisi Maneuvering",
-        image: "/images/KRSBI-H/5. Divisi Maneuvering/Bayu Kurniawan_Divisi Maneuvering.jpg",
+        role: "Maneuvering",
+        image:
+          "/images/KRSBI-H/5. Divisi Maneuvering/Bayu Kurniawan_Divisi Maneuvering.jpg",
       },
       {
         name: "Gavra Ahmad Zidan",
-        role: "Divisi Maneuvering",
-        image: "/images/KRSBI-H/5. Divisi Maneuvering/Gavra Ahmad Zidan_Divisi Maneuvering.jpeg",
+        role: "Maneuvering",
+        image:
+          "/images/KRSBI-H/5. Divisi Maneuvering/Gavra Ahmad Zidan_Divisi Maneuvering.jpeg",
       },
       {
         name: "M. Lufyn Aulia Rahman",
-        role: "Divisi Maneuvering",
-        image: "/images/KRSBI-H/5. Divisi Maneuvering/M. Lufyn Aulia Rahman_Divisi Maneuvering.JPG",
+        role: "Maneuvering",
+        image:
+          "/images/KRSBI-H/5. Divisi Maneuvering/M. Lufyn Aulia Rahman_Divisi Maneuvering.JPG",
       },
       {
         name: "M. Rizal Al Akbar",
-        role: "Divisi Maneuvering",
-        image: "/images/KRSBI-H/5. Divisi Maneuvering/M. Rizal Al Akbar_Divisi Maneuvering.JPG",
+        role: "Maneuvering",
+        image:
+          "/images/KRSBI-H/5. Divisi Maneuvering/M. Rizal Al Akbar_Divisi Maneuvering.JPG",
       },
       {
         name: "M. Ryan Hidayat",
-        role: "Divisi Maneuvering",
-        image: "/images/KRSBI-H/5. Divisi Maneuvering/M. Ryan Hidayat_Divisi Maneuvering.JPG",
+        role: "Maneuvering",
+        image:
+          "/images/KRSBI-H/5. Divisi Maneuvering/M. Ryan Hidayat_Divisi Maneuvering.JPG",
       },
       {
         name: "M. Wisnu Hardiantoro",
-        role: "Divisi Maneuvering",
-        image: "/images/KRSBI-H/5. Divisi Maneuvering/M. Wisnu Hardiantoro_Divisi Maneuvering.JPG",
+        role: "Maneuvering",
+        image:
+          "/images/KRSBI-H/5. Divisi Maneuvering/M. Wisnu Hardiantoro_Divisi Maneuvering.JPG",
       },
       {
         name: "Rendy Eko Pastyo",
-        role: "Divisi Maneuvering",
-        image: "/images/KRSBI-H/5. Divisi Maneuvering/Rendy Eko Pastyo_Divisi Maneuvering.JPG",
+        role: "Maneuvering",
+        image:
+          "/images/KRSBI-H/5. Divisi Maneuvering/Rendy Eko Pastyo_Divisi Maneuvering.JPG",
       },
     ],
   },
 ];
 
-/* ─── Single Member Card ─── */
-function MemberCard({ member, accentColor }: { member: DivisionMember; accentColor: string }) {
-  const [hovered, setHovered] = useState(false);
+/* ═══════════════════════════════════════════════
+   MEMBER CARD — Cinematic 3D Tilt + Layered
+═══════════════════════════════════════════════ */
+function MemberCard({
+  member,
+  division,
+  index,
+  isVisible,
+}: {
+  member: DivisionMember;
+  division: Division;
+  index: number;
+  isVisible: boolean;
+}) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+  const [scanProgress, setScanProgress] = useState(0);
+  const scanRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = cardRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const x = (e.clientX - rect.left) / rect.width - 0.5; // -0.5 to 0.5
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    setTilt({ x, y });
+  };
+
+  const onMouseEnter = () => {
+    setIsHovered(true);
+    // scan line animation
+    let progress = 0;
+    scanRef.current = setInterval(() => {
+      progress += 2;
+      setScanProgress(progress);
+      if (progress >= 110) {
+        if (scanRef.current) clearInterval(scanRef.current);
+        setScanProgress(0);
+      }
+    }, 12);
+  };
+
+  const onMouseLeave = () => {
+    setIsHovered(false);
+    setTilt({ x: 0, y: 0 });
+    if (scanRef.current) clearInterval(scanRef.current);
+    setScanProgress(0);
+  };
+
+  const cardNumber = String(index + 1).padStart(2, "0");
 
   return (
     <article
-      className="group relative shrink-0 cursor-pointer select-none"
-      style={{ width: "220px" }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      className="shrink-0 select-none"
+      style={{
+        width: "clamp(260px, 28vw, 320px)",
+        scrollSnapAlign: "start",
+        // stagger entrance
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible
+          ? "translateY(0)"
+          : "translateY(40px)",
+        transition: `opacity 0.7s cubic-bezier(0.22,1,0.36,1) ${index * 0.08}s, transform 0.7s cubic-bezier(0.22,1,0.36,1) ${index * 0.08}s`,
+      }}
     >
-      {/* Card shell */}
+      {/* ── 3D perspective wrapper ── */}
       <div
-        className="relative overflow-hidden rounded-[1.6rem] transition-all duration-500"
+        ref={cardRef}
         style={{
-          height: "300px",
-          boxShadow: hovered
-            ? `0 28px 60px -20px rgba(0,0,0,0.8), 0 0 0 1px ${accentColor}55`
-            : "0 12px 40px -20px rgba(0,0,0,0.55)",
-          transform: hovered ? "translateY(-8px) scale(1.02)" : "translateY(0) scale(1)",
-          transition: "transform 0.5s cubic-bezier(0.22,1,0.36,1), box-shadow 0.5s ease",
+          perspective: "900px",
+          cursor: "pointer",
         }}
+        onMouseMove={onMouseMove}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
       >
-        {/* Photo */}
-        <Image
-          alt={member.name}
-          className="object-cover object-top"
-          fill
-          sizes="220px"
-          src={encodeURI(member.image)}
-        />
-
-        {/* Gradient overlay */}
+        {/* ── Card shell (3D tilt) ── */}
         <div
-          className="absolute inset-0 transition-opacity duration-500"
           style={{
-            background: `linear-gradient(180deg, transparent 35%, rgba(3,6,16,0.97) 100%)`,
-            opacity: hovered ? 1 : 0.85,
+            position: "relative",
+            height: "clamp(360px, 42vw, 440px)",
+            borderRadius: "1.75rem",
+            overflow: "hidden",
+            transform: isHovered
+              ? `rotateY(${tilt.x * 12}deg) rotateX(${-tilt.y * 10}deg) scale(1.04) translateZ(0)`
+              : "rotateY(0deg) rotateX(0deg) scale(1) translateZ(0)",
+            transition: isHovered
+              ? "transform 0.12s ease-out, box-shadow 0.4s ease"
+              : "transform 0.6s cubic-bezier(0.22,1,0.36,1), box-shadow 0.6s ease",
+            boxShadow: isHovered
+              ? `0 40px 80px -20px rgba(0,0,0,0.9), 0 0 0 1px rgba(${division.colorRgb},0.5), 0 0 60px -10px rgba(${division.colorRgb},0.25)`
+              : `0 16px 48px -20px rgba(0,0,0,0.65), 0 0 0 1px rgba(${division.colorRgb},0.12)`,
+            willChange: "transform",
+            transformStyle: "preserve-3d",
           }}
-        />
-
-        {/* Accent glow on hover */}
-        <div
-          className="absolute inset-x-0 bottom-0 h-32 transition-opacity duration-500"
-          style={{
-            background: `radial-gradient(ellipse 80% 60% at 50% 100%, ${accentColor}22, transparent)`,
-            opacity: hovered ? 1 : 0,
-          }}
-        />
-
-        {/* Accent top stripe */}
-        <div
-          className="absolute inset-x-0 top-0 h-1 transition-all duration-500"
-          style={{
-            background: accentColor,
-            opacity: hovered ? 1 : 0.4,
-            boxShadow: hovered ? `0 0 16px 2px ${accentColor}88` : "none",
-          }}
-        />
-
-        {/* Name / Role */}
-        <div className="absolute inset-x-0 bottom-0 p-5">
-          <h4
-            className="font-display font-black uppercase leading-none tracking-[-0.03em] text-[var(--cream)] transition-all duration-300"
+        >
+          {/* ── LAYER 1: Photo ── */}
+          <Image
+            alt={member.name}
+            src={encodeURI(member.image)}
+            fill
+            sizes="(max-width: 768px) 90vw, 320px"
+            className="object-cover object-top"
             style={{
-              fontSize: "1.3rem",
-              transform: hovered ? "translateY(0)" : "translateY(2px)",
+              transform: isHovered
+                ? `scale(1.08) translate(${tilt.x * -6}px, ${tilt.y * -4}px)`
+                : "scale(1) translate(0,0)",
+              transition: "transform 0.6s cubic-bezier(0.22,1,0.36,1)",
             }}
-          >
-            {member.name}
-          </h4>
+          />
+
+          {/* ── LAYER 2: Dark gradient (bottom-heavy) ── */}
           <div
-            className="mt-2 font-mono text-[0.6rem] font-black uppercase tracking-[0.18em] transition-all duration-300"
             style={{
-              color: accentColor,
-              opacity: hovered ? 1 : 0.7,
+              position: "absolute",
+              inset: 0,
+              background:
+                "linear-gradient(180deg, rgba(3,6,16,0.1) 0%, rgba(3,6,16,0.2) 40%, rgba(3,6,16,0.88) 72%, rgba(3,6,16,0.97) 100%)",
+            }}
+          />
+
+          {/* ── LAYER 3: Colored radial glow (bottom bloom) ── */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: `radial-gradient(ellipse 90% 55% at 50% 110%, rgba(${division.colorRgb},0.38) 0%, transparent 65%)`,
+              opacity: isHovered ? 1 : 0.45,
+              transition: "opacity 0.45s ease",
+            }}
+          />
+
+          {/* ── LAYER 4: Top-left corner shimmer on hover ── */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: `radial-gradient(circle at ${15 + tilt.x * 20}% ${15 + tilt.y * 20}%, rgba(${division.colorRgb},0.15) 0%, transparent 45%)`,
+              opacity: isHovered ? 1 : 0,
+              transition: "opacity 0.35s ease",
+            }}
+          />
+
+          {/* ── LAYER 5: Scan line sweep on hover enter ── */}
+          {scanProgress > 0 && scanProgress < 105 && (
+            <div
+              style={{
+                position: "absolute",
+                left: 0,
+                right: 0,
+                top: `${scanProgress}%`,
+                height: "2px",
+                background: `linear-gradient(90deg, transparent, rgba(${division.colorRgb},0.8), transparent)`,
+                boxShadow: `0 0 12px 4px rgba(${division.colorRgb},0.4)`,
+                pointerEvents: "none",
+              }}
+            />
+          )}
+
+          {/* ── LAYER 6: Accent top bar ── */}
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: isHovered ? "3px" : "2px",
+              background: division.color,
+              boxShadow: isHovered
+                ? `0 0 20px 4px rgba(${division.colorRgb},0.7)`
+                : "none",
+              transition: "height 0.3s ease, box-shadow 0.3s ease",
+            }}
+          />
+
+          {/* ── LAYER 7: Grid overlay (subtle tech feel) ── */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              backgroundImage: `
+                linear-gradient(rgba(${division.colorRgb},0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(${division.colorRgb},0.04) 1px, transparent 1px)
+              `,
+              backgroundSize: "32px 32px",
+              maskImage:
+                "linear-gradient(to bottom, transparent 30%, black 60%)",
+              opacity: isHovered ? 0.6 : 0.25,
+              transition: "opacity 0.45s ease",
+            }}
+          />
+
+          {/* ── TOP UI: Number badge + role tag ── */}
+          <div
+            style={{
+              position: "absolute",
+              top: "1rem",
+              left: "1rem",
+              right: "1rem",
+              display: "flex",
+              alignItems: "flex-start",
+              justifyContent: "space-between",
             }}
           >
-            {member.role}
+            {/* Large number */}
+            <div
+              style={{
+                fontFamily: "var(--font-display), Impact, sans-serif",
+                fontSize: "3.5rem",
+                fontWeight: 900,
+                lineHeight: 1,
+                letterSpacing: "-0.06em",
+                color: `rgba(${division.colorRgb},${isHovered ? 0.9 : 0.3})`,
+                transition: "color 0.4s ease",
+                textShadow: isHovered
+                  ? `0 0 24px rgba(${division.colorRgb},0.6)`
+                  : "none",
+              }}
+            >
+              {cardNumber}
+            </div>
+
+            {/* Role pill */}
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.4rem",
+                padding: "0.35rem 0.7rem",
+                borderRadius: "999px",
+                background: `rgba(3,6,16,0.7)`,
+                border: `1px solid rgba(${division.colorRgb},${isHovered ? 0.5 : 0.2})`,
+                backdropFilter: "blur(12px)",
+                fontFamily: "var(--font-geist-mono), monospace",
+                fontSize: "0.55rem",
+                fontWeight: 900,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                color: division.color,
+                transition: "border-color 0.35s ease",
+              }}
+            >
+              <span style={{ opacity: 0.6 }}>{division.icon}</span>
+              {division.shortLabel}
+            </div>
           </div>
+
+          {/* ── BOTTOM: Name plate (glass morphism) ── */}
+          <div
+            style={{
+              position: "absolute",
+              inset: "auto 0 0 0",
+              padding: "0 1.4rem 1.4rem",
+              transform: isHovered ? "translateY(0)" : "translateY(6px)",
+              transition: "transform 0.45s cubic-bezier(0.22,1,0.36,1)",
+            }}
+          >
+            {/* Glass card */}
+            <div
+              style={{
+                borderRadius: "1.1rem",
+                border: `1px solid rgba(${division.colorRgb},${isHovered ? 0.3 : 0.12})`,
+                background: "rgba(3,6,16,0.55)",
+                backdropFilter: "blur(18px)",
+                WebkitBackdropFilter: "blur(18px)",
+                padding: "1rem 1.1rem",
+                transition: "border-color 0.35s ease",
+              }}
+            >
+              <h4
+                style={{
+                  fontFamily:
+                    "var(--font-display), Impact, 'Arial Narrow', sans-serif",
+                  fontSize: "clamp(1.25rem, 2.5vw, 1.55rem)",
+                  fontWeight: 900,
+                  textTransform: "uppercase",
+                  letterSpacing: "-0.03em",
+                  lineHeight: 1.05,
+                  color: "var(--cream)",
+                  margin: 0,
+                }}
+              >
+                {member.name}
+              </h4>
+
+              {/* Accent underline */}
+              <div
+                style={{
+                  marginTop: "0.5rem",
+                  height: "1px",
+                  background: `linear-gradient(to right, rgba(${division.colorRgb},${isHovered ? 0.8 : 0.35}), transparent)`,
+                  transition: "background 0.4s ease",
+                }}
+              />
+
+              <div
+                style={{
+                  marginTop: "0.5rem",
+                  fontFamily: "var(--font-geist-mono), monospace",
+                  fontSize: "0.6rem",
+                  fontWeight: 900,
+                  letterSpacing: "0.2em",
+                  textTransform: "uppercase",
+                  color: division.color,
+                  opacity: isHovered ? 1 : 0.65,
+                  transition: "opacity 0.35s ease",
+                }}
+              >
+                {member.role}
+              </div>
+            </div>
+          </div>
+
+          {/* ── LAYER 8: Corner accent glow (bottom-right) ── */}
+          <div
+            style={{
+              position: "absolute",
+              bottom: "-20px",
+              right: "-20px",
+              width: "120px",
+              height: "120px",
+              borderRadius: "50%",
+              background: `rgba(${division.colorRgb},0.15)`,
+              filter: "blur(30px)",
+              opacity: isHovered ? 1 : 0,
+              transition: "opacity 0.45s ease",
+              pointerEvents: "none",
+            }}
+          />
         </div>
       </div>
     </article>
   );
 }
 
-/* ─── Division Carousel Row ─── */
-function DivisionRow({ division, index }: { division: Division; index: number }) {
+/* ═══════════════════════════════════════════════
+   DIVISION ROW — Draggable Carousel
+═══════════════════════════════════════════════ */
+function DivisionRow({
+  division,
+  index,
+}: {
+  division: Division;
+  index: number;
+}) {
   const trackRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
   const startX = useRef(0);
-  const scrollLeft = useRef(0);
+  const scrollStartX = useRef(0);
+  const hasDragged = useRef(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
-  const { ref: rowRef, isVisible } = useScrollReveal();
+  const { ref: rowRef, isVisible } = useScrollReveal({ threshold: 0.08 });
 
   const updateScrollState = useCallback(() => {
     const el = trackRef.current;
@@ -267,19 +570,20 @@ function DivisionRow({ division, index }: { division: Division; index: number })
     return () => el.removeEventListener("scroll", updateScrollState);
   }, [updateScrollState]);
 
-  /* ── Drag to scroll ── */
-  const onPointerDown = (e: React.PointerEvent) => {
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     isDragging.current = true;
+    hasDragged.current = false;
     startX.current = e.clientX;
-    scrollLeft.current = trackRef.current?.scrollLeft ?? 0;
+    scrollStartX.current = trackRef.current?.scrollLeft ?? 0;
     (e.currentTarget as HTMLDivElement).setPointerCapture(e.pointerId);
   };
 
-  const onPointerMove = (e: React.PointerEvent) => {
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!isDragging.current) return;
     const dx = e.clientX - startX.current;
+    if (Math.abs(dx) > 4) hasDragged.current = true;
     if (trackRef.current) {
-      trackRef.current.scrollLeft = scrollLeft.current - dx;
+      trackRef.current.scrollLeft = scrollStartX.current - dx;
     }
   };
 
@@ -288,209 +592,454 @@ function DivisionRow({ division, index }: { division: Division; index: number })
   };
 
   const scroll = (dir: number) => {
-    trackRef.current?.scrollBy({ left: dir * 260, behavior: "smooth" });
+    trackRef.current?.scrollBy({
+      left: dir * 340,
+      behavior: "smooth",
+    });
   };
-
-  const isEven = index % 2 === 0;
 
   return (
     <div
       ref={rowRef}
-      className={`reveal-base reveal-up ${isVisible ? "revealed" : ""}`}
-      style={{ animationDelay: `${index * 0.1}s` }}
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? "translateY(0)" : "translateY(48px)",
+        transition: `opacity 0.8s cubic-bezier(0.22,1,0.36,1) ${index * 0.12}s, transform 0.8s cubic-bezier(0.22,1,0.36,1) ${index * 0.12}s`,
+      }}
     >
-      {/* Division header */}
-      <div className={`mb-6 flex items-center justify-between px-4 sm:px-8 ${isEven ? "" : "flex-row-reverse"}`}>
-        <div className={`flex items-center gap-4 ${isEven ? "" : "flex-row-reverse"}`}>
-          {/* Accent dot + label */}
+      {/* ── Section anchor ── */}
+      <div id={`div-${division.id}`} style={{ scrollMarginTop: "6rem" }} />
+
+      {/* ── Division Header ── */}
+      <div
+        style={{
+          padding: "0 clamp(1rem, 4vw, 2rem)",
+          marginBottom: "2rem",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "1rem",
+        }}
+      >
+        {/* Left: label + count */}
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem", minWidth: 0 }}>
+          {/* Icon badge */}
           <div
-            className="flex size-3 shrink-0 rounded-full"
-            style={{ background: division.color, boxShadow: `0 0 10px 2px ${division.color}66` }}
-          />
-          <h3
-            className="font-display font-black uppercase tracking-[-0.03em] text-[var(--cream)]"
-            style={{ fontSize: "clamp(1.6rem, 4vw, 2.8rem)" }}
+            style={{
+              flexShrink: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "2.8rem",
+              height: "2.8rem",
+              borderRadius: "0.85rem",
+              background: `rgba(${division.colorRgb},0.12)`,
+              border: `1px solid rgba(${division.colorRgb},0.28)`,
+              fontSize: "1.1rem",
+              lineHeight: 1,
+              color: division.color,
+            }}
           >
-            {division.label}
-          </h3>
-          <span
-            className="font-mono text-[0.62rem] font-black uppercase tracking-[0.18em]"
-            style={{ color: division.color }}
-          >
-            {division.members.length} {division.members.length === 1 ? "anggota" : "anggota"}
-          </span>
+            {division.icon}
+          </div>
+
+          <div>
+            <h3
+              style={{
+                fontFamily:
+                  "var(--font-display), Impact, 'Arial Narrow', sans-serif",
+                fontSize: "clamp(1.8rem, 4vw, 3.2rem)",
+                fontWeight: 900,
+                textTransform: "uppercase",
+                letterSpacing: "-0.04em",
+                lineHeight: 1,
+                color: "var(--cream)",
+                margin: 0,
+              }}
+            >
+              {division.label}
+            </h3>
+            <div
+              style={{
+                marginTop: "0.3rem",
+                fontFamily: "var(--font-geist-mono), monospace",
+                fontSize: "0.6rem",
+                fontWeight: 900,
+                letterSpacing: "0.2em",
+                textTransform: "uppercase",
+                color: division.color,
+                opacity: 0.75,
+              }}
+            >
+              {division.members.length}{" "}
+              {division.members.length === 1 ? "anggota" : "anggota"}
+            </div>
+          </div>
         </div>
 
-        {/* Nav arrows */}
+        {/* Right: Arrow buttons */}
         {division.members.length > 1 && (
-          <div className="flex gap-2">
-            <button
-              aria-label="Geser kiri"
-              className="flex size-10 items-center justify-center rounded-full border border-[rgba(248,247,240,0.14)] bg-[rgba(248,247,240,0.05)] text-[var(--cream)] transition hover:border-[rgba(255,228,92,0.4)] hover:bg-[rgba(255,228,92,0.08)] hover:text-[var(--yellow)] disabled:opacity-25"
-              disabled={!canScrollLeft}
-              onClick={() => scroll(-1)}
-              type="button"
-            >
-              <svg fill="none" viewBox="0 0 20 20" width="18">
-                <path d="M12 15l-5-5 5-5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
-              </svg>
-            </button>
-            <button
-              aria-label="Geser kanan"
-              className="flex size-10 items-center justify-center rounded-full border border-[rgba(248,247,240,0.14)] bg-[rgba(248,247,240,0.05)] text-[var(--cream)] transition hover:border-[rgba(255,228,92,0.4)] hover:bg-[rgba(255,228,92,0.08)] hover:text-[var(--yellow)] disabled:opacity-25"
-              disabled={!canScrollRight}
-              onClick={() => scroll(1)}
-              type="button"
-            >
-              <svg fill="none" viewBox="0 0 20 20" width="18">
-                <path d="M8 5l5 5-5 5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
-              </svg>
-            </button>
+          <div style={{ display: "flex", gap: "0.5rem", flexShrink: 0 }}>
+            {[
+              { dir: -1, disabled: !canScrollLeft, label: "Kiri" },
+              { dir: 1, disabled: !canScrollRight, label: "Kanan" },
+            ].map(({ dir, disabled, label }) => (
+              <button
+                key={dir}
+                aria-label={`Geser ${label}`}
+                disabled={disabled}
+                onClick={() => scroll(dir)}
+                type="button"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "2.6rem",
+                  height: "2.6rem",
+                  borderRadius: "50%",
+                  border: `1px solid rgba(${division.colorRgb},${disabled ? 0.1 : 0.3})`,
+                  background: `rgba(${division.colorRgb},${disabled ? 0.03 : 0.08})`,
+                  color: disabled ? "rgba(248,247,240,0.25)" : division.color,
+                  cursor: disabled ? "default" : "pointer",
+                  transition: "all 0.25s ease",
+                }}
+              >
+                <svg fill="none" viewBox="0 0 20 20" width="16">
+                  {dir === -1 ? (
+                    <path
+                      d="M12 15l-5-5 5-5"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2.2"
+                    />
+                  ) : (
+                    <path
+                      d="M8 5l5 5-5 5"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2.2"
+                    />
+                  )}
+                </svg>
+              </button>
+            ))}
           </div>
         )}
       </div>
 
-      {/* Scrollable card track */}
-      <div className="relative">
-        {/* Left fade mask */}
+      {/* ── Scroll track ── */}
+      <div style={{ position: "relative" }}>
+        {/* Left fade */}
         <div
-          className="pointer-events-none absolute left-0 top-0 z-10 h-full w-20 transition-opacity duration-300"
           style={{
-            background: "linear-gradient(to right, var(--navy-deep), transparent)",
+            position: "absolute",
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: "5rem",
+            zIndex: 10,
+            pointerEvents: "none",
+            background:
+              "linear-gradient(to right, var(--navy-deep) 0%, transparent 100%)",
             opacity: canScrollLeft ? 1 : 0,
+            transition: "opacity 0.35s ease",
           }}
         />
-        {/* Right fade mask */}
+        {/* Right fade */}
         <div
-          className="pointer-events-none absolute right-0 top-0 z-10 h-full w-20 transition-opacity duration-300"
           style={{
-            background: "linear-gradient(to left, var(--navy-deep), transparent)",
+            position: "absolute",
+            right: 0,
+            top: 0,
+            bottom: 0,
+            width: "5rem",
+            zIndex: 10,
+            pointerEvents: "none",
+            background:
+              "linear-gradient(to left, var(--navy-deep) 0%, transparent 100%)",
             opacity: canScrollRight && division.members.length > 1 ? 1 : 0,
+            transition: "opacity 0.35s ease",
           }}
         />
 
+        {/* Scrollable track */}
         <div
           ref={trackRef}
-          className="flex gap-5 overflow-x-auto px-4 pb-6 sm:px-8"
-          style={{
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
-            cursor: isDragging.current ? "grabbing" : "grab",
-            WebkitOverflowScrolling: "touch",
-            scrollSnapType: "x mandatory",
-          }}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
+          style={{
+            display: "flex",
+            gap: "1.25rem",
+            overflowX: "auto",
+            paddingLeft: "clamp(1rem, 4vw, 2rem)",
+            paddingRight: "clamp(1rem, 4vw, 2rem)",
+            paddingBottom: "1.5rem",
+            scrollbarWidth: "none",
+            scrollSnapType: "x mandatory",
+            WebkitOverflowScrolling: "touch",
+            cursor: isDragging.current ? "grabbing" : "grab",
+          } as CSSProperties}
         >
-          {division.members.map((member) => (
-            <div key={member.name} style={{ scrollSnapAlign: "start" }}>
-              <MemberCard member={member} accentColor={division.color} />
-            </div>
+          {division.members.map((member, i) => (
+            <MemberCard
+              key={member.name}
+              member={member}
+              division={division}
+              index={i}
+              isVisible={isVisible}
+            />
           ))}
-
-          {/* Spacer at end */}
-          <div className="w-4 shrink-0" />
+          {/* End spacer */}
+          <div style={{ width: "0.5rem", flexShrink: 0 }} />
         </div>
       </div>
 
-      {/* Divider line */}
+      {/* ── Divider ── */}
       <div
-        className="mx-4 mt-4 sm:mx-8"
         style={{
+          margin: "0 clamp(1rem, 4vw, 2rem)",
+          marginTop: "0.5rem",
           height: "1px",
-          background: `linear-gradient(to right, ${division.color}33, rgba(248,247,240,0.06), transparent)`,
+          background: `linear-gradient(to right, rgba(${division.colorRgb},0.4) 0%, rgba(${division.colorRgb},0.08) 40%, transparent 100%)`,
         }}
       />
     </div>
   );
 }
 
-/* ─── Main export ─── */
+/* ═══════════════════════════════════════════════
+   MAIN EXPORT
+═══════════════════════════════════════════════ */
 export function DivisionGallery() {
   const { ref: headerRef, isVisible: headerVisible } = useScrollReveal();
+  const totalMembers = divisions.reduce(
+    (acc, d) => acc + d.members.length,
+    0
+  );
 
   return (
     <section
       id="division-gallery"
-      className="relative overflow-hidden bg-[var(--navy-deep)] py-20 sm:py-28"
+      style={{ position: "relative", overflow: "hidden", background: "var(--navy-deep)", padding: "5rem 0 6rem" }}
     >
-      {/* Background texture */}
+      {/* ── BG: dot grid ── */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
         style={{
+          position: "absolute",
+          inset: 0,
+          pointerEvents: "none",
           backgroundImage:
-            "radial-gradient(circle at 1.5px 1.5px, rgba(255,228,92,0.04) 1px, transparent 0)",
-          backgroundSize: "28px 28px",
-        }}
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 60% 40% at 80% 20%, rgba(255,228,92,0.07), transparent 55%), radial-gradient(ellipse 50% 60% at 10% 80%, rgba(42,61,130,0.2), transparent)",
+            "radial-gradient(circle at 1.5px 1.5px, rgba(255,228,92,0.045) 1px, transparent 0)",
+          backgroundSize: "26px 26px",
         }}
       />
 
-      {/* Giant background text */}
+      {/* ── BG: ambient orbs ── */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -right-[5%] top-[2%] select-none font-display font-black uppercase leading-none text-[var(--cream)] opacity-[0.025]"
-        style={{ fontSize: "clamp(6rem, 22vw, 18rem)", letterSpacing: "-0.06em" }}
+        style={{
+          position: "absolute",
+          inset: 0,
+          pointerEvents: "none",
+          background:
+            "radial-gradient(ellipse 55% 35% at 85% 15%, rgba(255,228,92,0.09), transparent 60%), radial-gradient(ellipse 45% 55% at 12% 75%, rgba(42,61,130,0.22), transparent 60%)",
+        }}
+      />
+
+      {/* ── BG: giant ghost text ── */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          top: "2%",
+          right: "-3%",
+          pointerEvents: "none",
+          userSelect: "none",
+          fontFamily:
+            "var(--font-display), Impact, 'Arial Narrow', sans-serif",
+          fontSize: "clamp(7rem, 24vw, 20rem)",
+          fontWeight: 900,
+          textTransform: "uppercase",
+          letterSpacing: "-0.06em",
+          lineHeight: 1,
+          color: "rgba(248,247,240,0.022)",
+        }}
       >
         KRSBI
       </div>
 
-      {/* Header */}
+      {/* ══ HEADER ══ */}
       <div
         ref={headerRef}
-        className={`relative z-10 mx-auto mb-16 max-w-[1280px] px-4 sm:px-8 reveal-base reveal-up ${headerVisible ? "revealed" : ""}`}
+        style={{
+          position: "relative",
+          zIndex: 10,
+          maxWidth: "1280px",
+          margin: "0 auto",
+          padding: "0 clamp(1rem, 4vw, 2rem)",
+          marginBottom: "4rem",
+          opacity: headerVisible ? 1 : 0,
+          transform: headerVisible ? "translateY(0)" : "translateY(36px)",
+          transition: "opacity 0.9s cubic-bezier(0.22,1,0.36,1), transform 0.9s cubic-bezier(0.22,1,0.36,1)",
+        }}
       >
-        <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
-          <div>
-            <div className="kicker kicker-on-ink">Galeri Divisi</div>
-            <h2
-              className="headline mt-5 text-[var(--cream)]"
-              style={{ fontSize: "clamp(3rem, 8vw, 6.5rem)" }}
-            >
-              Orang-orang di balik{" "}
-              <span style={{ color: "var(--yellow)" }}>setiap divisi.</span>
-            </h2>
+        {/* Top row: kicker + stats */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: "1rem",
+            marginBottom: "1.5rem",
+          }}
+        >
+          <div className="kicker kicker-on-ink">Galeri Divisi KRSBI-H</div>
+
+          {/* Stat chips */}
+          <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
+            {[
+              { value: `${totalMembers}`, label: "Anggota" },
+              { value: `${divisions.length}`, label: "Divisi" },
+            ].map((s) => (
+              <div
+                key={s.label}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  padding: "0.4rem 0.85rem",
+                  borderRadius: "999px",
+                  border: "1px solid rgba(255,228,92,0.18)",
+                  background: "rgba(255,228,92,0.06)",
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily:
+                      "var(--font-display), Impact, sans-serif",
+                    fontSize: "1.2rem",
+                    fontWeight: 900,
+                    letterSpacing: "-0.04em",
+                    color: "var(--yellow)",
+                    lineHeight: 1,
+                  }}
+                >
+                  {s.value}
+                </span>
+                <span
+                  style={{
+                    fontFamily: "var(--font-geist-mono), monospace",
+                    fontSize: "0.56rem",
+                    fontWeight: 900,
+                    letterSpacing: "0.18em",
+                    textTransform: "uppercase",
+                    color: "rgba(248,247,240,0.45)",
+                  }}
+                >
+                  {s.label}
+                </span>
+              </div>
+            ))}
           </div>
-          <p className="max-w-[30rem] pb-2 text-[1rem] leading-[1.85] text-[rgba(248,247,240,0.55)] lg:text-right">
-            {divisions.reduce((acc, d) => acc + d.members.length, 0)} anggota terbagi dalam{" "}
-            {divisions.length} divisi. Geser kartu untuk melihat seluruh tim.
-          </p>
         </div>
 
-        {/* Division tab pills */}
-        <div className="mt-8 flex flex-wrap gap-2">
+        {/* Main headline */}
+        <h2
+          style={{
+            fontFamily:
+              "var(--font-display), Impact, 'Arial Narrow', sans-serif",
+            fontSize: "clamp(3rem, 8.5vw, 7rem)",
+            fontWeight: 900,
+            textTransform: "uppercase",
+            letterSpacing: "-0.05em",
+            lineHeight: 0.9,
+            color: "var(--cream)",
+            margin: 0,
+            maxWidth: "16ch",
+          }}
+        >
+          Orang-orang di balik{" "}
+          <span
+            style={{
+              color: "var(--yellow)",
+              textShadow: "0.04em 0.05em 0 var(--navy-black)",
+            }}
+          >
+            setiap divisi.
+          </span>
+        </h2>
+
+        <p
+          style={{
+            marginTop: "1.25rem",
+            maxWidth: "36rem",
+            fontSize: "1rem",
+            lineHeight: 1.85,
+            color: "rgba(248,247,240,0.5)",
+          }}
+        >
+          Hover kartu untuk melihat efek 3D. Geser atau drag untuk menjelajahi
+          semua anggota per divisi.
+        </p>
+
+        {/* Division jump pills */}
+        <div
+          style={{
+            marginTop: "2rem",
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "0.5rem",
+          }}
+        >
           {divisions.map((div) => (
             <a
-              href={`#div-${div.id}`}
               key={div.id}
-              className="rounded-full border px-4 py-2 font-mono text-[0.65rem] font-black uppercase tracking-[0.16em] transition-all duration-300 hover:-translate-y-0.5"
+              href={`#div-${div.id}`}
               style={{
-                borderColor: `${div.color}44`,
-                background: `${div.color}0d`,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.45rem",
+                padding: "0.4rem 0.9rem",
+                borderRadius: "999px",
+                border: `1px solid rgba(${div.colorRgb},0.3)`,
+                background: `rgba(${div.colorRgb},0.07)`,
+                fontFamily: "var(--font-geist-mono), monospace",
+                fontSize: "0.62rem",
+                fontWeight: 900,
+                letterSpacing: "0.16em",
+                textTransform: "uppercase",
                 color: div.color,
+                textDecoration: "none",
+                transition: "all 0.25s ease",
               }}
             >
-              {div.label}
+              <span style={{ opacity: 0.65, fontSize: "0.8em" }}>
+                {div.icon}
+              </span>
+              {div.shortLabel}
             </a>
           ))}
         </div>
       </div>
 
-      {/* Division rows */}
-      <div className="relative z-10 flex flex-col gap-12">
+      {/* ══ DIVISION ROWS ══ */}
+      <div
+        style={{
+          position: "relative",
+          zIndex: 10,
+          display: "flex",
+          flexDirection: "column",
+          gap: "4rem",
+        }}
+      >
         {divisions.map((div, i) => (
-          <div id={`div-${div.id}`} key={div.id}>
-            <DivisionRow division={div} index={i} />
-          </div>
+          <DivisionRow key={div.id} division={div} index={i} />
         ))}
       </div>
     </section>
