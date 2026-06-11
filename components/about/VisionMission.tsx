@@ -29,7 +29,7 @@ export function VisionMission({ vision, mission, values }: VisionMissionProps) {
         <AboutSectionTitle icon={<EyeIcon className="size-6" />} kicker="Arah Kami" title="Visi & Misi" />
 
         <div ref={cardsRef} className="mt-12 grid gap-6 lg:grid-cols-2">
-          <article className={`card-paper card-hover-lift rounded-[2rem] p-6 sm:p-8 reveal-base reveal-left ${cardsVisible ? "revealed" : ""}`}>
+          <article className={`card-paper card-hover-lift luxury-surface rounded-[2rem] p-6 sm:p-8 reveal-base reveal-left ${cardsVisible ? "revealed" : ""}`}>
             <div className="numeral text-[3rem] leading-none text-[var(--gold-deep)]">01</div>
             <h3 className="font-display mt-5 text-[clamp(3rem,6vw,5rem)] font-black uppercase leading-[0.85] tracking-[-0.05em] text-[var(--navy-deep)]">
               {vision.title}
@@ -39,7 +39,7 @@ export function VisionMission({ vision, mission, values }: VisionMissionProps) {
             </p>
           </article>
 
-          <article className={`card-ink card-hover-lift rounded-[2rem] p-6 sm:p-8 reveal-base reveal-right ${cardsVisible ? "revealed reveal-delay-1" : ""}`}>
+          <article className={`card-ink card-hover-lift luxury-surface rounded-[2rem] p-6 sm:p-8 reveal-base reveal-right ${cardsVisible ? "revealed reveal-delay-1" : ""}`}>
             <div className="numeral text-[3rem] leading-none text-[var(--yellow)]">02</div>
             <h3 className="font-display mt-5 text-[clamp(3rem,6vw,5rem)] font-black uppercase leading-[0.85] tracking-[-0.05em] text-[var(--cream)]">
               {mission.title}
@@ -55,13 +55,13 @@ export function VisionMission({ vision, mission, values }: VisionMissionProps) {
           </article>
         </div>
 
-        <div ref={valuesRef} className="mt-16 rounded-[2rem] bg-[var(--yellow)] p-5 text-[var(--navy-deep)] sm:p-8">
+        <div ref={valuesRef} className="luxury-surface mt-16 rounded-[2rem] bg-[var(--yellow)] p-5 text-[var(--navy-deep)] sm:p-8">
           <div className="font-mono text-[0.72rem] font-black uppercase tracking-[0.22em]">Nilai Inti</div>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {values.map((value, index) => {
               const Icon = valueIconMap[value.icon];
               return (
-                <article className={`rounded-[1.25rem] border border-[rgba(7,12,34,0.16)] bg-[rgba(248,247,240,0.45)] p-5 reveal-base reveal-up ${valuesVisible ? `revealed reveal-delay-${index + 1}` : ""}`} key={value.title}>
+                <article className={`luxury-surface rounded-[1.25rem] border border-[rgba(7,12,34,0.16)] bg-[rgba(248,247,240,0.45)] p-5 reveal-base reveal-up ${valuesVisible ? `revealed reveal-delay-${index + 1}` : ""}`} key={value.title}>
                   <Icon className="size-6" />
                   <h4 className="font-display mt-5 text-[1.7rem] font-black uppercase leading-none tracking-[-0.03em]">{value.title}</h4>
                   <p className="mt-3 text-[0.92rem] leading-[1.7] text-[rgba(7,12,34,0.72)]">{value.description}</p>

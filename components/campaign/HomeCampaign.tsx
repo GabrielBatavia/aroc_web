@@ -250,7 +250,7 @@ function CampaignHero({ hero }: { hero: HeroData }) {
         className="absolute inset-0"
         style={{
           transform: `translate3d(${tilt.x * -8}px, ${tilt.y * -5}px, 0) scale(1.04)`,
-          transition: "transform 0.5s ease",
+          transition: "transform 0.9s var(--ease-luxury)",
           willChange: "transform",
         }}
       >
@@ -403,11 +403,11 @@ function CampaignHero({ hero }: { hero: HeroData }) {
                 className="block"
                 style={{
                   color: "var(--yellow)",
-                  textShadow: "0.04em 0.06em 0 var(--navy-black)",
-                  transform: `translate3d(${tilt.x * -6}px, 0, 0)`,
-                  display: "inline-block",
-                  transition: "transform 0.35s ease",
-                }}
+                   textShadow: "0.04em 0.06em 0 var(--navy-black)",
+                   transform: `translate3d(${tilt.x * -6}px, 0, 0)`,
+                   display: "inline-block",
+                   transition: "transform 0.75s var(--ease-luxury)",
+                 }}
               >
                 Robot
               </span>
@@ -435,11 +435,11 @@ function CampaignHero({ hero }: { hero: HeroData }) {
 
             {/* CTA */}
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <MagneticButton className="btn-gold" href="#robots">
+              <MagneticButton className="btn-gold luxury-shimmer" href="#robots">
                 Lihat Robot
                 <ArrowRightIcon className="size-5" />
               </MagneticButton>
-              <Link className="btn-ghost-paper" href="#story">
+              <Link className="btn-ghost-paper luxury-shimmer" href="#story">
                 Cara Kerja
               </Link>
             </div>
@@ -447,7 +447,7 @@ function CampaignHero({ hero }: { hero: HeroData }) {
             {/* Quick stats */}
             <div className="mt-10 flex items-center gap-3">
               {heroFacts.map((fact) => (
-                <div key={fact.label} className="stat-pill">
+                <div key={fact.label} className="stat-pill luxury-surface">
                   <span className="numeral text-[1.55rem] leading-none text-[var(--yellow)]">
                     {fact.value}
                   </span>
@@ -693,7 +693,7 @@ function StickyScrollStory({ hero }: { hero: HeroData }) {
           <div className="hidden lg:block">
             <div className="sticky top-4 flex h-screen items-center py-12">
               <div className="relative w-full">
-                <div className="relative aspect-[3/4] overflow-hidden rounded-[2.4rem] border border-[rgba(255,228,92,0.16)] bg-[rgba(12,18,45,0.7)]">
+                <div className="luxury-surface soft-glow relative aspect-[3/4] overflow-hidden rounded-[2.4rem] border border-[rgba(255,228,92,0.16)] bg-[rgba(12,18,45,0.7)]">
                   <Image
                     alt="AROC_PL robot"
                     className="object-contain drop-shadow-[0_34px_80px_rgba(0,0,0,0.7)]"
@@ -854,7 +854,7 @@ function BenefitsClaims({ divisions }: { divisions: DivisionCard[] }) {
                   key={c.title}
                   type="button"
                   onClick={() => setActiveFeature(i)}
-                  className={`group flex items-start gap-5 rounded-[1.6rem] border p-5 text-left transition-all duration-300 ${
+                  className={`luxury-surface group flex items-start gap-5 rounded-[1.6rem] border p-5 text-left transition-all duration-300 ${
                     isActive
                       ? "border-[rgba(7,12,34,0.18)] bg-[var(--navy-deep)] text-[var(--cream)] shadow-[0_24px_60px_-36px_rgba(7,12,34,0.7)]"
                       : "border-[rgba(7,12,34,0.08)] bg-white/60 text-[var(--navy-deep)] hover:border-[rgba(7,12,34,0.14)] hover:bg-white/90"
@@ -895,7 +895,7 @@ function BenefitsClaims({ divisions }: { divisions: DivisionCard[] }) {
           <div className="sticky top-24 flex flex-col gap-5">
             {divisions.map((div) => (
               <div
-                className="tech-card rounded-[2rem] p-6 sm:p-8"
+                className="tech-card luxury-surface rounded-[2rem] p-6 sm:p-8"
                 key={div.title}
               >
                 <div className="kicker kicker-on-ink">{div.eyebrow}</div>
@@ -1003,14 +1003,14 @@ function RobotLineupSlider({ robots }: { robots: RobotCard[] }) {
         </div>
 
         {/* Main robot display */}
-        <div className="grid gap-6 overflow-hidden rounded-[2.8rem] border border-[rgba(255,228,92,0.2)] bg-[rgba(10,15,38,0.7)] p-5 sm:p-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+        <div className="luxury-surface soft-glow grid gap-6 overflow-hidden rounded-[2.8rem] border border-[rgba(255,228,92,0.2)] bg-[rgba(10,15,38,0.7)] p-5 sm:p-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           {/* Robot image */}
-          <div className="relative min-h-[28rem] sm:min-h-[38rem] overflow-hidden rounded-[2rem] bg-[radial-gradient(ellipse_60%_40%_at_50%_20%,rgba(255,228,92,0.22),transparent_55%)]">
+          <div className="luxury-image-frame relative min-h-[28rem] overflow-hidden rounded-[2rem] bg-[radial-gradient(ellipse_60%_40%_at_50%_20%,rgba(255,228,92,0.22),transparent_55%)] sm:min-h-[38rem]">
             {robots.map((r, i) => (
               <Image
                 key={r.name}
                 alt={`${r.name} robot`}
-                className={`absolute inset-0 object-cover transition-all duration-600 ${i === activeIndex ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}
+                className={`luxury-image absolute inset-0 object-cover transition-all duration-600 ${i === activeIndex ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}
                 fill
                 sizes="(max-width: 1024px) 100vw, 620px"
                 src={r.image}
@@ -1063,7 +1063,7 @@ function RobotLineupSlider({ robots }: { robots: RobotCard[] }) {
             <div className="mt-8 flex items-center gap-3">
               <button
                 aria-label="Robot sebelumnya"
-                className="flex size-12 items-center justify-center rounded-full border border-[rgba(248,247,240,0.16)] bg-[rgba(248,247,240,0.05)] text-[var(--cream)] transition hover:bg-[var(--yellow)] hover:text-[var(--navy-deep)] hover:border-[var(--yellow)]"
+                className="luxury-chip flex size-12 items-center justify-center rounded-full border border-[rgba(248,247,240,0.16)] bg-[rgba(248,247,240,0.05)] text-[var(--cream)] transition hover:border-[var(--yellow)] hover:bg-[var(--yellow)] hover:text-[var(--navy-deep)]"
                 onClick={() => go(-1)}
                 type="button"
               >
@@ -1071,7 +1071,7 @@ function RobotLineupSlider({ robots }: { robots: RobotCard[] }) {
               </button>
               <button
                 aria-label="Robot berikutnya"
-                className="flex size-12 items-center justify-center rounded-full border border-[rgba(248,247,240,0.16)] bg-[rgba(248,247,240,0.05)] text-[var(--cream)] transition hover:bg-[var(--yellow)] hover:text-[var(--navy-deep)] hover:border-[var(--yellow)]"
+                className="luxury-chip flex size-12 items-center justify-center rounded-full border border-[rgba(248,247,240,0.16)] bg-[rgba(248,247,240,0.05)] text-[var(--cream)] transition hover:border-[var(--yellow)] hover:bg-[var(--yellow)] hover:text-[var(--navy-deep)]"
                 onClick={() => go(1)}
                 type="button"
               >
@@ -1346,7 +1346,7 @@ function CampaignGallery({ gallery }: { gallery: GalleryItem[] }) {
         <div className="grid gap-4 sm:grid-cols-12 sm:grid-rows-[280px_280px_240px]">
           {gallery.map((item, i) => (
             <figure
-              className={`group relative min-h-[14rem] overflow-hidden rounded-[2rem] bg-[var(--navy-deep)] ${spans[i] ?? ""}`}
+              className={`luxury-surface luxury-image-frame group relative min-h-[14rem] overflow-hidden rounded-[2rem] bg-[var(--navy-deep)] ${spans[i] ?? ""}`}
               key={item.src}
               style={
                 i === 0
@@ -1358,7 +1358,7 @@ function CampaignGallery({ gallery }: { gallery: GalleryItem[] }) {
             >
               <Image
                 alt={item.alt}
-                className="object-cover transition duration-[900ms] group-hover:scale-[1.05]"
+                className="luxury-image object-cover"
                 fill
                 sizes="(max-width: 640px) 100vw, 50vw"
                 src={item.src}
@@ -1404,7 +1404,7 @@ function SponsorFinalCTA() {
       >
         {/* Inner container */}
         <div
-          className="relative overflow-hidden rounded-[3rem] border border-[rgba(255,228,92,0.22)] p-8 sm:p-12 lg:p-16"
+          className="luxury-surface soft-glow relative overflow-hidden rounded-[3rem] border border-[rgba(255,228,92,0.22)] p-8 sm:p-12 lg:p-16"
           style={{
             background: "linear-gradient(150deg, rgba(20,28,66,0.95), rgba(5,8,22,0.98))",
             boxShadow: "0 0 0 1px rgba(255,228,92,0.06), 0 60px 120px -60px rgba(0,0,0,0.95)",
@@ -1415,7 +1415,7 @@ function SponsorFinalCTA() {
 
           <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
             {/* Logo mark */}
-            <div className="mx-auto flex aspect-square w-full max-w-[18rem] items-center justify-center rounded-full bg-[var(--yellow)] p-8 shadow-[0_0_0_1.5rem_rgba(255,228,92,0.07),0_0_0_3rem_rgba(255,228,92,0.03)]">
+            <div className="breathing-mark mx-auto flex aspect-square w-full max-w-[18rem] items-center justify-center rounded-full bg-[var(--yellow)] p-8 shadow-[0_0_0_1.5rem_rgba(255,228,92,0.07),0_0_0_3rem_rgba(255,228,92,0.03)]">
               <ArocGeneratedMark className="h-full w-full max-w-[12rem]" />
             </div>
 
@@ -1444,10 +1444,10 @@ function SponsorFinalCTA() {
               </div>
 
               <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-                <Link className="btn-gold" href="mailto:hello@arocpl.com?subject=Kemitraan%20AROC_PL">
+                <Link className="btn-gold luxury-shimmer" href="mailto:hello@arocpl.com?subject=Kemitraan%20AROC_PL">
                   Ajukan Kemitraan
                 </Link>
-                <Link className="btn-ghost-paper" href="/#gallery">
+                <Link className="btn-ghost-paper luxury-shimmer" href="/#gallery">
                   Lihat Dokumentasi
                 </Link>
               </div>

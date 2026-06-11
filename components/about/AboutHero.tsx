@@ -32,7 +32,7 @@ export function AboutHero({ eyebrow, titlePrefix, titleAccent, description, stat
 
           <div className="relative mx-auto w-full max-w-[28rem]">
             <DoodleArrow className="absolute -left-10 top-0 w-36 rotate-[-12deg] text-[var(--yellow)]" />
-            <div className="flex aspect-square items-center justify-center rounded-full bg-[var(--yellow)] p-10 shadow-[0_0_0_1rem_rgba(255,228,92,0.08),0_40px_100px_-60px_rgba(255,228,92,0.9)]">
+            <div className="breathing-mark flex aspect-square items-center justify-center rounded-full bg-[var(--yellow)] p-10 shadow-[0_0_0_1rem_rgba(255,228,92,0.08),0_40px_100px_-60px_rgba(255,228,92,0.9)]">
               <ArocGeneratedMark className="h-full w-full" />
             </div>
           </div>
@@ -40,7 +40,7 @@ export function AboutHero({ eyebrow, titlePrefix, titleAccent, description, stat
 
         <div className="mt-14 grid gap-4 sm:grid-cols-3">
           {stats.map((stat, index) => (
-            <div className="rounded-[1.5rem] border border-[rgba(248,247,240,0.12)] bg-[rgba(248,247,240,0.06)] p-5 backdrop-blur" key={stat.label}>
+            <div className="luxury-surface rounded-[1.5rem] border border-[rgba(248,247,240,0.12)] bg-[rgba(248,247,240,0.06)] p-5 backdrop-blur" key={stat.label}>
               <div className="numeral text-[3.6rem] leading-none text-[var(--yellow)]">{stat.value}</div>
               <p className="mt-2 font-mono text-[0.7rem] font-black uppercase tracking-[0.18em] text-[rgba(248,247,240,0.52)]">
                 {String(index + 1).padStart(2, "0")} / {stat.label}

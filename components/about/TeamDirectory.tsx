@@ -26,7 +26,7 @@ export function TeamDirectory({ cohorts }: TeamDirectoryProps) {
           {cohorts.map((cohort) => {
             const isOpen = cohort.year === openYear;
             return (
-              <div className="overflow-hidden rounded-[2rem] border border-[var(--rule)] bg-white/[0.76] shadow-[0_22px_55px_-42px_rgba(7,12,34,0.55)] transition" key={cohort.year}>
+              <div className="luxury-surface overflow-hidden rounded-[2rem] border border-[var(--rule)] bg-white/[0.76] shadow-[0_22px_55px_-42px_rgba(7,12,34,0.55)] transition" key={cohort.year}>
                 <button aria-expanded={isOpen} className="flex w-full items-center justify-between gap-5 px-5 py-5 text-left sm:px-7" onClick={() => setOpenYear(isOpen ? "" : cohort.year)} type="button">
                   <div className="flex flex-wrap items-baseline gap-x-5 gap-y-2">
                     <span className="numeral text-[2.6rem] leading-none text-[var(--gold-deep)]">{cohort.year}</span>
@@ -36,15 +36,16 @@ export function TeamDirectory({ cohorts }: TeamDirectoryProps) {
                   <ChevronDownIcon className={["size-6 shrink-0 text-[var(--navy-deep)] transition-transform duration-300", isOpen ? "rotate-180" : ""].join(" ")} />
                 </button>
 
-                {isOpen ? (
-                  <div className="border-t border-[var(--rule)] bg-[var(--cream-soft)] px-5 pb-7 pt-7 sm:px-7">
+                <div className={["grid transition-[grid-template-rows] duration-500", isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"].join(" ")}>
+                  <div className="overflow-hidden">
+                    <div className="border-t border-[var(--rule)] bg-[var(--cream-soft)] px-5 pb-7 pt-7 sm:px-7">
                     <div className="grid gap-7 sm:grid-cols-2 xl:grid-cols-4">
                       {cohort.members.map((member, index) => (
-                        <article className="group" key={`${cohort.year}-${member.name}`}>
-                          <div className="relative aspect-[3/4] overflow-hidden rounded-[1.35rem] bg-[var(--navy-deep)] shadow-[0_26px_62px_-44px_rgba(7,12,34,0.8)]">
+                        <article className="group luxury-surface rounded-[1.35rem]" key={`${cohort.year}-${member.name}`}>
+                          <div className="luxury-image-frame relative aspect-[3/4] overflow-hidden rounded-[1.35rem] bg-[var(--navy-deep)] shadow-[0_26px_62px_-44px_rgba(7,12,34,0.8)]">
                             <Image
                               alt={`${member.name} portrait`}
-                              className="object-cover transition duration-[800ms] group-hover:scale-[1.06]"
+                              className="luxury-image object-cover"
                               fill
                               sizes="(max-width: 1279px) 50vw, 240px"
                               src={member.image}
@@ -61,11 +62,11 @@ export function TeamDirectory({ cohorts }: TeamDirectoryProps) {
                             <p className="mt-2 text-[0.82rem] text-[var(--muted-dark)]">NIM {member.nim}</p>
 
                             <div className="mt-4 flex flex-col gap-2">
-                              <a className="inline-flex max-w-fit items-center gap-2 text-[0.82rem] text-[var(--muted-dark)] transition hover:text-[var(--navy-deep)]" href={`https://instagram.com/${member.handle.replace("@", "").replace(/_+$/g, "")}`} rel="noreferrer" target="_blank">
+                              <a className="luxury-chip inline-flex max-w-fit items-center gap-2 text-[0.82rem] text-[var(--muted-dark)] transition hover:text-[var(--navy-deep)]" href={`https://instagram.com/${member.handle.replace("@", "").replace(/_+$/g, "")}`} rel="noreferrer" target="_blank">
                                 <InstagramIcon className="size-4" />
                                 <span>{member.handle}</span>
                               </a>
-                              <a className="inline-flex max-w-fit items-center gap-2 text-[0.82rem] text-[var(--muted-dark)] transition hover:text-[var(--navy-deep)]" href={`tel:${member.phone}`}>
+                              <a className="luxury-chip inline-flex max-w-fit items-center gap-2 text-[0.82rem] text-[var(--muted-dark)] transition hover:text-[var(--navy-deep)]" href={`tel:${member.phone}`}>
                                 <PhoneIcon className="size-4" />
                                 <span>{member.phone}</span>
                               </a>
@@ -74,8 +75,9 @@ export function TeamDirectory({ cohorts }: TeamDirectoryProps) {
                         </article>
                       ))}
                     </div>
+                    </div>
                   </div>
-                ) : null}
+                </div>
               </div>
             );
           })}

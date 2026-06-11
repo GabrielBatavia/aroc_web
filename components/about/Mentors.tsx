@@ -22,12 +22,12 @@ export function Mentors({ mentors }: MentorsProps) {
 
         <div className="mt-12 grid gap-6 lg:grid-cols-2">
           {mentors.map((mentor, index) => (
-            <article className={`card-paper card-hover-lift relative overflow-hidden rounded-[2rem] p-5 sm:p-6 reveal-base reveal-up ${isVisible ? `revealed reveal-delay-${index + 1}` : ""}`} key={mentor.name}>
+            <article className={`card-paper card-hover-lift luxury-surface relative overflow-hidden rounded-[2rem] p-5 sm:p-6 reveal-base reveal-up ${isVisible ? `revealed reveal-delay-${index + 1}` : ""}`} key={mentor.name}>
               <div className="grid gap-6 sm:grid-cols-[11rem_1fr] sm:items-stretch">
-                <div className="group relative min-h-[14rem] overflow-hidden rounded-[1.4rem] bg-[var(--navy-deep)] sm:min-h-0">
+                <div className="luxury-image-frame group relative min-h-[14rem] overflow-hidden rounded-[1.4rem] bg-[var(--navy-deep)] sm:min-h-0">
                   <Image
                     alt={`${mentor.name} portrait`}
-                    className="object-cover transition duration-[800ms] group-hover:scale-[1.06]"
+                    className="luxury-image object-cover"
                     fill
                     sizes="(max-width: 640px) 100vw, 176px"
                     src={mentor.image}
@@ -46,11 +46,11 @@ export function Mentors({ mentors }: MentorsProps) {
                   <p className="mt-4 text-[0.98rem] leading-[1.75] text-[var(--navy-deep)]">{mentor.specialization}</p>
 
                   <div className="mt-6 flex flex-wrap gap-2">
-                    <a className="inline-flex items-center gap-2 rounded-full border border-[var(--rule)] bg-white/70 px-3 py-2 text-[0.82rem] text-[var(--muted-dark)] transition hover:border-[var(--navy-deep)] hover:text-[var(--navy-deep)]" href={`mailto:${mentor.email}`}>
+                    <a className="luxury-chip inline-flex items-center gap-2 rounded-full border border-[var(--rule)] bg-white/70 px-3 py-2 text-[0.82rem] text-[var(--muted-dark)] transition hover:border-[var(--navy-deep)] hover:text-[var(--navy-deep)]" href={`mailto:${mentor.email}`}>
                       <MailIcon className="size-4" />
                       <span>{mentor.email}</span>
                     </a>
-                    <a className="inline-flex items-center gap-2 rounded-full border border-[var(--rule)] bg-white/70 px-3 py-2 text-[0.82rem] text-[var(--muted-dark)] transition hover:border-[var(--navy-deep)] hover:text-[var(--navy-deep)]" href={`https://instagram.com/${mentor.instagram.replace("@", "")}`} rel="noreferrer" target="_blank">
+                    <a className="luxury-chip inline-flex items-center gap-2 rounded-full border border-[var(--rule)] bg-white/70 px-3 py-2 text-[0.82rem] text-[var(--muted-dark)] transition hover:border-[var(--navy-deep)] hover:text-[var(--navy-deep)]" href={`https://instagram.com/${mentor.instagram.replace("@", "")}`} rel="noreferrer" target="_blank">
                       <InstagramIcon className="size-4" />
                       <span>{mentor.instagram}</span>
                     </a>
