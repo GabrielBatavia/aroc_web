@@ -5,6 +5,7 @@ import "./globals.css";
 import { ScrollAtmosphere } from "@/components/shared/ScrollAtmosphere";
 import { ScrollProgress } from "@/components/shared/ScrollProgress";
 import { CustomCursor } from "@/components/shared/CustomCursor";
+import { SoccerBallIdle } from "@/components/shared/SoccerBallIdle";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,6 +41,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <CustomCursor />
+        <SoccerBallIdle />
         <ScrollAtmosphere />
         <ScrollProgress />
         {children}
