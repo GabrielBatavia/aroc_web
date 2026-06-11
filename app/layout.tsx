@@ -4,6 +4,7 @@ import "./globals.css";
 
 import { ScrollAtmosphere } from "@/components/shared/ScrollAtmosphere";
 import { ScrollProgress } from "@/components/shared/ScrollProgress";
+import { CustomCursor } from "@/components/shared/CustomCursor";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,6 +39,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${barlowCondensed.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <CustomCursor />
         <ScrollAtmosphere />
         <ScrollProgress />
         {children}
