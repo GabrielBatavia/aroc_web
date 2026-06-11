@@ -185,7 +185,7 @@ function MemberCard({ member, accentColor }: { member: DivisionMember; accentCol
           className="object-cover object-top"
           fill
           sizes="220px"
-          src={member.image}
+          src={encodeURI(member.image)}
         />
 
         {/* Gradient overlay */}
@@ -296,8 +296,8 @@ function DivisionRow({ division, index }: { division: Division; index: number })
   return (
     <div
       ref={rowRef}
-      className={`reveal-base ${isVisible ? "revealed" : ""}`}
-      style={{ transitionDelay: `${index * 0.08}s` }}
+      className={`reveal-base reveal-up ${isVisible ? "revealed" : ""}`}
+      style={{ animationDelay: `${index * 0.1}s` }}
     >
       {/* Division header */}
       <div className={`mb-6 flex items-center justify-between px-4 sm:px-8 ${isEven ? "" : "flex-row-reverse"}`}>
