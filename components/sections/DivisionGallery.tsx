@@ -3,7 +3,6 @@
 import Image from "next/image";
 import {
   useCallback,
-  useEffect,
   useRef,
   useState,
   type CSSProperties,
@@ -549,22 +548,24 @@ function DeckCard({
    DIVISION STAGE — 3D stacked deck carousel
 ═══════════════════════════════════════════════ */
 function DivisionStage({ division }: { division: Division }) {
-  const [activeCardIdx, setActiveCardIdx] = useState(0);
+  const [activeCard, setActiveCard] = useState({ divisionId: division.id, index: 0 });
   const dragStartX = useRef(0);
   const totalCards = division.members.length;
-
-  // Reset to first card when division switches
-  useEffect(() => {
-    setActiveCardIdx(0);
-  }, [division.id]);
+  const activeCardIdx = activeCard.divisionId === division.id ? activeCard.index : 0;
 
   const goPrev = useCallback(() => {
-    setActiveCardIdx((i) => (i - 1 + totalCards) % totalCards);
-  }, [totalCards]);
+    setActiveCard((card) => {
+      const current = card.divisionId === division.id ? card.index : 0;
+      return { divisionId: division.id, index: (current - 1 + totalCards) % totalCards };
+    });
+  }, [division.id, totalCards]);
 
   const goNext = useCallback(() => {
-    setActiveCardIdx((i) => (i + 1) % totalCards);
-  }, [totalCards]);
+    setActiveCard((card) => {
+      const current = card.divisionId === division.id ? card.index : 0;
+      return { divisionId: division.id, index: (current + 1) % totalCards };
+    });
+  }, [division.id, totalCards]);
 
   const handlePointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     dragStartX.current = e.clientX;
@@ -574,7 +575,8 @@ function DivisionStage({ division }: { division: Division }) {
     (e: React.PointerEvent<HTMLDivElement>) => {
       const dx = e.clientX - dragStartX.current;
       if (Math.abs(dx) > 55) {
-        dx < 0 ? goNext() : goPrev();
+        if (dx < 0) goNext();
+        else goPrev();
       }
     },
     [goNext, goPrev]
@@ -611,7 +613,7 @@ function DivisionStage({ division }: { division: Division }) {
             division={division}
             offset={getOffset(i)}
             memberIndex={i}
-            onClickToFocus={() => setActiveCardIdx(i)}
+            onClickToFocus={() => setActiveCard({ divisionId: division.id, index: i })}
           />
         ))}
       </div>
@@ -632,7 +634,7 @@ function DivisionStage({ division }: { division: Division }) {
               key={i}
               type="button"
               aria-label={`Anggota ${i + 1}`}
-              onClick={() => setActiveCardIdx(i)}
+              onClick={() => setActiveCard({ divisionId: division.id, index: i })}
               style={{
                 width: activeCardIdx === i ? "2rem" : "0.5rem",
                 height: "0.5rem",

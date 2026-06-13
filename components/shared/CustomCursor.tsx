@@ -13,20 +13,16 @@ export function CustomCursor() {
   const mousePos = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
-    // Disable custom cursor on touch devices
-    const isTouchDevice =
-      "ontouchstart" in window || navigator.maxTouchPoints > 0;
-    
-    // Also disable on devices that don't support hover (e.g. some tablets)
+    const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
     const hasHover = window.matchMedia("(hover: hover)").matches;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (isTouchDevice || !hasHover) return;
+    if (isTouchDevice || !hasHover || prefersReducedMotion) return;
 
-    // Hide default cursor
     document.documentElement.style.cursor = "none";
 
     const updateMousePosition = (e: MouseEvent) => {
-      if (isHidden) setIsHidden(false);
+      setIsHidden((hidden) => (hidden ? false : hidden));
       mousePos.current = { x: e.clientX, y: e.clientY };
     };
 
@@ -35,13 +31,10 @@ export function CustomCursor() {
 
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      // Check if we are hovering over an interactive element
       const isClickable = target.closest(
         'a, button, input, textarea, select, [role="button"], [role="link"], [tabindex]:not([tabindex="-1"])'
       );
       setIsHovering(!!isClickable);
-      
-      // Also if user hovers over text, we might want a different cursor, but for now we just handle interactive elements
     };
 
     window.addEventListener("mousemove", updateMousePosition, { passive: true });
@@ -53,11 +46,9 @@ export function CustomCursor() {
     let isFirstRender = true;
 
     const render = () => {
-      // Lerp for the outer ring (0.15 is the smoothness factor)
       ringPos.current.x += (mousePos.current.x - ringPos.current.x) * 0.15;
       ringPos.current.y += (mousePos.current.y - ringPos.current.y) * 0.15;
 
-      // Instantly move the ring on the very first render so it doesn't fly in from the corner
       if (isFirstRender && mousePos.current.x !== 0 && mousePos.current.y !== 0) {
         ringPos.current.x = mousePos.current.x;
         ringPos.current.y = mousePos.current.y;
@@ -85,19 +76,13 @@ export function CustomCursor() {
       cancelAnimationFrame(animationFrameId);
       document.documentElement.style.cursor = "auto";
     };
-  }, [isHidden]);
-
-  // We hide entirely on touch devices by default without rendering logic
-  if (typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0 || !window.matchMedia("(hover: hover)").matches)) {
-    return null;
-  }
+  }, []);
 
   return (
     <div
       className="pointer-events-none fixed inset-0 z-[9999]"
       style={{ opacity: isHidden ? 0 : 1, transition: "opacity 0.3s ease" }}
     >
-      {/* Outer Ring with Lerp effect */}
       <div
         ref={ringRef}
         className={`absolute top-0 left-0 rounded-full border border-white/50 transition-all duration-300 ease-out will-change-transform ${
@@ -106,7 +91,6 @@ export function CustomCursor() {
             : "h-8 w-8"
         }`}
       />
-      {/* Inner Dot exact follow */}
       <div
         ref={dotRef}
         className={`absolute top-0 left-0 rounded-full bg-white transition-all duration-300 will-change-transform ${

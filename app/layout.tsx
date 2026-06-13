@@ -24,9 +24,24 @@ const barlowCondensed = Barlow_Condensed({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://arocpl.com"),
   title: "AROC_PL — Advance Robosoccer Polinema | Tim Robotik Juara Nasional",
   description:
     "Development Team robot humanoid Politeknik Negeri Malang. Juara Nasional KRI Humanoid League 2024 dan aktif mengembangkan sistem robot untuk kompetisi bergengsi.",
+  openGraph: {
+    title: "AROC_PL — Advance Robosoccer Polinema",
+    description:
+      "Development Team robot humanoid Politeknik Negeri Malang untuk riset, pengembangan, dan kompetisi robotik bergengsi.",
+    images: ["/images/hero-integrated.png"],
+    locale: "id_ID",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AROC_PL — Advance Robosoccer Polinema",
+    description: "Tim robot humanoid Politeknik Negeri Malang.",
+    images: ["/images/hero-integrated.png"],
+  },
 };
 
 export default function RootLayout({
@@ -40,6 +55,9 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${barlowCondensed.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <a className="skip-link" href="#main-content">
+          Lewati ke konten utama
+        </a>
         <CustomCursor />
         <SoccerBallIdle />
         <ScrollAtmosphere />

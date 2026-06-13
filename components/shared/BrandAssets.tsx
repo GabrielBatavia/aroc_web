@@ -3,7 +3,7 @@ import type { SVGProps } from "react";
 
 type SvgProps = SVGProps<SVGSVGElement>;
 
-export function ArocGeneratedMark({ className }: { className?: string }) {
+export function ArocGeneratedMark({ className, priority = false }: { className?: string; priority?: boolean }) {
   return (
     <div className={`relative ${className || ""}`}>
       <Image
@@ -12,7 +12,7 @@ export function ArocGeneratedMark({ className }: { className?: string }) {
         fill
         sizes="(max-width: 768px) 150px, 300px"
         className="object-contain"
-        priority
+        priority={priority}
       />
     </div>
   );

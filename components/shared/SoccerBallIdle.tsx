@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useCallback, useState } from "react";
+import { useEffect, useRef, useCallback } from "react";
 
 /* ─── types ─── */
 interface Particle {
@@ -55,7 +55,7 @@ function rand(min: number, max: number) {
 export function SoccerBallIdle() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mousePos = useRef({ x: -100, y: -100 });
-  const lastMoveTime = useRef(Date.now());
+  const lastMoveTime = useRef(0);
   const phaseRef = useRef<AnimPhase>("idle");
   const phaseStartRef = useRef(0);
   const ballPos = useRef({ x: 0, y: 0 });
@@ -63,7 +63,6 @@ export function SoccerBallIdle() {
   const kickEnd = useRef({ x: 0, y: 0 });
   const particles = useRef<Particle[]>([]);
   const rafRef = useRef(0);
-  const [isTouch, setIsTouch] = useState(false);
 
   /* — pick a random goal position on screen — */
   const pickGoalTarget = useCallback((fromX: number, fromY: number) => {
@@ -283,18 +282,16 @@ export function SoccerBallIdle() {
   }, []);
 
   useEffect(() => {
-    // Disable on touch devices
     const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
     const hasHover = window.matchMedia("(hover: hover)").matches;
-    if (isTouchDevice || !hasHover) {
-      setIsTouch(true);
-      return;
-    }
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (isTouchDevice || !hasHover || prefersReducedMotion) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+    lastMoveTime.current = Date.now();
 
     const resize = () => {
       const dpr = window.devicePixelRatio || 1;
@@ -311,7 +308,6 @@ export function SoccerBallIdle() {
       mousePos.current = { x: e.clientX, y: e.clientY };
       lastMoveTime.current = Date.now();
 
-      // if an animation was playing, reset to idle
       if (phaseRef.current !== "idle") {
         phaseRef.current = "idle";
         particles.current = [];
@@ -497,8 +493,6 @@ export function SoccerBallIdle() {
       window.removeEventListener("resize", resize);
     };
   }, [drawBall, drawGoal, drawGoalText, drawParticle, pickGoalTarget, spawnConfetti]);
-
-  if (isTouch) return null;
 
   return (
     <canvas

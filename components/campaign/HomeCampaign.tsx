@@ -1595,7 +1595,7 @@ export function HomeCampaign({
   teamYears,
 }: HomeCampaignProps) {
   return (
-    <main>
+    <main id="main-content">
       <ChapterRail chapters={campaignChapters} />
       <CampaignLoader />
       <CampaignHero hero={hero} />

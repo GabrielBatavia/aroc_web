@@ -124,6 +124,7 @@ export type FooterContact = {
 
 export const navLinks: NavLink[] = [
   { label: "Tentang", href: "/about", matchPath: "/about" },
+  { label: "Press Kit", href: "/press", matchPath: "/press" },
   { label: "Tim", href: "/#team" },
   { label: "Robot", href: "/#robots" },
   { label: "Prestasi", href: "/#achievements" },
@@ -136,11 +137,13 @@ export const campaignNavLinks: NavLink[] = [
   { label: "Prestasi", href: "/#achievements" },
   { label: "Tim", href: "/#team" },
   { label: "Galeri", href: "/#gallery" },
+  { label: "Press", href: "/press", matchPath: "/press" },
   { label: "Kemitraan", href: "/#sponsor" },
 ];
 
 export const footerNavigation: NavLink[] = [
   { label: "Tentang Kami", href: "/about", matchPath: "/about" },
+  { label: "Media & Press Kit", href: "/press", matchPath: "/press" },
   { label: "Tim Kami", href: "/#team" },
   { label: "Armada Robot", href: "/#robots" },
   { label: "Prestasi", href: "/#achievements" },

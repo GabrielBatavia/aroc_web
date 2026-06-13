@@ -20,6 +20,11 @@ export const metadata: Metadata = {
   title: "Tentang Kami | AROC_PL",
   description:
     "Tentang AROC_PL, Development Team robot humanoid Politeknik Negeri Malang: visi, misi, dosen pembimbing, dan anggota tim.",
+  openGraph: {
+    title: "Tentang Kami | AROC_PL",
+    description: "Profil AROC_PL, Development Team robot humanoid Politeknik Negeri Malang.",
+    images: ["/images/hero-integrated.png"],
+  },
 };
 
 export default function AboutPage() {
@@ -27,7 +32,7 @@ export default function AboutPage() {
     <>
       <Navbar links={navLinks} />
 
-      <main className="flex-1">
+      <main className="flex-1" id="main-content">
         <AboutHero
           description={aboutHero.description}
           eyebrow={aboutHero.eyebrow}
