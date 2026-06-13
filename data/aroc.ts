@@ -123,27 +123,18 @@ export type FooterContact = {
 };
 
 export const navLinks: NavLink[] = [
+  { label: "Beranda", href: "/", matchPath: "/" },
   { label: "Tentang", href: "/about", matchPath: "/about" },
+  { label: "Updates", href: "/updates", matchPath: "/updates" },
   { label: "Press Kit", href: "/press", matchPath: "/press" },
-  { label: "Tim", href: "/#team" },
-  { label: "Robot", href: "/#robots" },
-  { label: "Prestasi", href: "/#achievements" },
-  { label: "Galeri", href: "/#gallery" },
 ];
 
-export const campaignNavLinks: NavLink[] = [
-  { label: "Proses", href: "/#story" },
-  { label: "Robot", href: "/#robots" },
-  { label: "Prestasi", href: "/#achievements" },
-  { label: "Tim", href: "/#team" },
-  { label: "Galeri", href: "/#gallery" },
-  { label: "Press", href: "/press", matchPath: "/press" },
-  { label: "Kemitraan", href: "/#sponsor" },
-];
+export const campaignNavLinks: NavLink[] = navLinks;
 
 export const footerNavigation: NavLink[] = [
   { label: "Tentang Kami", href: "/about", matchPath: "/about" },
   { label: "Media & Press Kit", href: "/press", matchPath: "/press" },
+  { label: "News & Updates", href: "/updates", matchPath: "/updates" },
   { label: "Tim Kami", href: "/#team" },
   { label: "Armada Robot", href: "/#robots" },
   { label: "Prestasi", href: "/#achievements" },
