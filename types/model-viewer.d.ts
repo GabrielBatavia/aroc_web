@@ -11,6 +11,7 @@ type ModelViewerProps = DetailedHTMLProps<
   "auto-rotate-delay"?: string;
   "camera-controls"?: boolean | "";
   "camera-orbit"?: string;
+  "camera-target"?: string;
   "disable-zoom"?: boolean | "";
   "environment-image"?: string;
   exposure?: string;
