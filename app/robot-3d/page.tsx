@@ -135,7 +135,7 @@ export default function Robot3DPage() {
               </p>
             </div>
 
-            <div className="grid gap-5 lg:grid-cols-4">
+            <div className="grid gap-5 lg:grid-cols-3">
               {robotUpgradeCards.map((upgrade) => (
                 <article
                   className="luxury-surface rounded-[2rem] border border-[var(--rule)] bg-white/75 p-6 shadow-[0_30px_80px_-62px_rgba(7,12,34,0.7)]"

@@ -17,6 +17,7 @@ type ModelViewerProps = DetailedHTMLProps<
   exposure?: string;
   "field-of-view"?: string;
   "interaction-prompt"?: "auto" | "none" | "when-focused";
+  "interpolation-decay"?: string;
   loading?: "auto" | "lazy" | "eager";
   "max-camera-orbit"?: string;
   "max-field-of-view"?: string;
