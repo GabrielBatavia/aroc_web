@@ -126,6 +126,7 @@ export const navLinks: NavLink[] = [
   { label: "Beranda", href: "/", matchPath: "/" },
   { label: "Tentang", href: "/about", matchPath: "/about" },
   { label: "Robot 3D", href: "/robot-3d", matchPath: "/robot-3d" },
+  { label: "Lab", href: "/lab", matchPath: "/lab" },
   { label: "Updates", href: "/updates", matchPath: "/updates" },
   { label: "Press Kit", href: "/press", matchPath: "/press" },
 ];
@@ -135,6 +136,7 @@ export const campaignNavLinks: NavLink[] = navLinks;
 export const footerNavigation: NavLink[] = [
   { label: "Tentang Kami", href: "/about", matchPath: "/about" },
   { label: "Robot 3D Experience", href: "/robot-3d", matchPath: "/robot-3d" },
+  { label: "AROC Lab", href: "/lab", matchPath: "/lab" },
   { label: "Media & Press Kit", href: "/press", matchPath: "/press" },
   { label: "News & Updates", href: "/updates", matchPath: "/updates" },
   { label: "Tim Kami", href: "/#team" },
