@@ -6,6 +6,10 @@ export type LabModule = {
   level: "Foundation" | "Tools" | "Practice" | "Match Ready";
   duration: string;
   description: string;
+  content?: Array<{
+    heading: string;
+    body: string[];
+  }>;
   outcomes: string[];
 };
 
