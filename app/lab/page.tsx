@@ -4,7 +4,8 @@ import { LabExperience } from "@/components/lab/LabExperience";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { footerData, footerNavigation, navLinks } from "@/data/aroc";
-import { labDivisions, labHeroStats } from "@/data/lab";
+import { labDivisionsWithContent } from "@/data/labContent";
+import { labHeroStats } from "@/data/lab";
 
 export const metadata: Metadata = {
   title: "AROC Lab | AROC_PL",
@@ -22,7 +23,7 @@ export default function LabPage() {
   return (
     <>
       <Navbar links={navLinks} />
-      <LabExperience divisions={labDivisions} stats={labHeroStats} />
+      <LabExperience divisions={labDivisionsWithContent} stats={labHeroStats} />
       <Footer
         contact={footerData.contact}
         description={footerData.description}
