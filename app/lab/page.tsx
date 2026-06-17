@@ -4,17 +4,15 @@ import { LabExperience } from "@/components/lab/LabExperience";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { footerData, footerNavigation, navLinks } from "@/data/aroc";
-import { labDivisionsWithContent } from "@/data/labContent";
-import { labHeroStats } from "@/data/lab";
 
 export const metadata: Metadata = {
-  title: "AROC Lab | AROC_PL",
+  title: "AROC Lab Arcade | AROC_PL",
   description:
-    "Learning portal sederhana AROC_PL untuk latihan divisi Maneuvering, Image Processing, dan Communication dengan modul, mini lab, dan progress lokal.",
+    "Tiga simulator interaktif untuk merasakan bagaimana humanoid soccer robot melihat, berpikir, berkomunikasi, dan bergerak. Tidak perlu membaca artikel panjang — langsung main.",
   openGraph: {
-    title: "AROC Lab | AROC_PL",
+    title: "AROC Lab Arcade | AROC_PL",
     description:
-      "Training ground anggota aktif AROC_PL untuk modul robot humanoid, mini lab interaktif, dan skill matrix divisi.",
+      "Robot Control Room — tiga simulator browser-playable untuk divisi Maneuvering, Image Processing, dan Communication.",
     images: ["/images/hero-integrated.png"],
   },
 };
@@ -23,7 +21,7 @@ export default function LabPage() {
   return (
     <>
       <Navbar links={navLinks} />
-      <LabExperience divisions={labDivisionsWithContent} stats={labHeroStats} />
+      <LabExperience />
       <Footer
         contact={footerData.contact}
         description={footerData.description}
