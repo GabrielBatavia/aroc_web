@@ -10,7 +10,25 @@ export type LabModule = {
     heading: string;
     body: string[];
   }>;
+  interactive?: LabInteractive[];
   outcomes: string[];
+};
+
+export type LabInteractiveCheck = {
+  label: string;
+  pattern: string;
+  hint: string;
+};
+
+export type LabInteractive = {
+  id: string;
+  type: "ros2-code-checker" | "vision-playground";
+  title: string;
+  prompt: string;
+  starterCode?: string;
+  checks?: LabInteractiveCheck[];
+  successMessage?: string;
+  failureMessage?: string;
 };
 
 export type LabMiniLab = {
@@ -170,6 +188,70 @@ export const labDivisions: LabDivision[] = [
         duration: "60 min",
         description:
           "Membaca mask, contour, area, dan false positive saat robot mencari bola di lapangan.",
+        interactive: [
+          {
+            id: "vision-detector-code-check",
+            type: "ros2-code-checker",
+            title: "Cek ide node detector ROS2",
+            prompt:
+              "Tulis potongan Python/ROS2 yang membaca CircleSetStamped, memilih bola terbesar dari radius, mengecek threshold, lalu publish status OK atau NO_BALL.",
+            starterCode: `import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String
+from op3_ball_detector_msgs.msg import CircleSetStamped
+
+class BallFilter(Node):
+    def __init__(self):
+        super().__init__("ball_filter")
+        # TODO: subscribe /ball_detector_node/circle_set
+        # TODO: publish /ball_localizer/status
+
+    def on_circles(self, msg):
+        # TODO: pilih circle dengan radius terbesar
+        pass`,
+            checks: [
+              {
+                label: "Import rclpy dan Node",
+                pattern: "import\\s+rclpy[\\s\\S]*from\\s+rclpy\\.node\\s+import\\s+Node",
+                hint: "Mulai node ROS2 Python dengan import rclpy dan Node.",
+              },
+              {
+                label: "Class mewarisi Node",
+                pattern: "class\\s+\\w+\\(Node\\)",
+                hint: "Buat class seperti class BallFilter(Node).",
+              },
+              {
+                label: "Subscribe CircleSetStamped",
+                pattern: "create_subscription\\([\\s\\S]*CircleSetStamped[\\s\\S]*/ball_detector_node/circle_set",
+                hint: "Gunakan create_subscription ke /ball_detector_node/circle_set.",
+              },
+              {
+                label: "Publish status localizer",
+                pattern: "create_publisher\\([\\s\\S]*String[\\s\\S]*/ball_localizer/status",
+                hint: "Buat publisher String untuk /ball_localizer/status.",
+              },
+              {
+                label: "Pilih radius terbesar",
+                pattern: "max\\([\\s\\S]*msg\\.circles[\\s\\S]*key[\\s\\S]*(z|radius)",
+                hint: "Pakai max(msg.circles, key=lambda c: c.z) untuk memilih kandidat paling kuat.",
+              },
+              {
+                label: "Handle kondisi bola tidak ada",
+                pattern: "(NO_BALL|not\\s+msg\\.circles|len\\(msg\\.circles\\)\\s*==\\s*0)",
+                hint: "Jangan proses circle kosong. Publish/return status NO_BALL.",
+              },
+            ],
+            successMessage: "Pipeline dasar detector sudah aman: input, filter, dan status tersedia.",
+            failureMessage: "Lengkapi struktur node, topic, dan safety handling sebelum dipakai sebagai referensi.",
+          },
+          {
+            id: "vision-threshold-playground",
+            type: "vision-playground",
+            title: "Playground threshold bola",
+            prompt:
+              "Atur threshold sampai bola terdeteksi tanpa terlalu banyak noise. Ini simulasi browser untuk memahami efek hue, saturation, value, dan radius minimum.",
+          },
+        ],
         outcomes: ["Baca mask", "Filter contour", "Kurangi false positive"],
       },
       {
@@ -251,6 +333,77 @@ export const labDivisions: LabDivision[] = [
         duration: "60 min",
         description:
           "Menelusuri alur code dari input sensor ke command gerak agar debugging tidak loncat-loncat.",
+        interactive: [
+          {
+            id: "communication-bridge-code-check",
+            type: "ros2-code-checker",
+            title: "Cek ide bridge soccer ROS2",
+            prompt:
+              "Tulis potongan Python/ROS2 untuk bridge yang membaca /ball_polar dan /ball_localizer/status, lalu publish walking start/stop atau action page kick/turn dengan safety timeout.",
+            starterCode: `import rclpy
+from rclpy.node import Node
+from geometry_msgs.msg import Point
+from std_msgs.msg import Int32, String
+
+class SoccerBridge(Node):
+    def __init__(self):
+        super().__init__("soccer_bridge")
+        self.kick_range_m = 0.23
+        self.kick_bearing_rad = 0.20
+        # TODO: subscribe /ball_polar dan /ball_localizer/status
+        # TODO: publish /robotis/walking/command dan /robotis/action/page_num
+
+    def on_ball(self, msg):
+        range_m = msg.x
+        bearing = msg.y
+        # TODO: buat logic kick, turn, forward, stop
+        pass`,
+            checks: [
+              {
+                label: "Import ROS2 dan message utama",
+                pattern: "import\\s+rclpy[\\s\\S]*from\\s+rclpy\\.node\\s+import\\s+Node[\\s\\S]*Point[\\s\\S]*Int32[\\s\\S]*String",
+                hint: "Bridge perlu rclpy, Node, Point, Int32, dan String.",
+              },
+              {
+                label: "Subscribe posisi bola polar",
+                pattern: "create_subscription\\([\\s\\S]*Point[\\s\\S]*/ball_polar",
+                hint: "Input utama bridge adalah /ball_polar bertipe geometry_msgs/Point.",
+              },
+              {
+                label: "Subscribe status localizer",
+                pattern: "create_subscription\\([\\s\\S]*String[\\s\\S]*/ball_localizer/status",
+                hint: "Status seperti NO_BALL dan TF_FAIL harus dibaca dari /ball_localizer/status.",
+              },
+              {
+                label: "Publish walking command",
+                pattern: "create_publisher\\([\\s\\S]*String[\\s\\S]*/robotis/walking/command",
+                hint: "Gunakan /robotis/walking/command untuk start/stop walking.",
+              },
+              {
+                label: "Publish action page",
+                pattern: "create_publisher\\([\\s\\S]*Int32[\\s\\S]*/robotis/action/page_num",
+                hint: "Gunakan /robotis/action/page_num untuk kick atau turn action.",
+              },
+              {
+                label: "Cek range dan bearing sebelum kick",
+                pattern: "(range_m|msg\\.x|r)\\s*<[^\\n]+kick[\\s\\S]*abs\\((bearing|msg\\.y|brg)",
+                hint: "Kick harus mengecek jarak dan arah, bukan hanya melihat bola ada.",
+              },
+              {
+                label: "Handle lost/no ball dengan stop",
+                pattern: "(NO_BALL|TF_FAIL|lost_timeout|lost_timeout_sec)[\\s\\S]*(stop|\\\"stop\\\"|'stop')",
+                hint: "Saat bola hilang atau status error terlalu lama, publish stop.",
+              },
+              {
+                label: "Ada cooldown atau rate limiting",
+                pattern: "(cooldown|last_action_time|get_clock\\(\\)\\.now|nanoseconds)",
+                hint: "Tambahkan cooldown agar robot tidak spam action page.",
+              },
+            ],
+            successMessage: "Bridge logic sudah mencakup input, output, keputusan, dan safety stop.",
+            failureMessage: "Masih ada bagian penting bridge yang belum aman untuk skenario robot bergerak.",
+          },
+        ],
         outcomes: ["Trace function", "Baca state", "Isolasi bug"],
       },
       {

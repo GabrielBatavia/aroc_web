@@ -10,6 +10,8 @@ import {
   RadioIcon,
   ShieldIcon,
 } from "@/components/shared/Icons";
+import { Ros2CodeChecker } from "@/components/lab/Ros2CodeChecker";
+import { VisionPlayground } from "@/components/lab/VisionPlayground";
 import type { LabDivision, LabDivisionId, LabModule } from "@/data/lab";
 
 type LabExperienceProps = {
@@ -311,6 +313,31 @@ export function LabExperience({ divisions, stats }: LabExperienceProps) {
                       ))}
                     </div>
                   </section>
+
+                  {activeModule.interactive?.length ? (
+                    <section className="mt-9 border-t border-[rgba(7,12,34,0.1)] pt-8">
+                      <div className="mb-5">
+                        <div className="font-mono text-[0.58rem] font-black uppercase tracking-[0.18em] text-[var(--gold-deep)]">
+                          Practice Playground
+                        </div>
+                        <h3 className="mt-2 text-[1.55rem] font-black leading-tight text-[var(--navy-deep)]">
+                          Coba konsepnya langsung
+                        </h3>
+                        <p className="mt-2 text-[0.95rem] leading-[1.72] text-[var(--muted-dark)]">
+                          Latihan ini berjalan di browser dan tidak menjalankan kode robot asli. Tujuannya membantu membaca struktur logic sebelum masuk ke repo OP3.
+                        </p>
+                      </div>
+                      <div className="grid gap-5">
+                        {activeModule.interactive.map((exercise) => {
+                          if (exercise.type === "vision-playground") {
+                            return <VisionPlayground exercise={exercise} key={exercise.id} />;
+                          }
+
+                          return <Ros2CodeChecker exercise={exercise} key={exercise.id} />;
+                        })}
+                      </div>
+                    </section>
+                  ) : null}
 
                   <div className="mt-8 flex flex-col gap-3 border-t border-[rgba(7,12,34,0.1)] pt-6 sm:flex-row sm:items-center sm:justify-between">
                     <p className="text-[0.9rem] leading-[1.65] text-[var(--muted-dark)]">
