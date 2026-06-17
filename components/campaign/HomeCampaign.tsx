@@ -260,52 +260,23 @@ function CampaignHero({ hero }: { hero: HeroData }) {
     >
       {/* ── Cinematic video-like hero background ── */}
 
-      {/* Slide A — cinematic image with Ken Burns + crossfade */}
+      {/* ── Cinematic video background ── */}
       <div
         aria-hidden="true"
-        className="hero-cinematic-slide hero-cinematic-slide--a"
+        className="absolute inset-0"
         style={{
+          transform: `translate3d(${tilt.x * -8}px, ${tilt.y * -5}px, 0) scale(1.04)`,
           transition: "transform 0.9s var(--ease-luxury)",
+          willChange: "transform",
         }}
       >
-        <Image
-          alt=""
-          fill
-          priority
-          quality={92}
-          sizes="100vw"
-          src="/images/hero-integrated.png"
-          style={{ objectFit: "cover", objectPosition: "center" }}
-        />
-      </div>
-
-      {/* Slide B — second cinematic image, crossfades with A */}
-      <div
-        aria-hidden="true"
-        className="hero-cinematic-slide hero-cinematic-slide--b"
-      >
-        <Image
-          alt=""
-          fill
-          quality={92}
-          sizes="100vw"
-          src="/images/hero-cinematic-1.png"
-          style={{ objectFit: "cover", objectPosition: "center" }}
-        />
-      </div>
-
-      {/* Slide C — third cinematic angle, completes the video cycle */}
-      <div
-        aria-hidden="true"
-        className="hero-cinematic-slide hero-cinematic-slide--c"
-      >
-        <Image
-          alt=""
-          fill
-          quality={92}
-          sizes="100vw"
-          src="/images/hero-cinematic-2.png"
-          style={{ objectFit: "cover", objectPosition: "center" }}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="h-full w-full object-cover object-center"
+          src="/images/hero-integrated-video.mp4"
         />
       </div>
 
