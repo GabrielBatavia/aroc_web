@@ -1,4 +1,1004 @@
 {
   "divisionId": "image-processing",
-  "modules": []
+  "modules": [
+    {
+      "id": "vision-role-robot-soccer",
+      "title": "Apa Itu Divisi Image Processing di Robot Soccer",
+      "level": "Foundation",
+      "duration": "45 min",
+      "description": "Modul pembuka untuk memahami peran divisi Image Processing sebagai mata robot humanoid, batas tanggung jawabnya, dan alasan output vision harus berupa informasi yang bisa dipakai sistem lain, bukan langsung gerakan robot.",
+      "content": [
+        {
+          "heading": "Vision adalah mata robot, bukan kaki robot",
+          "body": [
+            "Di robot soccer, divisi Image Processing bertugas membuat robot bisa melihat dunia lapangan secara berguna. Kamera menangkap gambar, lalu sistem vision mencari informasi penting seperti ada atau tidaknya bola, letak bola di gambar, ukuran bola, dan seberapa yakin hasil deteksinya. Dari luar, proses ini terlihat sederhana seperti robot melihat bola lalu berjalan, tetapi di dalam sistem ada banyak tahap kecil yang harus rapi agar keputusan robot tidak asal tebak.",
+            "Cara paling mudah memahami divisi ini adalah membayangkan vision sebagai anggota tim yang berdiri di pinggir lapangan dan memberi laporan singkat: bola terlihat, posisinya agak kanan, ukurannya kecil, dan deteksinya cukup yakin. Laporan itu belum berarti robot harus langsung menendang. Laporan itu perlu dipakai oleh bagian lain yang memahami posisi robot, strategi, dan kemampuan geraknya. Karena itu, output vision harus jelas, stabil, dan mudah dipercaya."
+          ]
+        },
+        {
+          "heading": "Kenapa humanoid butuh vision",
+          "body": [
+            "Robot humanoid tidak punya mata manusia. Tanpa vision, robot hanya bisa menjalankan gerakan yang sudah diperintahkan tanpa tahu bola berada di mana. Dalam soccer, kondisi lapangan terus berubah: bola bisa berpindah, tertutup kaki robot, terlihat kecil karena jauh, atau muncul di pinggir frame. Vision membantu robot menyesuaikan perilaku berdasarkan keadaan aktual, bukan hanya berdasarkan urutan motion yang sudah disiapkan sebelumnya.",
+            "Vision juga membantu robot menghindari keputusan yang terlalu buta. Misalnya, robot tidak seharusnya terus berjalan lurus jika bola sudah hilang dari kamera. Robot juga tidak seharusnya menendang jika bola masih jauh atau hanya terdeteksi sebagai objek mirip bola. Informasi visual menjadi bahan awal agar sistem robot lebih adaptif, walaupun keputusan akhir tetap harus dikombinasikan dengan localization, strategy, dan maneuvering."
+          ]
+        },
+        {
+          "heading": "Bedanya vision, localization, strategy, dan maneuvering",
+          "body": [
+            "Vision menjawab pertanyaan apa yang terlihat di gambar. Contohnya: apakah ada bola, di mana pusat bola pada frame, berapa ukuran bounding box, dan seberapa besar confidence detector. Localization menjawab pertanyaan posisi benda atau robot dalam ruang yang lebih bermakna, misalnya arah bola relatif terhadap robot atau estimasi jarak bola. Strategy menjawab apa yang sebaiknya dilakukan, seperti mencari bola, mendekati bola, mengatur arah tubuh, atau siap menendang. Maneuvering menjawab bagaimana robot mengeksekusi gerakan secara stabil dan aman.",
+            "Batas ini penting supaya anggota baru tidak menaruh semua masalah di satu divisi. Jika bola terlihat salah warna di debug frame, itu masalah vision. Jika bola terlihat benar tetapi jaraknya aneh, itu bisa masuk localization. Jika posisi bola sudah benar tetapi robot memilih aksi yang tidak cocok, itu masuk strategy atau bridge. Jika command sudah benar tetapi robot jatuh saat berjalan, itu lebih dekat ke maneuvering. Membagi masalah seperti ini membuat debugging jauh lebih tenang."
+          ]
+        },
+        {
+          "heading": "Output vision: informasi bola, bukan gerakan robot",
+          "body": [
+            "Kesalahan umum pemula adalah menganggap detector harus langsung membuat robot berjalan. Padahal detector sebaiknya hanya mengeluarkan hasil persepsi, misalnya center bola, radius, bounding box, label, dan confidence. Gerakan robot adalah keputusan level berikutnya. Dengan pemisahan ini, detector bisa diuji tanpa menyalakan robot, localizer bisa diuji dengan data visual, dan bridge bisa mengubah informasi bola menjadi command sederhana secara terkontrol.",
+            "Prinsip yang perlu diingat: vision memberi bukti visual, bukan aksi final. Kalau detector terlalu banyak mengambil keputusan, code akan sulit diuji dan sulit dipakai ulang. Kalau detector fokus pada informasi yang bersih, anggota lain bisa memakai output itu untuk banyak kebutuhan: mencari bola, menghadap bola, mendekati bola, mengecek false positive, atau membuat mode latihan yang aman di luar lapangan."
+          ]
+        }
+      ],
+      "outcomes": [
+        "Peserta mampu menjelaskan peran divisi Image Processing sebagai sumber informasi visual robot soccer.",
+        "Peserta mampu membedakan tugas vision, localization, strategy, dan maneuvering secara praktis.",
+        "Peserta memahami bahwa detector tidak seharusnya langsung menggerakkan robot.",
+        "Peserta mampu menyebutkan contoh output vision seperti posisi bola, ukuran, label, dan confidence.",
+        "Peserta mampu memakai pembagian tanggung jawab ini sebagai dasar debugging awal."
+      ]
+    },
+    {
+      "id": "vision-op3-hardware-overview",
+      "title": "Gambaran Robot ROBOTIS OP3 dari Sudut Pandang Vision",
+      "level": "Foundation",
+      "duration": "45 min",
+      "description": "Modul pengantar tentang ROBOTIS OP3 sebagai platform vision: kamera Logitech C920 sebagai sumber gambar, Intel NUC sebagai komputer utama, ROS2 sebagai penghubung software, serta hubungan tidak langsung vision dengan OpenCR dan DYNAMIXEL.",
+      "content": [
+        {
+          "heading": "Kamera Logitech C920 sebagai sumber visual",
+          "body": [
+            "Pada ROBOTIS OP3, kamera Logitech C920 berperan sebagai mata utama robot. Kamera ini menangkap frame lapangan yang kemudian diproses oleh software vision. Bagi anggota Image Processing, kamera bukan hanya benda yang menghasilkan gambar bagus atau jelek. Kamera adalah sensor yang kualitas outputnya dipengaruhi oleh resolusi, exposure, fokus, posisi kepala robot, cahaya lapangan, dan kestabilan mounting.",
+            "Jika kamera miring, terlalu gelap, terlalu terang, atau bergerak terlalu cepat saat kepala robot menoleh, hasil deteksi bola bisa berubah drastis. Bola yang sebenarnya jelas untuk manusia bisa saja sulit dipahami komputer karena blur, noise, atau warna yang bergeser. Karena itu, debugging vision harus dimulai dari melihat raw frame sebelum menyalahkan algoritma. Kadang masalah paling besar bukan code, tetapi input gambar yang memang kurang sehat."
+          ]
+        },
+        {
+          "heading": "Intel NUC sebagai tempat vision berpikir",
+          "body": [
+            "Intel NUC adalah komputer utama yang menjalankan software level atas pada OP3. Dari sudut pandang vision, NUC adalah tempat node ROS2 berjalan, frame kamera diterima, detector melakukan proses, localizer menghitung informasi posisi, dan bridge menyiapkan command sederhana untuk sistem lain. Kamera memberi data mentah, tetapi NUC yang mengubah data itu menjadi informasi yang bisa dipakai robot.",
+            "Karena proses vision berjalan di komputer utama, performa juga harus diperhatikan. Detector yang terlalu berat dapat membuat FPS turun. FPS yang turun membuat informasi bola terlambat. Informasi yang terlambat bisa membuat robot bergerak berdasarkan keadaan beberapa saat yang lalu. Untuk robot soccer, keterlambatan kecil bisa terasa besar karena bola dan robot sama-sama bergerak."
+          ]
+        },
+        {
+          "heading": "ROS2 sebagai jalur komunikasi antar software",
+          "body": [
+            "ROS2 dapat dipahami sebagai sistem komunikasi yang membuat banyak bagian software saling bertukar pesan. Node kamera bisa publish frame. Node detector bisa subscribe frame lalu publish hasil deteksi. Node localizer bisa subscribe hasil deteksi lalu publish estimasi posisi bola. Node bridge bisa subscribe posisi bola lalu publish command sederhana. Setiap node tidak perlu tahu semua isi sistem, cukup tahu topic input dan output yang relevan.",
+            "Pola ini membuat pipeline vision lebih mudah dipelajari. Anggota baru tidak harus langsung membaca seluruh codebase. Cukup mulai dari pertanyaan sederhana: node ini membaca topic apa, mengeluarkan topic apa, message-nya berisi apa, dan parameter apa yang memengaruhi hasilnya. Kalau alur topic sudah dipahami, code akan terasa jauh lebih ramah."
+          ]
+        },
+        {
+          "heading": "Hubungan vision dengan OpenCR dan DYNAMIXEL secara tidak langsung",
+          "body": [
+            "Vision tidak menggerakkan servo DYNAMIXEL secara langsung. Vision membaca kamera dan menghasilkan informasi. Informasi itu kemudian dipakai oleh sistem lain yang pada akhirnya bisa memicu motion, walking, atau perubahan arah robot. OpenCR dan DYNAMIXEL berada di sisi eksekusi gerak, sedangkan vision berada di sisi persepsi. Keduanya terhubung sebagai satu sistem robot, tetapi tidak berada pada level tanggung jawab yang sama.",
+            "Contohnya, ketika bola terlihat di kanan frame, vision mungkin menghasilkan status bahwa bola berada di kanan. Bridge atau strategy dapat mengubahnya menjadi command belok kanan. Maneuvering kemudian menjalankan gerakan melalui modul robot dan aktuator. Jika robot tidak belok, penyebabnya belum tentu detector. Bisa jadi bridge tidak publish command, strategy menolak aksi, walking belum aktif, atau robot secara fisik tidak siap bergerak."
+          ]
+        }
+      ],
+      "outcomes": [
+        "Peserta mampu menjelaskan peran kamera Logitech C920 sebagai sumber frame vision pada OP3.",
+        "Peserta memahami Intel NUC sebagai komputer utama yang menjalankan pipeline vision.",
+        "Peserta mampu menjelaskan ROS2 sebagai penghubung node, topic, dan message.",
+        "Peserta memahami bahwa vision berhubungan dengan OpenCR dan DYNAMIXEL secara tidak langsung melalui keputusan gerak.",
+        "Peserta mampu memulai debugging dari raw frame dan alur topic sebelum menyalahkan algoritma."
+      ]
+    },
+    {
+      "id": "vision-camera-to-robot-response",
+      "title": "Alur Besar Kamera sampai Robot Merespons Bola",
+      "level": "Foundation",
+      "duration": "50 min",
+      "description": "Modul ini menjelaskan pipeline besar dari kamera menangkap frame, detector mencari bola, localizer menghitung posisi, bridge mengubah posisi menjadi keputusan sederhana, sampai robot bergerak berdasarkan command.",
+      "content": [
+        {
+          "heading": "Dari kamera ke frame",
+          "body": [
+            "Pipeline vision selalu dimulai dari frame. Kamera menangkap keadaan lapangan pada satu momen, lalu frame itu masuk ke sistem sebagai data gambar. Frame tidak punya makna bola secara otomatis. Bagi komputer, frame hanyalah kumpulan angka warna pada banyak pixel. Tugas pipeline berikutnya adalah mencari pola yang dianggap sebagai bola, garis, lapangan, atau objek lain yang relevan.",
+            "Kualitas frame menentukan kualitas tahap berikutnya. Kalau frame terlalu gelap, bola bisa hilang. Kalau frame terlalu terang, warna bola bisa pecah. Kalau frame blur karena robot bergerak, detector bisa bingung. Karena itu, sebelum membahas model atau algoritma, anggota vision harus terbiasa bertanya: apakah frame input masuk akal untuk diproses?"
+          ]
+        },
+        {
+          "heading": "Detector mencari kandidat bola",
+          "body": [
+            "Detector adalah bagian yang menjawab pertanyaan apakah ada objek yang terlihat seperti bola di frame. Bentuk output detector dapat berbeda tergantung metode yang dipakai. Pada pendekatan threshold atau contour, output bisa berupa lingkaran, center, radius, dan area. Pada pendekatan YOLO atau object detection modern, output biasanya berupa bounding box, class label, dan confidence.",
+            "Detector tidak selalu benar. Kadang ia menemukan objek yang mirip bola padahal bukan bola. Kadang ia gagal melihat bola yang sebenarnya ada. Karena itu, detector perlu menghasilkan informasi yang cukup untuk diperiksa: posisi, ukuran, confidence, dan kadang gambar debug. Semakin mudah output detector dibaca, semakin mudah tim memperbaiki pipeline."
+          ]
+        },
+        {
+          "heading": "Localizer memberi makna posisi",
+          "body": [
+            "Hasil detector masih berada di dunia gambar. Center bola pada pixel x=400, y=260 belum langsung berarti robot harus maju atau belok. Localizer membantu mengubah informasi gambar menjadi informasi yang lebih dekat dengan kebutuhan robot, misalnya bola berada di kiri, tengah, kanan, dekat, atau jauh. Pada sistem yang lebih matang, localizer dapat memperkirakan arah dan jarak relatif bola terhadap robot.",
+            "Tahap ini penting karena robot bergerak di dunia nyata, bukan di layar monitor. Pixel hanya memberi lokasi pada gambar, sedangkan robot perlu tahu bagaimana posisi bola relatif terhadap tubuhnya. Tanpa localization, robot mudah mengambil keputusan kasar yang hanya cocok pada satu kondisi kamera atau satu jarak bola."
+          ]
+        },
+        {
+          "heading": "Bridge mengubah informasi menjadi command sederhana",
+          "body": [
+            "Bridge berada di antara informasi persepsi dan sistem aksi. Bridge bisa membaca status bola dari localizer lalu mengubahnya menjadi keputusan sederhana seperti SEARCH, TURN_LEFT, TURN_RIGHT, FORWARD, atau READY_TO_KICK. Keputusan ini belum tentu motion final, tetapi sudah lebih dekat dengan perilaku robot yang bisa dipakai saat latihan.",
+            "Dengan bridge, tim bisa menguji hubungan vision dan gerakan secara bertahap. Pertama pastikan frame masuk. Kedua pastikan detector mengeluarkan bola. Ketiga pastikan localizer memberi arah yang masuk akal. Keempat pastikan bridge menghasilkan command yang aman. Baru setelah itu command dihubungkan ke sistem gerak robot. Ini membuat debugging tidak lompat-lompat."
+          ]
+        }
+      ],
+      "interactive": [
+        {
+          "id": "vision-bridge-command-check",
+          "type": "ros2-code-checker",
+          "title": "Latihan bridge: posisi bola ke command",
+          "prompt": "Tulis ide node ROS2 sederhana yang subscribe posisi bola, menangani kondisi bola hilang, lalu publish command seperti TURN_LEFT, TURN_RIGHT, FORWARD, atau SEARCH. Checker hanya membaca struktur ide, bukan menjalankan robot.",
+          "starterCode": "import rclpy\nfrom rclpy.node import Node\nfrom std_msgs.msg import String\n\nclass VisionBridge(Node):\n    def __init__(self):\n        super().__init__('vision_bridge')\n        # TODO: subscribe topic posisi bola\n        # TODO: publish topic command sederhana\n\n    def on_ball(self, msg):\n        # TODO: jika bola tidak ada, publish SEARCH\n        # TODO: jika bola di kiri/kanan/tengah, publish command sesuai\n        pass",
+          "checks": [
+            {
+              "label": "Import rclpy dan Node",
+              "pattern": "import\\s+rclpy[\\s\\S]*from\\s+rclpy\\.node\\s+import\\s+Node",
+              "hint": "Mulai node ROS2 Python dengan import rclpy dan Node."
+            },
+            {
+              "label": "Class mewarisi Node",
+              "pattern": "class\\s+\\w+\\(Node\\)",
+              "hint": "Buat class seperti VisionBridge(Node)."
+            },
+            {
+              "label": "Ada subscriber posisi bola",
+              "pattern": "create_subscription\\([\\s\\S]*(String|Pose|Point|Float|Ball)[\\s\\S]*on_ball",
+              "hint": "Gunakan create_subscription untuk membaca informasi bola dan arahkan callback ke on_ball."
+            },
+            {
+              "label": "Ada publisher command",
+              "pattern": "create_publisher\\([\\s\\S]*String[\\s\\S]*(command|cmd|behavior|status)",
+              "hint": "Buat publisher String untuk command sederhana seperti /vision/command."
+            },
+            {
+              "label": "Menangani bola hilang",
+              "pattern": "(SEARCH|NO_BALL|not\\s+msg|lost|hilang)",
+              "hint": "Bridge harus punya perilaku aman saat bola tidak terlihat."
+            },
+            {
+              "label": "Menghasilkan command arah",
+              "pattern": "(TURN_LEFT|TURN_RIGHT|FORWARD|CENTER|LEFT|RIGHT)",
+              "hint": "Tambahkan command sederhana berdasarkan posisi bola."
+            }
+          ],
+          "successMessage": "Struktur bridge sudah masuk akal: ada input bola, output command, dan kondisi bola hilang.",
+          "failureMessage": "Lengkapi dulu subscriber, publisher, handling bola hilang, dan command arah sebelum dianggap aman."
+        }
+      ],
+      "outcomes": [
+        "Peserta mampu menjelaskan alur kamera, detector, localizer, bridge, dan command robot.",
+        "Peserta memahami bahwa frame kamera masih berupa data mentah yang perlu diproses.",
+        "Peserta mampu membedakan output detector dan output localizer.",
+        "Peserta mampu menjelaskan fungsi bridge sebagai pengubah informasi bola menjadi keputusan sederhana.",
+        "Peserta mampu menguji pipeline vision secara bertahap tanpa langsung menyalakan gerakan robot."
+      ]
+    },
+    {
+      "id": "vision-before-code-prerequisites",
+      "title": "Apa yang Harus Dipahami Anggota Baru Sebelum Masuk Code",
+      "level": "Foundation",
+      "duration": "55 min",
+      "description": "Modul persiapan sebelum membaca code vision: image, pixel, frame, topic, message, node, parameter, dan debugging visual sebagai kosakata dasar yang membuat codebase terasa lebih ramah.",
+      "content": [
+        {
+          "heading": "Image, pixel, dan frame sebagai bahasa gambar",
+          "body": [
+            "Sebelum masuk code, anggota baru perlu memahami bahwa image adalah data, pixel adalah unit kecil penyusun image, dan frame adalah satu image pada satu waktu tertentu. Video dari kamera sebenarnya hanyalah deretan frame yang datang cepat. Jika detector bekerja pada 30 FPS, artinya ia mencoba membaca banyak frame setiap detik. Ketika robot bergerak, setiap frame bisa sedikit berbeda karena kamera ikut berubah posisi.",
+            "Pemahaman ini membuat istilah di code lebih mudah dicerna. Variabel seperti image, frame, mask, width, height, center_x, atau radius bukan sekadar nama teknis. Semuanya berhubungan langsung dengan bagaimana komputer membaca gambar. Kalau konsep ini belum nyaman, code OpenCV atau detector akan terasa seperti angka acak."
+          ]
+        },
+        {
+          "heading": "Topic, message, dan node di ROS2",
+          "body": [
+            "Dalam ROS2, node adalah program kecil yang punya tugas tertentu. Topic adalah jalur komunikasi. Message adalah bentuk data yang lewat di topic. Contohnya, node kamera publish frame ke topic image. Node detector subscribe frame tersebut dan publish hasil deteksi ke topic lain. Node localizer subscribe hasil deteksi dan publish posisi bola. Pola ini membuat sistem besar bisa dipecah menjadi bagian kecil yang lebih mudah diuji.",
+            "Anggota baru tidak perlu langsung hafal semua API ROS2. Yang penting adalah bisa membaca peta komunikasi: siapa publish apa, siapa subscribe apa, dan message itu berisi data apa. Jika topic input salah, node tidak akan mendapat data. Jika message salah dipahami, hasil proses bisa keliru. Jika node tidak berjalan, topic yang diharapkan tidak akan muncul."
+          ]
+        },
+        {
+          "heading": "Parameter sebagai knob eksperimen",
+          "body": [
+            "Parameter adalah nilai yang mengatur perilaku node tanpa harus selalu mengubah logika utama. Dalam vision, parameter bisa berupa threshold warna, confidence minimum, radius minimum, path model YOLO, ukuran frame, atau pilihan topic input. Parameter membuat eksperimen lebih aman karena anggota bisa mencoba perubahan kecil sambil mencatat pengaruhnya.",
+            "Namun parameter bukan tombol ajaib. Jika threshold dinaikkan, false positive bisa turun tetapi false negative bisa naik. Jika confidence terlalu tinggi, detector mungkin hanya menerima bola yang sangat jelas. Jika confidence terlalu rendah, objek lain bisa ikut dianggap bola. Tuning parameter harus dilakukan dengan observasi, bukan perasaan."
+          ]
+        },
+        {
+          "heading": "Debugging visual sebagai bukti pertama",
+          "body": [
+            "Dalam image processing, mata manusia tetap menjadi alat bantu penting. Debugging visual berarti melihat raw frame, melihat hasil detector, melihat bounding box atau mask, lalu membandingkannya dengan ekspektasi. Jika output visual sudah salah, maka output angka kemungkinan juga salah. Jika output visual benar tetapi command robot salah, masalah mungkin berada di tahap setelah detector.",
+            "Biasakan bertanya dengan bukti: frame mana yang dipakai, bola terlihat di mana, detector menggambar apa, confidence berapa, dan apakah hasilnya konsisten pada beberapa frame. Kebiasaan ini mencegah debugging yang hanya berdasarkan dugaan. Di vision, gambar debug sering kali lebih jujur daripada log panjang yang belum dipahami."
+          ]
+        }
+      ],
+      "interactive": [
+        {
+          "id": "vision-ros2-vocabulary-check",
+          "type": "ros2-code-checker",
+          "title": "Latihan kosakata ROS2 vision",
+          "prompt": "Buat skeleton node ROS2 yang punya parameter confidence_min, subscribe frame atau hasil deteksi, lalu publish status vision. Tujuannya bukan code sempurna, tetapi mengenali node, topic, message, dan parameter.",
+          "starterCode": "import rclpy\nfrom rclpy.node import Node\nfrom std_msgs.msg import String\n\nclass VisionVocabulary(Node):\n    def __init__(self):\n        super().__init__('vision_vocabulary')\n        # TODO: declare parameter confidence_min\n        # TODO: create subscription\n        # TODO: create publisher status\n\n    def on_data(self, msg):\n        pass",
+          "checks": [
+            {
+              "label": "Node ROS2 dibuat",
+              "pattern": "class\\s+\\w+\\(Node\\)[\\s\\S]*super\\(\\)\\.__init__",
+              "hint": "Buat class yang mewarisi Node dan panggil super().__init__."
+            },
+            {
+              "label": "Parameter confidence_min ada",
+              "pattern": "declare_parameter\\([\\s\\S]*(confidence|min|threshold)",
+              "hint": "Gunakan declare_parameter untuk nilai seperti confidence_min atau threshold."
+            },
+            {
+              "label": "Ada subscription",
+              "pattern": "create_subscription\\(",
+              "hint": "Tambahkan create_subscription untuk input frame atau deteksi."
+            },
+            {
+              "label": "Ada publisher status",
+              "pattern": "create_publisher\\([\\s\\S]*String[\\s\\S]*(status|vision)",
+              "hint": "Tambahkan publisher String untuk status vision."
+            },
+            {
+              "label": "Ada callback data",
+              "pattern": "def\\s+on_\\w+\\(self,\\s*msg\\)",
+              "hint": "Buat callback seperti on_data(self, msg)."
+            }
+          ],
+          "successMessage": "Kosakata dasar ROS2 vision sudah muncul: node, parameter, subscriber, publisher, dan callback.",
+          "failureMessage": "Lengkapi struktur dasar ROS2 dulu agar code vision lebih mudah dibaca."
+        }
+      ],
+      "outcomes": [
+        "Peserta mampu menjelaskan image, pixel, dan frame dengan bahasa sederhana.",
+        "Peserta mampu menjelaskan topic, message, dan node pada ROS2.",
+        "Peserta memahami fungsi parameter sebagai knob eksperimen vision.",
+        "Peserta mampu memakai debugging visual sebagai bukti awal saat membaca masalah.",
+        "Peserta lebih siap membaca codebase vision tanpa langsung panik."
+      ]
+    },
+    {
+      "id": "vision-custom-package-map",
+      "title": "Peta Package Custom Vision AROC_PL",
+      "level": "Tools",
+      "duration": "50 min",
+      "description": "Modul pemetaan awal package custom vision AROC_PL: op3_advanced_detector, op3_ball_localization, op3_yolo_viewer, dan op3_yolo_soccer_bridge tanpa masuk detail code terlebih dahulu.",
+      "content": [
+        {
+          "heading": "Kenapa perlu peta package",
+          "body": [
+            "Codebase vision bisa terasa besar ketika pertama kali dibuka. Ada package detector, localizer, viewer, bridge, launch file, parameter, dan message. Tanpa peta, anggota baru mudah membuka file secara acak lalu merasa semua file sama pentingnya. Padahal setiap package biasanya punya peran yang berbeda di pipeline.",
+            "Peta package membantu anggota memahami urutan berpikir sebelum membaca detail code. Mulai dari sumber data, proses deteksi, proses localization, alat visualisasi, lalu bridge ke perilaku robot. Dengan peta ini, anggota bisa tahu file mana yang perlu dibaca dulu, output apa yang perlu dicek, dan bagian mana yang sebaiknya tidak diedit sebelum paham dampaknya."
+          ]
+        },
+        {
+          "heading": "op3_advanced_detector sebagai pencari objek",
+          "body": [
+            "Package op3_advanced_detector dapat dipahami sebagai bagian yang bertugas mencari objek penting dari input visual. Dalam konteks bola, detector membaca frame atau stream yang sudah tersedia lalu menghasilkan informasi kandidat bola. Output ini dapat berupa bounding box, circle, class label, confidence, atau bentuk message lain sesuai implementasi tim.",
+            "Saat belajar package detector, fokus awal bukan mengubah model atau menulis ulang algoritma. Fokus awal adalah memahami input frame berasal dari mana, output deteksi dipublish ke topic apa, parameter apa yang mengubah sensitivitas, dan bagaimana hasilnya terlihat di debug view. Jika empat hal ini jelas, baru masuk ke detail cara detector bekerja."
+          ]
+        },
+        {
+          "heading": "op3_ball_localization sebagai pemberi makna posisi bola",
+          "body": [
+            "Package op3_ball_localization berada setelah hasil deteksi. Tugasnya adalah mengubah informasi dari detector menjadi posisi bola yang lebih berguna bagi robot. Detector mungkin hanya tahu bola berada di pixel tertentu, tetapi localizer mencoba memberi makna arah, jarak, atau status yang lebih dekat dengan kebutuhan perilaku robot.",
+            "Saat membaca localizer, cari hubungan antara input deteksi dan output posisi. Perhatikan apakah localizer memakai parameter kamera, ukuran frame, asumsi tinggi kamera, atau filter tertentu. Jika output posisi terasa aneh, belum tentu detector salah. Bisa jadi transformasi dari pixel ke informasi robot belum sesuai dengan kondisi kamera atau parameter yang dipakai."
+          ]
+        },
+        {
+          "heading": "op3_yolo_viewer dan op3_yolo_soccer_bridge",
+          "body": [
+            "Package op3_yolo_viewer membantu anggota melihat hasil YOLO atau hasil deteksi secara visual. Viewer bukan sekadar aksesoris. Ia adalah alat debugging yang membuat hasil model lebih mudah dibuktikan: bounding box muncul di mana, label apa yang terbaca, confidence berapa, dan apakah objek yang dipilih benar-benar bola. Viewer sering menjadi tempat terbaik untuk memulai diskusi ketika hasil robot terasa aneh.",
+            "Package op3_yolo_soccer_bridge berada lebih dekat dengan keputusan sederhana. Bridge membaca hasil deteksi atau localization lalu mengubahnya menjadi status atau command yang bisa dipakai sistem soccer. Bridge harus dijaga tetap sederhana dan mudah diaudit. Jika bridge terlalu banyak mengambil keputusan rumit, sulit membedakan apakah masalah berasal dari vision, strategy, atau motion."
+          ]
+        }
+      ],
+      "outcomes": [
+        "Peserta mampu menyebutkan peran umum op3_advanced_detector dalam pipeline vision.",
+        "Peserta mampu menjelaskan fungsi op3_ball_localization sebagai pengubah deteksi menjadi informasi posisi.",
+        "Peserta memahami op3_yolo_viewer sebagai alat debugging visual.",
+        "Peserta memahami op3_yolo_soccer_bridge sebagai penghubung vision ke command sederhana.",
+        "Peserta mampu membaca package berdasarkan input, output, parameter, dan alat debugnya."
+      ]
+    },
+    {
+      "id": "vision-codebase-learning-without-panic",
+      "title": "Cara Belajar Codebase Vision Tanpa Panik",
+      "level": "Tools",
+      "duration": "50 min",
+      "description": "Modul strategi belajar codebase vision secara bertahap: jangan langsung edit code, pahami pipeline, baca topic input/output, pahami parameter, jalankan debugging bertahap, dan catat perubahan.",
+      "content": [
+        {
+          "heading": "Jangan langsung edit code",
+          "body": [
+            "Refleks pertama saat menemukan bug sering kali adalah membuka file lalu mengganti angka atau logika. Di vision, kebiasaan ini berbahaya karena satu perubahan kecil bisa membuat hasil terlihat membaik di satu frame tetapi rusak di kondisi lain. Sebelum mengedit, anggota harus memahami apa yang sedang masuk ke node, apa yang keluar dari node, dan apakah masalah benar-benar berada di file tersebut.",
+            "Aturan praktisnya sederhana: observasi dulu, baru ubah. Jalankan pipeline, lihat raw frame, lihat output detector, baca topic, cek parameter, dan catat gejala. Jika belum bisa menjelaskan masalah dengan satu atau dua kalimat yang jelas, kemungkinan besar belum waktunya mengubah code."
+          ]
+        },
+        {
+          "heading": "Pahami pipeline sebelum detail algoritma",
+          "body": [
+            "Pipeline adalah peta perjalanan data. Dalam vision, data bisa berjalan dari kamera ke detector, dari detector ke localizer, dari localizer ke bridge, lalu dari bridge ke sistem aksi. Jika anggota langsung membaca detail algoritma tanpa tahu pipeline, code akan terasa seperti potongan puzzle yang tidak punya gambar akhir.",
+            "Mulailah dengan membuat catatan sederhana: node apa saja yang berjalan, topic inputnya apa, topic outputnya apa, message-nya apa, dan parameter pentingnya apa. Catatan ini tidak perlu indah. Yang penting bisa membantu anggota menjawab di mana data muncul, di mana data berubah, dan di mana data hilang."
+          ]
+        },
+        {
+          "heading": "Debugging bertahap dan catatan perubahan",
+          "body": [
+            "Debugging vision sebaiknya dilakukan bertahap. Cek apakah kamera publish frame. Cek apakah detector menerima frame. Cek apakah detector mengeluarkan hasil. Cek apakah localizer membaca hasil detector. Cek apakah bridge mengeluarkan command. Jika semua dicek sekaligus, tim akan sulit tahu tahap mana yang sebenarnya rusak.",
+            "Setiap perubahan parameter atau code harus dicatat. Catatan minimal berisi nilai sebelum, nilai sesudah, kondisi percobaan, dan efek yang terlihat. Contohnya: confidence_min dari 0.35 ke 0.55, cahaya indoor, false positive berkurang tetapi bola jauh sering hilang. Catatan kecil seperti ini membuat tim tidak mengulang tuning yang sama berkali-kali."
+          ]
+        },
+        {
+          "heading": "Membaca error dengan tenang",
+          "body": [
+            "Error di codebase vision bisa berasal dari banyak tempat: topic tidak ada, message salah, parameter belum diset, kamera tidak terbaca, model path salah, atau node belum diluncurkan. Jangan langsung menyimpulkan algoritma rusak. Baca error dari atas ke bawah, cari baris pertama yang relevan, lalu hubungkan dengan pipeline.",
+            "Kalau node tidak menerima data, gunakan pertanyaan topic. Kalau output kosong, gunakan pertanyaan detector. Kalau gambar debug aneh, gunakan pertanyaan frame dan parameter. Kalau robot bergerak aneh padahal deteksi benar, gunakan pertanyaan bridge dan strategy. Dengan cara ini, codebase besar berubah menjadi rangkaian pertanyaan kecil yang bisa dijawab satu per satu."
+          ]
+        }
+      ],
+      "outcomes": [
+        "Peserta mampu menjelaskan kenapa tidak boleh langsung mengedit code tanpa memahami pipeline.",
+        "Peserta mampu membuat catatan node, topic input, topic output, message, dan parameter penting.",
+        "Peserta mampu menjalankan debugging bertahap dari kamera sampai bridge.",
+        "Peserta memahami pentingnya mencatat perubahan parameter dan efeknya.",
+        "Peserta mampu membaca error vision dengan pendekatan yang lebih tenang dan sistematis."
+      ]
+    },
+    {
+      "id": "vision-intro-image-processing",
+      "title": "Apa Itu Image Processing",
+      "level": "Foundation",
+      "duration": "45 min",
+      "description": "Modul fase dasar yang menjelaskan image sebagai data, gambar sebagai array angka, alasan komputer membutuhkan representasi numerik, dan contoh aplikasi image processing pada robot soccer.",
+      "content": [
+        {
+          "heading": "Image sebagai data",
+          "body": [
+            "Bagi manusia, gambar adalah sesuatu yang langsung punya makna. Kita melihat bola, lapangan, kaki robot, bayangan, dan garis putih. Bagi komputer, gambar tidak langsung punya makna seperti itu. Image disimpan sebagai data numerik. Setiap pixel punya nilai warna, dan kumpulan nilai itu membentuk gambar yang kita lihat di layar.",
+            "Image processing adalah proses mengolah data gambar agar informasi tertentu bisa ditemukan. Informasi itu bisa sederhana seperti area warna oranye, tepi objek, bentuk lingkaran, atau pusat bounding box. Informasi juga bisa lebih kompleks seperti hasil model deteksi objek. Intinya, komputer perlu mengubah gambar menjadi angka yang bisa dihitung."
+          ]
+        },
+        {
+          "heading": "Gambar bukan cuma gambar, tapi array angka",
+          "body": [
+            "Dalam OpenCV atau library vision lain, image sering direpresentasikan sebagai array. Jika frame berukuran 640x480 dengan tiga channel warna, komputer menyimpan banyak angka untuk setiap pixel dan channel. Angka ini bisa dipotong, difilter, diubah warna, dibandingkan dengan threshold, atau dikirim ke model deteksi.",
+            "Memahami image sebagai array membuat banyak operasi vision terasa lebih masuk akal. Grayscale berarti mengurangi informasi warna menjadi intensitas terang-gelap. Threshold berarti memilih pixel yang nilainya masuk batas tertentu. Mask berarti membuat gambar hitam-putih yang menunjukkan area mana yang dianggap cocok. Semua ini hanyalah operasi angka yang membantu komputer mencari pola."
+          ]
+        },
+        {
+          "heading": "Kenapa representasi numerik dibutuhkan",
+          "body": [
+            "Komputer tidak bisa cukup diberi instruksi lihat bola seperti manusia. Komputer perlu aturan yang bisa dihitung atau model yang sudah dilatih. Untuk aturan warna, komputer perlu tahu rentang nilai warna yang dianggap bola. Untuk object detection, komputer perlu memproses angka pixel melalui model yang menghasilkan prediksi label dan confidence.",
+            "Representasi numerik juga membuat hasil bisa diuji. Kita bisa membandingkan confidence sebelum dan sesudah tuning. Kita bisa menghitung center bola. Kita bisa mengukur radius. Kita bisa mencatat FPS. Tanpa angka, debugging hanya menjadi perasaan bahwa gambar terlihat bagus atau buruk. Dengan angka, tim punya bukti yang bisa dibandingkan."
+          ]
+        },
+        {
+          "heading": "Contoh aplikasi di robot soccer",
+          "body": [
+            "Pada robot soccer, image processing dapat dipakai untuk mendeteksi bola, membaca warna lapangan, mencari garis, mengenali goal, atau memeriksa apakah frame terlalu gelap. Pada level awal, fokus paling mudah adalah bola karena bola menjadi objek utama yang menentukan banyak perilaku robot. Jika robot bisa melihat bola dengan stabil, pipeline dasar soccer sudah punya fondasi penting.",
+            "Namun bola bukan satu-satunya masalah. Lapangan punya warna yang berubah karena cahaya. Garis putih bisa terlihat mirip noise. Kaki robot sendiri bisa menutup bola. Kamera bisa menangkap motion blur saat kepala bergerak. Semua contoh ini menunjukkan bahwa image processing bukan hanya soal algoritma keren, tetapi juga soal memahami kondisi nyata tempat robot bermain."
+          ]
+        }
+      ],
+      "outcomes": [
+        "Peserta mampu menjelaskan image sebagai data numerik, bukan hanya gambar visual.",
+        "Peserta memahami image sebagai array pixel dan channel warna.",
+        "Peserta mampu menjelaskan alasan komputer membutuhkan angka untuk memproses gambar.",
+        "Peserta mampu menyebutkan contoh penggunaan image processing di robot soccer.",
+        "Peserta siap mempelajari pixel, warna, frame, dan detector sebagai konsep lanjutan."
+      ]
+    },
+    {
+      "id": "vision-pixel-resolution-coordinate",
+      "title": "Pixel, Resolusi, dan Koordinat Gambar",
+      "level": "Foundation",
+      "duration": "50 min",
+      "description": "Modul dasar untuk memahami pixel, resolusi seperti 640x480 dan 1280x720, koordinat x-y pada gambar, origin kiri atas, serta alasan konsep ini penting untuk deteksi bola.",
+      "content": [
+        {
+          "heading": "Pixel sebagai titik kecil penyusun gambar",
+          "body": [
+            "Pixel adalah unit terkecil yang biasa kita pakai untuk membaca gambar digital. Satu frame kamera tersusun dari banyak pixel. Setiap pixel menyimpan informasi warna atau intensitas. Jika kita memperbesar gambar cukup jauh, bola yang terlihat bulat sebenarnya tersusun dari kotak-kotak kecil bernilai warna berbeda.",
+            "Dalam deteksi bola, pixel menjadi dasar semua pengukuran. Center bola ditulis dalam koordinat pixel. Ukuran bola bisa dihitung dari radius pixel atau lebar bounding box. Area mask juga dihitung dari jumlah pixel yang cocok dengan threshold. Jadi ketika code menyebut x, y, width, height, radius, atau area, semuanya kembali ke konsep pixel."
+          ]
+        },
+        {
+          "heading": "Resolusi 640x480 dan 1280x720",
+          "body": [
+            "Resolusi menunjukkan jumlah pixel pada gambar. Resolusi 640x480 berarti lebar gambar 640 pixel dan tinggi gambar 480 pixel. Resolusi 1280x720 berarti gambar lebih besar dan lebih detail, tetapi juga lebih berat diproses. Resolusi yang lebih tinggi dapat membantu melihat bola kecil dari jauh, tetapi bisa menurunkan FPS jika komputer atau model tidak cukup cepat.",
+            "Dalam robot soccer, resolusi adalah kompromi. Gambar besar memberi detail lebih banyak, tetapi real-time vision membutuhkan proses cepat. Jika detector lambat, robot akan menerima informasi terlambat. Karena itu, pemilihan resolusi harus melihat kebutuhan: cukup detail untuk mendeteksi bola, cukup ringan agar pipeline tetap responsif."
+          ]
+        },
+        {
+          "heading": "Koordinat x dan y pada gambar",
+          "body": [
+            "Koordinat gambar biasanya memakai x untuk arah horizontal dan y untuk arah vertikal. Titik origin atau 0,0 biasanya berada di kiri atas gambar. Semakin ke kanan, nilai x semakin besar. Semakin ke bawah, nilai y semakin besar. Ini berbeda dari koordinat matematika yang sering kita bayangkan, di mana y naik ke atas.",
+            "Perbedaan ini penting agar tidak salah membaca arah bola. Pada frame 640x480, titik tengah gambar kira-kira berada di x=320 dan y=240. Jika center bola berada di x=200, bola berada di sisi kiri frame. Jika center bola berada di x=450, bola berada di sisi kanan frame. Informasi sederhana ini sering menjadi dasar command belok kiri atau kanan."
+          ]
+        },
+        {
+          "heading": "Kenapa koordinat penting untuk deteksi bola",
+          "body": [
+            "Detector tidak cukup mengatakan bola ada. Robot perlu tahu bola ada di mana. Koordinat center bola membantu sistem memahami apakah robot perlu mengarahkan kepala, memutar badan, maju, atau menunggu. Ukuran bola pada frame juga memberi petunjuk kasar tentang jarak: bola yang dekat biasanya terlihat lebih besar, sedangkan bola jauh terlihat lebih kecil.",
+            "Namun koordinat pixel belum sama dengan posisi dunia nyata. Pixel hanya memberi lokasi di gambar. Untuk robot, koordinat ini perlu diolah lagi oleh localizer atau bridge. Meski begitu, pemahaman koordinat gambar adalah langkah pertama yang wajib kuat sebelum membahas localization."
+          ]
+        }
+      ],
+      "interactive": [
+        {
+          "id": "vision-coordinate-center-check",
+          "type": "ros2-code-checker",
+          "title": "Latihan membaca center bola",
+          "prompt": "Tulis fungsi kecil yang menerima lebar frame, tinggi frame, dan center bola, lalu menghitung apakah bola berada di LEFT, CENTER, atau RIGHT. Ini latihan konsep koordinat, bukan code robot asli.",
+          "starterCode": "def ball_side(frame_width, frame_height, ball_x, ball_y):\n    # TODO: hitung center frame\n    # TODO: bandingkan ball_x dengan center frame\n    # TODO: return LEFT, CENTER, atau RIGHT\n    pass",
+          "checks": [
+            {
+              "label": "Ada fungsi pembaca posisi",
+              "pattern": "def\\s+\\w+\\(.*frame_width.*ball_x",
+              "hint": "Buat fungsi dengan parameter frame_width dan ball_x."
+            },
+            {
+              "label": "Menghitung center frame",
+              "pattern": "(frame_width\\s*/\\s*2|frame_width\\s*//\\s*2|0\\.5\\s*\\*\\s*frame_width)",
+              "hint": "Titik tengah horizontal frame bisa dihitung dari frame_width / 2."
+            },
+            {
+              "label": "Membandingkan ball_x",
+              "pattern": "ball_x[\\s\\S]*(<|>)[\\s\\S]*(center|mid|frame_width)",
+              "hint": "Bandingkan ball_x dengan center atau batas toleransi sekitar center."
+            },
+            {
+              "label": "Menghasilkan label arah",
+              "pattern": "(LEFT|RIGHT|CENTER)",
+              "hint": "Return label arah seperti LEFT, RIGHT, atau CENTER."
+            }
+          ],
+          "successMessage": "Konsep koordinat sudah benar: center frame dihitung dan posisi bola dibaca dari ball_x.",
+          "failureMessage": "Lengkapi fungsi dengan perhitungan center frame, perbandingan ball_x, dan label arah."
+        }
+      ],
+      "outcomes": [
+        "Peserta mampu menjelaskan pixel sebagai unit kecil penyusun gambar.",
+        "Peserta mampu membaca resolusi 640x480 dan 1280x720 sebagai lebar dan tinggi frame.",
+        "Peserta memahami koordinat x-y gambar dengan origin di kiri atas.",
+        "Peserta mampu menentukan kiri, tengah, atau kanan berdasarkan center bola di frame.",
+        "Peserta memahami bahwa koordinat pixel adalah dasar awal sebelum localization."
+      ]
+    },
+    {
+      "id": "vision-color-computer-vision",
+      "title": "Warna dalam Computer Vision",
+      "level": "Tools",
+      "duration": "55 min",
+      "description": "Modul pengantar warna untuk vision: RGB, BGR, grayscale, HSV, alasan warna bisa terlihat aneh di OpenCV, dan cara membaca threshold warna secara santai tetapi akurat.",
+      "content": [
+        {
+          "heading": "RGB dan BGR",
+          "body": [
+            "RGB adalah format warna yang umum dikenal: Red, Green, Blue. Banyak gambar yang kita lihat di browser atau aplikasi desain memakai urutan ini. OpenCV sering memakai BGR: Blue, Green, Red. Perbedaan urutan ini terlihat kecil, tetapi bisa membuat warna tampak aneh jika gambar ditampilkan tanpa konversi yang benar.",
+            "Contohnya, warna merah bisa terlihat kebiruan jika data BGR dianggap RGB. Bagi manusia ini terlihat seperti gambar rusak. Bagi pipeline, kesalahan channel bisa membuat threshold warna gagal total. Karena itu, ketika warna di debug view terasa aneh, jangan langsung menyimpulkan kamera rusak. Bisa jadi urutan channel belum dikonversi dengan benar."
+          ]
+        },
+        {
+          "heading": "Grayscale untuk terang-gelap",
+          "body": [
+            "Grayscale mengubah gambar berwarna menjadi informasi intensitas terang-gelap. Ini berguna ketika warna tidak menjadi fokus utama, misalnya untuk mencari tepi, membaca kontras, atau menyederhanakan proses. Gambar grayscale lebih ringan karena tidak menyimpan tiga channel warna seperti RGB atau BGR.",
+            "Namun untuk mendeteksi bola berdasarkan warna, grayscale biasanya tidak cukup. Bola oranye dan benda lain dengan kecerahan mirip bisa terlihat dekat nilainya. Grayscale tetap penting dipahami karena banyak operasi dasar image processing memakainya, tetapi anggota vision harus tahu kapan warna penuh lebih berguna."
+          ]
+        },
+        {
+          "heading": "HSV sebagai cara membaca warna yang lebih ramah threshold",
+          "body": [
+            "HSV memisahkan warna menjadi Hue, Saturation, dan Value. Hue menggambarkan jenis warna, seperti merah, hijau, atau oranye. Saturation menggambarkan seberapa kuat warna itu. Value menggambarkan seberapa terang. Format ini sering lebih nyaman untuk threshold warna karena kita bisa fokus pada warna bola tanpa terlalu tercampur dengan terang-gelap.",
+            "Misalnya, bola oranye dapat dicari dengan rentang hue tertentu, lalu saturation dan value digunakan untuk menghindari area yang terlalu pucat atau terlalu gelap. Tetapi HSV bukan sihir. Cahaya lapangan tetap bisa mengubah tampilan warna, kamera tetap bisa overexpose, dan bayangan tetap bisa membuat bola terlihat berbeda. Threshold HSV harus dituning berdasarkan kondisi nyata."
+          ]
+        },
+        {
+          "heading": "Kenapa warna bisa berubah di OpenCV",
+          "body": [
+            "Warna bisa terlihat berubah karena beberapa hal: urutan channel BGR/RGB, konversi color space, exposure kamera, white balance otomatis, kompresi video, atau cahaya ruangan. Kadang frame yang sama terlihat normal di satu viewer tetapi aneh di viewer lain karena cara tampilnya berbeda. Ini hal yang umum, bukan tanda bahwa semua pipeline salah.",
+            "Saat debugging warna, biasakan cek tiga hal: format input, konversi warna, dan hasil mask. Jika raw frame normal tetapi mask kosong, threshold mungkin terlalu sempit. Jika mask penuh noise, threshold mungkin terlalu lebar atau saturation/value terlalu rendah. Jika warna tampak tertukar, cek apakah BGR perlu dikonversi ke RGB sebelum ditampilkan."
+          ]
+        }
+      ],
+      "interactive": [
+        {
+          "id": "vision-hsv-playground-color",
+          "type": "vision-playground",
+          "title": "Playground HSV warna bola",
+          "prompt": "Geser Hue, Saturation, Value, dan Minimum radius untuk melihat bagaimana threshold warna memengaruhi deteksi bola oranye. Coba buat bola terdeteksi tanpa membuat lapangan ikut masuk mask."
+        }
+      ],
+      "outcomes": [
+        "Peserta mampu membedakan RGB dan BGR serta risiko warna tertukar di OpenCV.",
+        "Peserta memahami grayscale sebagai representasi terang-gelap.",
+        "Peserta mampu menjelaskan HSV secara dasar: hue, saturation, dan value.",
+        "Peserta mampu membaca efek threshold warna terhadap mask dan noise.",
+        "Peserta memahami bahwa warna kamera dipengaruhi cahaya, exposure, dan konversi format."
+      ]
+    },
+    {
+      "id": "vision-frame-fps-video-stream",
+      "title": "Frame, FPS, dan Video Stream",
+      "level": "Tools",
+      "duration": "45 min",
+      "description": "Modul tentang frame sebagai satu gambar, video sebagai urutan frame, FPS kamera, FPS detector, dan alasan robot membutuhkan vision yang cukup real-time.",
+      "content": [
+        {
+          "heading": "Frame adalah satu foto kecil dari waktu",
+          "body": [
+            "Frame adalah satu gambar yang diambil pada satu momen. Video stream adalah rangkaian frame yang datang terus-menerus. Jika kamera berjalan 30 FPS, artinya kamera mengirim sekitar 30 frame setiap detik. Robot tidak melihat dunia sebagai video mulus seperti manusia, tetapi sebagai potongan gambar yang diproses satu per satu.",
+            "Dalam setiap frame, posisi bola bisa berubah sedikit. Jika robot atau bola bergerak cepat, perbedaan antar frame bisa cukup besar. Pipeline vision harus cukup cepat agar informasi yang dipakai robot masih relevan dengan keadaan sekarang. Kalau frame lama diproses terlalu lambat, robot bisa merespons kondisi yang sudah lewat."
+          ]
+        },
+        {
+          "heading": "FPS kamera dan FPS detector tidak selalu sama",
+          "body": [
+            "FPS kamera menunjukkan seberapa sering kamera mengirim frame. FPS detector menunjukkan seberapa sering detector mampu memproses frame dan menghasilkan output. Kamera bisa saja 30 FPS, tetapi detector hanya mampu 10 FPS jika model terlalu berat atau komputer sedang sibuk. Dalam kondisi itu, tidak semua frame dapat diproses secara real-time.",
+            "Perbedaan ini penting saat membaca performa. Jika kamera terlihat lancar tetapi bounding box terlambat, masalah mungkin ada di detector atau proses setelahnya. Jika kamera sendiri patah-patah, masalah bisa berasal dari stream, driver, USB, resolusi, atau beban sistem. Jangan mencampur masalah FPS kamera dan FPS detector tanpa bukti."
+          ]
+        },
+        {
+          "heading": "Latency dan efeknya pada robot",
+          "body": [
+            "Latency adalah jeda antara kejadian nyata dan output yang diterima sistem. Pada vision, latency bisa muncul dari kamera, decoding frame, preprocessing, inference detector, localization, dan komunikasi ROS2. Robot soccer membutuhkan latency rendah karena keputusan bergerak harus mengikuti posisi bola yang berubah.",
+            "Jika latency tinggi, robot bisa belok ke posisi bola yang sudah tidak ada. Robot juga bisa terlambat berhenti ketika bola hilang. Dalam latihan, gejala latency sering terlihat sebagai output debug yang tertinggal dari gerakan nyata. Untuk pemula, cukup pahami bahwa akurasi tinggi belum cukup jika hasilnya datang terlalu lambat."
+          ]
+        },
+        {
+          "heading": "Real-time bukan berarti sempurna",
+          "body": [
+            "Real-time vision bukan berarti semua frame harus diproses dengan kualitas tertinggi. Real-time berarti pipeline cukup cepat dan konsisten untuk kebutuhan robot. Kadang lebih baik memakai resolusi sedang dengan FPS stabil daripada resolusi tinggi tetapi output tersendat. Robot lebih mudah dikontrol dengan informasi yang sedikit kurang detail tetapi datang tepat waktu.",
+            "Saat tuning, perhatikan tiga hal sekaligus: kualitas deteksi, FPS, dan stabilitas output. Detector yang sangat akurat tetapi hanya berjalan lambat mungkin tidak cocok untuk mode bergerak. Detector yang cepat tetapi terlalu sering salah juga tidak cukup. Tujuannya adalah keseimbangan yang sesuai kebutuhan latihan dan pertandingan."
+          ]
+        }
+      ],
+      "outcomes": [
+        "Peserta mampu menjelaskan frame sebagai satu gambar dan video stream sebagai urutan frame.",
+        "Peserta mampu membedakan FPS kamera dan FPS detector.",
+        "Peserta memahami latency dan dampaknya pada respons robot.",
+        "Peserta mampu menjelaskan kenapa robot soccer butuh vision yang cukup real-time.",
+        "Peserta mampu melihat performa vision sebagai kombinasi akurasi, FPS, dan stabilitas."
+      ]
+    },
+    {
+      "id": "vision-noise-blur-lighting",
+      "title": "Noise, Blur, dan Lighting",
+      "level": "Tools",
+      "duration": "55 min",
+      "description": "Modul tentang gangguan visual yang sering terjadi pada kamera robot: noise, motion blur, overexposure, underexposure, shadow, dan efeknya terhadap deteksi bola.",
+      "content": [
+        {
+          "heading": "Noise kamera",
+          "body": [
+            "Noise adalah gangguan kecil pada gambar yang membuat pixel terlihat berbintik atau tidak stabil. Noise sering muncul pada kondisi cahaya rendah, sensor kamera bekerja keras, atau setting exposure kurang cocok. Bagi manusia, noise mungkin hanya terlihat seperti gambar kurang bersih. Bagi detector berbasis threshold, noise bisa menjadi area palsu yang ikut masuk mask.",
+            "Dalam deteksi bola, noise dapat menghasilkan titik-titik kecil yang terlihat seperti kandidat objek. Jika filter area atau radius tidak cukup baik, noise bisa dianggap bola kecil. Karena itu, pipeline biasanya membutuhkan threshold, filtering, minimum area, minimum radius, atau confidence agar tidak terlalu percaya pada gangguan kecil."
+          ]
+        },
+        {
+          "heading": "Motion blur saat robot bergerak",
+          "body": [
+            "Motion blur terjadi ketika kamera atau objek bergerak cukup cepat sehingga gambar tampak terseret. Pada OP3, blur bisa muncul ketika kepala bergerak, robot berjalan, atau bola bergerak cepat. Bola yang seharusnya bulat bisa terlihat lonjong, tepinya tidak jelas, dan warnanya bercampur dengan background.",
+            "Blur membuat detector lebih sulit bekerja. Threshold warna bisa tetap menangkap area bola, tetapi bentuk dan ukuran menjadi tidak stabil. Object detector juga bisa menurunkan confidence karena pola visual tidak lagi tajam. Saat hasil deteksi sering hilang ketika robot bergerak tetapi baik saat robot diam, motion blur perlu dicurigai."
+          ]
+        },
+        {
+          "heading": "Overexposure, underexposure, dan shadow",
+          "body": [
+            "Overexposure berarti gambar terlalu terang sampai detail warna hilang. Bola oranye bisa terlihat pucat atau hampir putih. Underexposure berarti gambar terlalu gelap sehingga warna bola tidak cukup jelas. Shadow atau bayangan membuat sebagian area frame lebih gelap, sehingga bola yang sama bisa punya warna berbeda ketika masuk dan keluar bayangan.",
+            "Masalah lighting sering membuat parameter yang kemarin berhasil menjadi gagal hari ini. Ini bukan berarti code tiba-tiba rusak. Kondisi cahaya memang bagian dari input vision. Anggota perlu membiasakan diri menguji pipeline pada beberapa kondisi cahaya dan mencatat parameter yang dipakai, bukan hanya mengandalkan satu kondisi ideal."
+          ]
+        },
+        {
+          "heading": "Efek gangguan visual pada deteksi bola",
+          "body": [
+            "Noise dapat membuat false positive. Blur dapat membuat bola hilang atau ukurannya tidak stabil. Overexposure dapat mengubah warna bola. Underexposure dapat membuat bola terlalu gelap. Shadow dapat membuat threshold hanya bekerja di sebagian lapangan. Semua gangguan ini memengaruhi output detector sebelum localizer atau bridge mendapat data.",
+            "Cara belajar yang baik adalah membandingkan raw frame dan debug output. Jika raw frame buruk, perbaiki input atau parameter kamera lebih dulu. Jika raw frame baik tetapi output detector buruk, baru fokus pada threshold, model, confidence, atau filtering. Jangan melompat ke tuning bridge jika masalah sebenarnya sudah terlihat di frame."
+          ]
+        }
+      ],
+      "interactive": [
+        {
+          "id": "vision-lighting-threshold-playground",
+          "type": "vision-playground",
+          "title": "Playground noise dan threshold",
+          "prompt": "Coba lebarkan dan sempitkan threshold. Perhatikan kapan bola masuk mask, kapan noise ikut masuk, dan kapan minimum radius membantu menolak gangguan kecil."
+        }
+      ],
+      "outcomes": [
+        "Peserta mampu menjelaskan noise kamera dan dampaknya pada mask atau false positive.",
+        "Peserta memahami motion blur dan gejalanya saat robot atau bola bergerak.",
+        "Peserta mampu membedakan overexposure, underexposure, dan shadow secara praktis.",
+        "Peserta mampu menghubungkan gangguan visual dengan kegagalan deteksi bola.",
+        "Peserta mampu memulai debugging dari raw frame sebelum tuning tahap berikutnya."
+      ]
+    },
+    {
+      "id": "vision-bounding-box-object-detection",
+      "title": "Bounding Box dan Object Detection",
+      "level": "Practice",
+      "duration": "60 min",
+      "description": "Modul pengantar object detection: apa itu bounding box, center point, confidence, class label, serta perbedaan detection dan classification dalam konteks robot soccer.",
+      "content": [
+        {
+          "heading": "Object detection mencari objek dan lokasinya",
+          "body": [
+            "Object detection adalah proses mencari objek tertentu di dalam gambar sekaligus menentukan lokasinya. Jika classification hanya menjawab gambar ini berisi apa, detection menjawab objek apa yang terlihat dan di mana letaknya. Untuk robot soccer, detection berguna karena robot tidak cukup tahu bahwa ada bola; robot perlu tahu posisi bola di frame.",
+            "Model seperti YOLO biasanya menghasilkan beberapa prediksi. Setiap prediksi berisi bounding box, class label, dan confidence. Class label memberi jenis objek, misalnya ball. Bounding box memberi area objek di gambar. Confidence memberi tingkat keyakinan model terhadap prediksi tersebut. Ketiganya harus dibaca bersama, bukan terpisah."
+          ]
+        },
+        {
+          "heading": "Bounding box dan center point",
+          "body": [
+            "Bounding box adalah kotak yang mengelilingi objek yang terdeteksi. Formatnya bisa berbeda-beda: ada yang memakai x, y, width, height; ada yang memakai x_min, y_min, x_max, y_max; ada juga yang memakai center_x, center_y, width, height. Anggota vision harus selalu cek format yang dipakai sebelum menghitung posisi bola.",
+            "Center point biasanya dihitung dari tengah bounding box. Center ini sering dipakai untuk menentukan apakah bola berada di kiri, tengah, atau kanan frame. Jika bounding box salah format, center bisa salah. Jika center salah, localizer atau bridge bisa memberi command yang salah arah. Karena itu, membaca format bounding box adalah skill kecil yang sangat penting."
+          ]
+        },
+        {
+          "heading": "Confidence dan class label",
+          "body": [
+            "Confidence menunjukkan seberapa yakin model terhadap prediksi. Confidence tinggi tidak selalu berarti benar, tetapi biasanya lebih dapat dipercaya daripada confidence rendah. Class label menunjukkan objek apa yang diprediksi model. Jika model mendeteksi beberapa class, bridge harus memastikan yang dipakai benar-benar class bola, bukan objek lain.",
+            "Dalam practice, anggota perlu melihat hubungan antara bounding box, label, confidence, dan gambar asli. Jika box mengelilingi bola dengan label ball dan confidence cukup tinggi, prediksi layak dipakai. Jika box mengelilingi benda lain tetapi label ball, itu false positive. Jika bola terlihat tetapi tidak ada box, itu missed detection atau false negative."
+          ]
+        },
+        {
+          "heading": "Detection berbeda dari classification",
+          "body": [
+            "Classification hanya memberi label untuk keseluruhan gambar atau crop. Detection memberi label sekaligus lokasi objek. Untuk robot soccer, lokasi sangat penting. Gambar yang diklasifikasikan berisi bola belum cukup membantu robot bergerak karena robot masih tidak tahu bola berada di sisi mana.",
+            "Detection lebih cocok untuk pipeline bola karena outputnya bisa langsung dipakai menghitung center, ukuran, dan arah. Namun detection juga lebih kompleks karena model bisa menghasilkan banyak box, box tumpang tindih, atau confidence rendah. Karena itu, post-processing dan threshold tetap dibutuhkan setelah model memberi prediksi."
+          ]
+        }
+      ],
+      "interactive": [
+        {
+          "id": "vision-bbox-center-check",
+          "type": "ros2-code-checker",
+          "title": "Latihan menghitung center bounding box",
+          "prompt": "Tulis fungsi kecil yang menerima x, y, width, height, confidence, dan label. Fungsi harus menerima hanya label ball dengan confidence cukup, lalu menghitung center_x dan center_y.",
+          "starterCode": "def parse_detection(x, y, width, height, confidence, label):\n    # TODO: abaikan jika label bukan ball\n    # TODO: abaikan jika confidence terlalu rendah\n    # TODO: hitung center_x dan center_y\n    pass",
+          "checks": [
+            {
+              "label": "Ada fungsi parse detection",
+              "pattern": "def\\s+\\w+\\(.*x.*y.*width.*height.*confidence.*label",
+              "hint": "Buat fungsi dengan parameter x, y, width, height, confidence, dan label."
+            },
+            {
+              "label": "Mengecek label bola",
+              "pattern": "label[\\s\\S]*(ball|BALL)",
+              "hint": "Pastikan hanya label ball yang diproses."
+            },
+            {
+              "label": "Mengecek confidence",
+              "pattern": "confidence[\\s\\S]*(<|>|>=|<=)[\\s\\S]*(0\\.|threshold|min)",
+              "hint": "Tambahkan batas confidence agar prediksi lemah bisa ditolak."
+            },
+            {
+              "label": "Menghitung center_x",
+              "pattern": "center_x[\\s\\S]*x\\s*\\+[\\s\\S]*width\\s*/\\s*2",
+              "hint": "Untuk format x,y,width,height, center_x = x + width / 2."
+            },
+            {
+              "label": "Menghitung center_y",
+              "pattern": "center_y[\\s\\S]*y\\s*\\+[\\s\\S]*height\\s*/\\s*2",
+              "hint": "Untuk format x,y,width,height, center_y = y + height / 2."
+            }
+          ],
+          "successMessage": "Bounding box sudah dibaca dengan aman: label dicek, confidence difilter, dan center dihitung.",
+          "failureMessage": "Lengkapi filter label, confidence, dan perhitungan center bounding box."
+        }
+      ],
+      "outcomes": [
+        "Peserta mampu menjelaskan object detection sebagai proses mencari objek dan lokasinya.",
+        "Peserta memahami bounding box, center point, confidence, dan class label.",
+        "Peserta mampu membedakan detection dan classification.",
+        "Peserta mampu menghitung center dari bounding box format x, y, width, height.",
+        "Peserta mampu membaca false positive dan missed detection dari visual debug."
+      ]
+    },
+    {
+      "id": "vision-confidence-false-positive",
+      "title": "Confidence dan False Positive",
+      "level": "Practice",
+      "duration": "55 min",
+      "description": "Modul tentang confidence score, false positive, false negative, missed detection, dan alasan threshold perlu dituning dengan bukti visual serta catatan percobaan.",
+      "content": [
+        {
+          "heading": "Confidence score bukan jaminan mutlak",
+          "body": [
+            "Confidence score adalah angka keyakinan dari detector terhadap prediksi. Jika confidence 0.90, model sangat yakin menurut perhitungannya. Jika confidence 0.25, model kurang yakin. Namun confidence bukan kebenaran mutlak. Model bisa percaya diri pada objek yang salah, dan kadang bola yang benar muncul dengan confidence rendah karena blur, gelap, atau tertutup sebagian.",
+            "Karena itu, confidence harus dibaca bersama gambar. Jangan hanya melihat angka. Lihat apakah bounding box benar-benar mengelilingi bola, apakah label benar, dan apakah hasilnya konsisten pada beberapa frame. Confidence membantu filtering, tetapi manusia tetap perlu mengecek kualitas output saat tuning."
+          ]
+        },
+        {
+          "heading": "False positive dan false negative",
+          "body": [
+            "False positive terjadi ketika detector mengatakan ada bola padahal objek itu bukan bola. Contohnya pantulan cahaya, benda oranye, kaki robot, atau noise yang masuk threshold. False negative terjadi ketika bola sebenarnya ada tetapi detector gagal menemukannya. Missed detection adalah cara lain menyebut bola yang terlewat.",
+            "Keduanya sama-sama mengganggu, tetapi efeknya berbeda. False positive bisa membuat robot mengejar objek yang salah. False negative bisa membuat robot terus mencari bola padahal bola ada di depan. Dalam robot soccer, keduanya perlu dikendalikan sesuai kebutuhan mode. Saat mencari bola, mungkin sistem boleh sedikit lebih sensitif. Saat siap menendang, sistem harus lebih ketat."
+          ]
+        },
+        {
+          "heading": "Threshold perlu tuning",
+          "body": [
+            "Threshold adalah batas yang menentukan prediksi diterima atau ditolak. Confidence threshold 0.50 berarti prediksi di bawah 0.50 diabaikan. Jika threshold terlalu rendah, false positive bisa meningkat. Jika threshold terlalu tinggi, bola yang sulit terlihat bisa sering hilang. Tidak ada satu angka yang selalu cocok untuk semua kondisi.",
+            "Tuning threshold harus dilakukan dengan data. Coba beberapa nilai, lihat output visual, catat jumlah false positive dan missed detection, lalu pilih nilai yang paling masuk akal untuk skenario latihan. Jangan hanya menaikkan threshold karena satu frame salah, dan jangan menurunkan threshold karena satu frame bola hilang. Lihat pola, bukan kejadian tunggal."
+          ]
+        },
+        {
+          "heading": "Membuat keputusan aman dari confidence",
+          "body": [
+            "Bridge atau localizer sebaiknya tidak mengambil keputusan agresif dari deteksi yang lemah. Jika confidence rendah, command bisa dibuat lebih hati-hati seperti SEARCH, HOLD, atau NEED_CONFIRMATION. Jika confidence tinggi dan posisi stabil beberapa frame, command bisa lebih percaya diri seperti TURN_LEFT, TURN_RIGHT, atau FORWARD.",
+            "Pendekatan aman ini membantu robot tidak terlalu reaktif terhadap satu prediksi aneh. Vision di dunia nyata selalu punya noise. Sistem yang baik tidak hanya mencari deteksi terbaik, tetapi juga tahu kapan harus ragu. Dalam robot soccer, ragu secara terkontrol sering lebih baik daripada bergerak cepat ke arah objek yang salah."
+          ]
+        }
+      ],
+      "interactive": [
+        {
+          "id": "vision-confidence-threshold-check",
+          "type": "ros2-code-checker",
+          "title": "Latihan filter confidence",
+          "prompt": "Tulis fungsi atau callback yang menerima daftar deteksi, memilih hanya label ball, menolak confidence rendah, dan menangani kondisi tidak ada bola yang valid.",
+          "starterCode": "def choose_ball(detections, min_confidence=0.5):\n    # TODO: filter label ball\n    # TODO: filter confidence >= min_confidence\n    # TODO: jika kosong, return NO_BALL\n    # TODO: pilih kandidat terbaik\n    pass",
+          "checks": [
+            {
+              "label": "Ada min_confidence",
+              "pattern": "min_confidence|confidence_min|threshold",
+              "hint": "Gunakan nama seperti min_confidence atau threshold untuk batas confidence."
+            },
+            {
+              "label": "Filter label ball",
+              "pattern": "(label|class)[\\s\\S]*(ball|BALL)",
+              "hint": "Jangan proses semua objek. Pilih label ball."
+            },
+            {
+              "label": "Filter confidence rendah",
+              "pattern": "confidence[\\s\\S]*(>=|>|<)[\\s\\S]*(min_confidence|threshold|0\\.)",
+              "hint": "Bandingkan confidence dengan batas minimum."
+            },
+            {
+              "label": "Handle tidak ada bola valid",
+              "pattern": "(NO_BALL|None|not\\s+valid|not\\s+detections|len\\(.*\\)\\s*==\\s*0)",
+              "hint": "Jika tidak ada kandidat valid, jangan memaksa output bola."
+            },
+            {
+              "label": "Pilih kandidat terbaik",
+              "pattern": "(max\\(|sorted\\(|best)",
+              "hint": "Pilih kandidat terbaik berdasarkan confidence atau ukuran."
+            }
+          ],
+          "successMessage": "Filter confidence sudah aman: label dicek, confidence dibatasi, dan kondisi kosong ditangani.",
+          "failureMessage": "Lengkapi filter label, confidence, kondisi tidak ada bola, dan pemilihan kandidat terbaik."
+        }
+      ],
+      "outcomes": [
+        "Peserta mampu menjelaskan confidence score sebagai tingkat keyakinan detector.",
+        "Peserta mampu membedakan false positive, false negative, dan missed detection.",
+        "Peserta memahami trade-off threshold rendah dan threshold tinggi.",
+        "Peserta mampu membuat filter sederhana untuk memilih deteksi bola yang valid.",
+        "Peserta memahami pentingnya keputusan aman ketika confidence rendah atau deteksi tidak stabil."
+      ]
+    },
+    {
+      "id": "vision-ball-detection-robot-soccer",
+      "title": "Deteksi Bola dalam Robot Soccer",
+      "level": "Practice",
+      "duration": "60 min",
+      "description": "Modul khusus tentang tantangan deteksi bola: bola kecil di frame, tertutup kaki robot, mirip objek lain, berubah ukuran tergantung jarak, dan perlu diuji pada kondisi lapangan nyata.",
+      "content": [
+        {
+          "heading": "Kenapa bola sulit dideteksi",
+          "body": [
+            "Bola terlihat sederhana bagi manusia, tetapi bagi robot bola adalah objek yang sering berubah tampilan. Dari dekat bola besar dan jelas. Dari jauh bola kecil dan hanya berisi sedikit pixel. Saat cahaya berubah, warnanya bisa berbeda. Saat kamera bergerak, bentuknya bisa blur. Saat tertutup kaki robot atau garis lapangan, bentuknya tidak lagi utuh.",
+            "Kesulitan ini membuat deteksi bola tidak cukup diuji dengan satu gambar bagus. Detector harus diuji pada beberapa jarak, sudut, kondisi cahaya, dan situasi occlusion. Jika hanya diuji pada bola di tengah frame dengan cahaya ideal, hasilnya bisa terlihat bagus di lab tetapi gagal saat robot benar-benar bermain."
+          ]
+        },
+        {
+          "heading": "Bola kecil, tertutup, dan berubah ukuran",
+          "body": [
+            "Bola yang jauh hanya menempati sedikit pixel. Ini membuat detector lebih sulit membedakannya dari noise atau objek kecil lain. Jika threshold terlalu ketat, bola jauh bisa hilang. Jika threshold terlalu longgar, noise bisa ikut terbaca sebagai bola. Untuk object detector, bola kecil juga bisa menghasilkan confidence lebih rendah karena detail visualnya sedikit.",
+            "Bola juga sering tertutup sebagian oleh kaki robot, robot lawan, atau garis pandang yang kurang ideal. Detector harus mampu menghadapi bola yang tidak terlihat sempurna. Dalam beberapa kasus, sistem perlu menunggu beberapa frame sebelum memutuskan bola benar-benar hilang. Mengandalkan satu frame saja bisa membuat status bola terlalu sering naik turun."
+          ]
+        },
+        {
+          "heading": "Bola mirip objek lain",
+          "body": [
+            "Objek lain bisa terlihat mirip bola, terutama jika warnanya dekat atau ukurannya kecil. Pantulan cahaya, marker, benda di sekitar lapangan, bagian robot, atau noise warna dapat menjadi false positive. Pada pendekatan threshold warna, masalah ini sering muncul ketika rentang warna terlalu lebar. Pada pendekatan YOLO, masalah bisa muncul jika data latih tidak cukup mewakili kondisi lapangan nyata.",
+            "Untuk mengurangi false positive, sistem bisa memakai beberapa filter: class label harus ball, confidence harus cukup, ukuran bounding box masuk akal, posisi tidak aneh, dan hasil stabil beberapa frame. Filter ini tidak harus rumit di awal. Yang penting adalah tidak mempercayai semua kandidat tanpa pemeriksaan."
+          ]
+        },
+        {
+          "heading": "Menguji deteksi bola secara menyenangkan",
+          "body": [
+            "Latihan deteksi bola bisa dibuat seperti permainan kecil. Letakkan bola di tengah, kiri, kanan, dekat, jauh, setengah tertutup, dan di area bayangan. Untuk setiap posisi, lihat apakah raw frame jelas, apakah detector menemukan bola, confidence berapa, dan apakah output stabil. Catat skenario yang berhasil dan gagal. Dengan cara ini, debugging terasa seperti eksperimen, bukan menebak-nebak error.",
+            "Gunakan playground dan viewer sebagai pemanasan sebelum masuk lapangan. Playground membantu memahami konsep threshold dan noise. Viewer membantu melihat output detector asli. Lapangan membantu menguji kenyataan. Ketiganya saling melengkapi: konsep, visualisasi, dan validasi nyata."
+          ]
+        }
+      ],
+      "interactive": [
+        {
+          "id": "vision-ball-detection-playground",
+          "type": "vision-playground",
+          "title": "Playground deteksi bola",
+          "prompt": "Gunakan slider untuk membuat bola oranye terdeteksi. Lalu sengaja buat threshold terlalu longgar agar noise naik. Perhatikan kenapa filter radius dan rentang HSV perlu seimbang."
+        }
+      ],
+      "outcomes": [
+        "Peserta mampu menjelaskan kenapa bola bisa sulit dideteksi pada robot soccer.",
+        "Peserta memahami tantangan bola kecil, bola tertutup, dan bola yang berubah ukuran karena jarak.",
+        "Peserta mampu mengenali risiko objek lain yang mirip bola.",
+        "Peserta mampu menyusun skenario uji sederhana untuk deteksi bola.",
+        "Peserta memahami pentingnya menggabungkan playground, viewer, dan uji lapangan."
+      ]
+    },
+    {
+      "id": "vision-from-2d-to-robot-information",
+      "title": "Dari Deteksi 2D ke Informasi Robot",
+      "level": "Practice",
+      "duration": "60 min",
+      "description": "Modul tentang batas deteksi gambar 2D, kebutuhan robot terhadap arah dan jarak, alasan localization diperlukan, serta kenapa koordinat pixel belum cukup untuk keputusan robot yang stabil.",
+      "content": [
+        {
+          "heading": "Deteksi gambar hanya 2D",
+          "body": [
+            "Detector bekerja pada gambar 2D. Ia melihat lebar dan tinggi frame, lalu menandai posisi objek di gambar. Output seperti center_x, center_y, width, height, radius, atau bounding box masih berada di dunia pixel. Informasi ini berguna, tetapi belum sepenuhnya menjelaskan posisi bola di dunia robot.",
+            "Misalnya, bola di x=320 berarti bola berada di tengah frame secara horizontal. Tetapi apakah bola dekat atau jauh? Apakah robot perlu maju jauh atau cukup siap menendang? Jawabannya tidak selalu bisa diperoleh dari x dan y saja. Ukuran bola, parameter kamera, orientasi kepala, dan asumsi lapangan juga berpengaruh."
+          ]
+        },
+        {
+          "heading": "Robot butuh arah dan jarak",
+          "body": [
+            "Robot bergerak memakai konsep dunia fisik: belok, maju, berhenti, menjaga keseimbangan, dan menendang. Untuk itu, robot butuh informasi yang lebih praktis daripada sekadar pixel. Arah bola membantu robot menghadap target. Jarak bola membantu robot memutuskan apakah harus mendekat, memperlambat, atau masuk mode tendang.",
+            "Pada tahap sederhana, arah bisa diperkirakan dari posisi horizontal bola di frame: kiri, tengah, atau kanan. Jarak bisa diperkirakan kasar dari ukuran bola di frame: kecil berarti jauh, besar berarti dekat. Ini belum sempurna, tetapi cukup untuk membangun intuisi. Tahap lanjut dapat memakai kalibrasi kamera dan transformasi geometri yang lebih akurat."
+          ]
+        },
+        {
+          "heading": "Kenapa perlu localization",
+          "body": [
+            "Localization membantu menjembatani dunia gambar dan dunia robot. Ia membaca hasil deteksi lalu mengubahnya menjadi informasi yang lebih bermakna, seperti bearing, jarak relatif, atau status posisi bola. Dengan localization, sistem lain tidak perlu membaca detail pixel setiap saat. Mereka cukup menerima informasi yang sudah lebih dekat dengan kebutuhan perilaku robot.",
+            "Tanpa localization, bridge bisa terlalu bergantung pada aturan pixel yang kasar. Aturan itu mungkin bekerja pada satu resolusi dan satu posisi kamera, tetapi gagal ketika resolusi berubah atau kepala robot menunduk. Localization membuat pipeline lebih rapi karena transformasi dari pixel ke informasi robot ditangani di tempat khusus."
+          ]
+        },
+        {
+          "heading": "Koordinat pixel belum cukup",
+          "body": [
+            "Pixel adalah awal yang baik, tetapi bukan akhir. Koordinat pixel tidak otomatis tahu skala dunia nyata. Dua bola dengan x yang sama bisa berada pada jarak berbeda. Bola dengan ukuran sama bisa terlihat berbeda jika kamera berubah exposure atau sudut kepala berubah. Karena itu, output detector perlu diproses lagi sebelum menjadi keputusan robot.",
+            "Cara berpikir yang aman adalah membuat pipeline bertingkat. Detector menghasilkan bukti visual. Localizer mengubah bukti visual menjadi posisi relatif. Bridge mengubah posisi relatif menjadi command sederhana. Strategy memutuskan perilaku yang lebih luas. Maneuvering menjalankan gerakan. Dengan pembagian ini, setiap tahap bisa diuji dan diperbaiki tanpa mencampur semua logika."
+          ]
+        }
+      ],
+      "interactive": [
+        {
+          "id": "vision-localizer-idea-check",
+          "type": "ros2-code-checker",
+          "title": "Latihan ide localizer sederhana",
+          "prompt": "Tulis fungsi atau callback yang membaca center_x dan radius bola, lalu menghasilkan arah LEFT/CENTER/RIGHT dan jarak kasar FAR/NEAR. Ini bukan localization final, tetapi latihan memisahkan pixel dari informasi robot.",
+          "starterCode": "def localize_ball(frame_width, center_x, radius):\n    # TODO: ubah center_x menjadi LEFT/CENTER/RIGHT\n    # TODO: ubah radius menjadi FAR/NEAR\n    # TODO: return informasi arah dan jarak\n    pass",
+          "checks": [
+            {
+              "label": "Membaca frame_width dan center_x",
+              "pattern": "def\\s+\\w+\\(.*frame_width.*center_x",
+              "hint": "Fungsi perlu tahu lebar frame dan center_x bola."
+            },
+            {
+              "label": "Menghitung tengah frame",
+              "pattern": "(frame_width\\s*/\\s*2|frame_width\\s*//\\s*2|center)",
+              "hint": "Gunakan tengah frame untuk membedakan kiri, tengah, dan kanan."
+            },
+            {
+              "label": "Menghasilkan arah",
+              "pattern": "(LEFT|RIGHT|CENTER)",
+              "hint": "Output arah sederhana seperti LEFT, RIGHT, atau CENTER."
+            },
+            {
+              "label": "Memakai radius untuk jarak",
+              "pattern": "radius[\\s\\S]*(<|>|>=|<=)[\\s\\S]*(FAR|NEAR|threshold|min)",
+              "hint": "Gunakan radius sebagai petunjuk kasar jarak bola."
+            },
+            {
+              "label": "Menghasilkan status jarak",
+              "pattern": "(FAR|NEAR|CLOSE)",
+              "hint": "Return status jarak seperti FAR, NEAR, atau CLOSE."
+            }
+          ],
+          "successMessage": "Ide localizer awal sudah terbentuk: pixel diubah menjadi arah dan jarak kasar.",
+          "failureMessage": "Lengkapi pembacaan center_x, radius, arah, dan status jarak."
+        }
+      ],
+      "outcomes": [
+        "Peserta memahami bahwa deteksi gambar masih berada di ruang 2D pixel.",
+        "Peserta mampu menjelaskan kenapa robot membutuhkan arah dan jarak, bukan hanya center pixel.",
+        "Peserta memahami fungsi localization sebagai pengubah hasil deteksi menjadi informasi robot.",
+        "Peserta mampu membuat aturan sederhana kiri, tengah, kanan, jauh, dan dekat.",
+        "Peserta memahami pipeline bertingkat dari detector ke localizer, bridge, strategy, dan maneuvering."
+      ]
+    },
+    {
+      "id": "vision-visual-debugging-beginner",
+      "title": "Debugging Visual untuk Pemula",
+      "level": "Match Ready",
+      "duration": "55 min",
+      "description": "Modul penutup fase awal tentang cara melihat raw frame, output detector, gambar debug, membandingkan hasil, dan memakai visual sebagai bukti awal saat pipeline vision bermasalah.",
+      "content": [
+        {
+          "heading": "Mulai dari raw frame",
+          "body": [
+            "Raw frame adalah gambar asli yang masuk dari kamera sebelum detector memberi interpretasi. Ini adalah bukti pertama. Jika raw frame gelap, blur, miring, atau warna aneh, hasil detector kemungkinan ikut bermasalah. Banyak debugging vision menjadi lebih cepat ketika anggota membiasakan diri melihat raw frame sebelum membaca log panjang.",
+            "Saat melihat raw frame, cek beberapa hal sederhana: apakah bola terlihat oleh manusia, apakah posisi bola masuk frame, apakah frame terlalu gelap atau terang, apakah kamera miring, dan apakah ada delay yang terlihat. Jika jawaban dasar ini belum jelas, jangan buru-buru mengubah threshold atau model. Input yang buruk akan membuat output sulit dipercaya."
+          ]
+        },
+        {
+          "heading": "Lihat output detector",
+          "body": [
+            "Output detector biasanya ditampilkan sebagai bounding box, circle, mask, label, confidence, atau status. Gambar debug membantu kita melihat apakah detector memilih objek yang benar. Jika box berada tepat di bola, label benar, dan confidence masuk akal, detector kemungkinan bekerja. Jika box muncul pada objek lain, itu false positive. Jika bola terlihat tetapi tidak ada output, itu missed detection.",
+            "Perhatikan juga kestabilan antar frame. Deteksi yang muncul-hilang-muncul-hilang dapat membuat robot bingung. Kadang masalah bukan satu frame yang salah, tetapi output yang terlalu tidak stabil. Untuk robot, konsistensi beberapa frame sering lebih berguna daripada deteksi yang sangat bagus tetapi jarang muncul."
+          ]
+        },
+        {
+          "heading": "Bandingkan gambar asli dan gambar debug",
+          "body": [
+            "Debugging visual paling kuat ketika raw frame dan debug output dibandingkan berdampingan. Raw frame menunjukkan apa yang sebenarnya dilihat kamera. Debug output menunjukkan apa yang dipahami detector. Selisih di antara keduanya adalah tempat bug sering ditemukan.",
+            "Jika raw frame jelas tetapi mask kosong, threshold mungkin salah. Jika raw frame jelas tetapi box berada di objek lain, model atau confidence threshold perlu diperiksa. Jika raw frame buruk, perbaiki cahaya, exposure, posisi kamera, atau resolusi. Dengan perbandingan ini, debugging menjadi proses membaca bukti, bukan menebak."
+          ]
+        },
+        {
+          "heading": "Gunakan visual sebagai laporan latihan",
+          "body": [
+            "Saat melaporkan masalah vision, jangan hanya menulis bola tidak kedetect. Laporan yang baik menyebut kondisi frame, posisi bola, output detector, confidence, parameter penting, dan apakah masalah konsisten. Jika memungkinkan, sertakan screenshot raw frame dan debug output. Laporan seperti ini membantu senior memahami masalah tanpa harus mengulang semua percobaan dari awal.",
+            "Format sederhana yang bisa dipakai: kondisi lapangan, posisi bola, raw frame terlihat bagaimana, detector menggambar apa, confidence berapa, output topic apa, dan dugaan tahap bermasalah. Kebiasaan melapor dengan visual membuat tim lebih cepat belajar karena setiap error berubah menjadi contoh yang bisa dibahas bersama."
+          ]
+        }
+      ],
+      "interactive": [
+        {
+          "id": "vision-debug-report-check",
+          "type": "ros2-code-checker",
+          "title": "Latihan struktur laporan debug",
+          "prompt": "Tulis pseudo-code atau catatan terstruktur untuk laporan debug vision. Sertakan raw frame, output detector, confidence, topic, parameter, dan kesimpulan tahap yang dicurigai.",
+          "starterCode": "debug_report = {\n    'raw_frame': '',\n    'detector_output': '',\n    'confidence': 0.0,\n    'topic': '',\n    'parameter': '',\n    'suspected_stage': ''\n}\n\n# TODO: isi laporan berdasarkan hasil pengamatan visual",
+          "checks": [
+            {
+              "label": "Menyebut raw frame",
+              "pattern": "raw_frame|raw frame|frame asli",
+              "hint": "Laporan harus menjelaskan kondisi raw frame."
+            },
+            {
+              "label": "Menyebut output detector",
+              "pattern": "detector_output|output detector|bounding|mask|box",
+              "hint": "Laporan harus mencatat hasil detector atau debug visual."
+            },
+            {
+              "label": "Menyebut confidence",
+              "pattern": "confidence|score",
+              "hint": "Sertakan confidence atau score jika detector menyediakannya."
+            },
+            {
+              "label": "Menyebut topic",
+              "pattern": "topic|/",
+              "hint": "Catat topic input atau output yang sedang dicek."
+            },
+            {
+              "label": "Menyebut parameter",
+              "pattern": "parameter|threshold|confidence_min|hue|radius",
+              "hint": "Catat parameter penting yang memengaruhi hasil."
+            },
+            {
+              "label": "Ada kesimpulan tahap",
+              "pattern": "suspected_stage|kesimpulan|dugaan|detector|localizer|bridge|camera",
+              "hint": "Akhiri laporan dengan dugaan tahap yang perlu dicek berikutnya."
+            }
+          ],
+          "successMessage": "Laporan debug sudah rapi: ada bukti visual, angka penting, topic, parameter, dan dugaan tahap.",
+          "failureMessage": "Lengkapi laporan dengan raw frame, output detector, confidence, topic, parameter, dan kesimpulan tahap."
+        }
+      ],
+      "outcomes": [
+        "Peserta mampu memulai debugging vision dari raw frame.",
+        "Peserta mampu membaca output detector seperti box, mask, label, dan confidence.",
+        "Peserta mampu membandingkan gambar asli dan gambar debug untuk menemukan tahap bermasalah.",
+        "Peserta mampu membuat laporan debug visual yang jelas dan berguna untuk tim.",
+        "Peserta siap masuk latihan vision lanjutan dengan kebiasaan observasi yang kuat."
+      ]
+    }
+  ]
 }
