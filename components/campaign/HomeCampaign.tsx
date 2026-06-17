@@ -258,26 +258,106 @@ function CampaignHero({ hero }: { hero: HeroData }) {
       }}
       onPointerLeave={() => setTilt({ x: 0, y: 0 })}
     >
-      {/* ── Full-bleed hero image ── */}
+      {/* ── Cinematic video-like hero background ── */}
+
+      {/* Slide A — cinematic image with Ken Burns + crossfade */}
       <div
         aria-hidden="true"
-        className="absolute inset-0"
+        className="hero-cinematic-slide hero-cinematic-slide--a"
         style={{
-          transform: `translate3d(${tilt.x * -8}px, ${tilt.y * -5}px, 0) scale(1.04)`,
           transition: "transform 0.9s var(--ease-luxury)",
-          willChange: "transform",
         }}
       >
         <Image
           alt=""
-          className="object-cover object-center"
           fill
           priority
-          quality={95}
+          quality={92}
           sizes="100vw"
           src="/images/hero-integrated.png"
+          style={{ objectFit: "cover", objectPosition: "center" }}
         />
       </div>
+
+      {/* Slide B — second cinematic image, crossfades with A */}
+      <div
+        aria-hidden="true"
+        className="hero-cinematic-slide hero-cinematic-slide--b"
+      >
+        <Image
+          alt=""
+          fill
+          quality={92}
+          sizes="100vw"
+          src="/images/hero-cinematic-1.png"
+          style={{ objectFit: "cover", objectPosition: "center" }}
+        />
+      </div>
+
+      {/* Slide C — third cinematic angle, completes the video cycle */}
+      <div
+        aria-hidden="true"
+        className="hero-cinematic-slide hero-cinematic-slide--c"
+      >
+        <Image
+          alt=""
+          fill
+          quality={92}
+          sizes="100vw"
+          src="/images/hero-cinematic-2.png"
+          style={{ objectFit: "cover", objectPosition: "center" }}
+        />
+      </div>
+
+      {/* Volumetric light rays */}
+      <div aria-hidden="true" className="hero-volumetric-ray" />
+
+      {/* Film grain overlay */}
+      <div aria-hidden="true" className="hero-film-grain" />
+
+      {/* Floating particles */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+        {[
+          { left: "15%", top: "30%", size: "3px", driftX: "80px", driftY: "-150px", duration: "7s", delay: "0s", color: "rgba(255,228,92,0.8)" },
+          { left: "70%", top: "50%", size: "2px", driftX: "-60px", driftY: "-100px", duration: "8s", delay: "1.2s", color: "rgba(255,228,92,0.6)" },
+          { left: "45%", top: "70%", size: "4px", driftX: "40px", driftY: "-180px", duration: "9s", delay: "2.5s", color: "rgba(255,228,92,0.7)" },
+          { left: "80%", top: "25%", size: "2px", driftX: "-90px", driftY: "-120px", duration: "6s", delay: "0.8s", color: "rgba(248,247,240,0.5)" },
+          { left: "30%", top: "60%", size: "3px", driftX: "50px", driftY: "-140px", duration: "10s", delay: "3s", color: "rgba(255,228,92,0.5)" },
+          { left: "55%", top: "40%", size: "2px", driftX: "-30px", driftY: "-160px", duration: "7.5s", delay: "1.8s", color: "rgba(248,247,240,0.4)" },
+          { left: "88%", top: "65%", size: "3px", driftX: "-70px", driftY: "-110px", duration: "8.5s", delay: "4s", color: "rgba(255,228,92,0.6)" },
+          { left: "10%", top: "80%", size: "2px", driftX: "100px", driftY: "-90px", duration: "11s", delay: "2s", color: "rgba(255,228,92,0.4)" },
+        ].map((p, i) => (
+          <div
+            key={i}
+            className="hero-particle"
+            style={{
+              left: p.left,
+              top: p.top,
+              "--size": p.size,
+              "--drift-x": p.driftX,
+              "--drift-y": p.driftY,
+              "--duration": p.duration,
+              "--delay": p.delay,
+              "--color": p.color,
+            } as CSSProperties}
+          />
+        ))}
+      </div>
+
+      {/* Breathing glow behind robot area */}
+      <div
+        aria-hidden="true"
+        className="absolute"
+        style={{
+          top: "10%",
+          right: "5%",
+          width: "50%",
+          height: "70%",
+          background: "radial-gradient(ellipse at center, rgba(255,228,92,0.12), transparent 65%)",
+          animation: "heroGlowBreathe 6s ease-in-out infinite",
+          pointerEvents: "none",
+        }}
+      />
 
       {/* ── Left gradient veil — keeps text readable ── */}
       <div
