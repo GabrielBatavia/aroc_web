@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ComponentType } from "react";
 
 import { GaitTunerSimulator } from "@/components/lab/GaitTunerSimulator";
 import { SignalFlowSimulator } from "@/components/lab/SignalFlowSimulator";
@@ -12,13 +12,13 @@ type LabExperienceProps = {
   stats?: Array<{ label: string; value: string }>;
 };
 
-const DIVISION_ICON_MAP: Record<SimulatorId, React.FC<{ className?: string }>> = {
+const DIVISION_ICON_MAP: Record<SimulatorId, ComponentType<{ className?: string }>> = {
   "maneuvering":      BoltIcon,
   "image-processing": EyeIcon,
   "communication":    RadioIcon,
 };
 
-const SIMULATOR_MAP: Record<SimulatorId, React.FC> = {
+const SIMULATOR_MAP: Record<SimulatorId, ComponentType> = {
   "maneuvering":      GaitTunerSimulator,
   "image-processing": VisionLockSimulator,
   "communication":    SignalFlowSimulator,
@@ -286,22 +286,22 @@ export function LabExperience({ stats = labHeroStats }: LabExperienceProps) {
               {
                 id: "insight-maneuvering",
                 num: "01",
-                title: "Gait is fragile.",
-                body: "Satu parameter off — lean terlalu jauh, foot lift terlalu tinggi — dan robot kehilangan stabilitas.",
+                title: "Walking itu parameter.",
+                body: "Source OP3 memakai walking param seperti x_move_amplitude, period_time, z_move_amplitude, dan balance gain sebelum command start terasa aman.",
                 color: "#ffe45c",
               },
               {
                 id: "insight-vision",
                 num: "02",
                 title: "Robot tidak 'melihat'.",
-                body: "Ia memproses threshold, confidence, dan noise frame demi frame. Tidak ada mata — hanya angka.",
+                body: "Detector YOLO/OpenVINO hanya mengirim center, radius, confidence, dan status. Localizer yang mengubahnya menjadi range dan bearing.",
                 color: "#7b93e8",
               },
               {
                 id: "insight-comm",
                 num: "03",
-                title: "Latency = danger.",
-                body: "Satu packet drop di kondisi kritis, dan robot terus bergerak tanpa perintah. Safety stop adalah jaring terakhir.",
+                title: "Bridge memutuskan aksi.",
+                body: "Di source, /ball_polar masuk bridge. Output-nya bisa walking start, stop, turn page 2/3, atau kick page 83 yang masih bisa ditahan KickGate.",
                 color: "#c8ccd8",
               },
             ].map((insight) => (

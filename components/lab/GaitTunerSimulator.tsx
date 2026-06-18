@@ -4,13 +4,13 @@ import { useEffect, useRef, useState } from "react";
 
 type StabilityStatus = "STABLE" | "WOBBLE" | "FALL_RISK";
 
-function computeStability(stepLen: number, bodyLean: number, footLift: number, speed: number): number {
-  // Stability drops with extreme values on any axis
-  const stepPenalty = stepLen > 75 ? (stepLen - 75) * 1.2 : stepLen < 20 ? (20 - stepLen) * 0.8 : 0;
-  const leanPenalty = Math.abs(bodyLean - 50) * 1.4;
-  const liftPenalty = footLift > 70 ? (footLift - 70) * 1.0 : 0;
-  const speedPenalty = speed > 70 ? (speed - 70) * 0.9 : 0;
-  const raw = 100 - stepPenalty - leanPenalty - liftPenalty - speedPenalty;
+function computeStability(xMoveMm: number, periodMs: number, footHeightMm: number, balanceGain: number): number {
+  // OP3 walking is sensitive to stride, cadence, foot clearance, and balance feedback.
+  const stridePenalty = xMoveMm > 38 ? (xMoveMm - 38) * 1.6 : xMoveMm < 6 ? (6 - xMoveMm) * 1.1 : 0;
+  const cadencePenalty = periodMs < 470 ? (470 - periodMs) * 0.13 : periodMs > 760 ? (periodMs - 760) * 0.08 : 0;
+  const footPenalty = Math.abs(footHeightMm - 40) * 0.9;
+  const balancePenalty = balanceGain < 60 ? (60 - balanceGain) * 0.9 : balanceGain > 88 ? (balanceGain - 88) * 0.35 : 0;
+  const raw = 100 - stridePenalty - cadencePenalty - footPenalty - balancePenalty;
   return Math.max(0, Math.min(100, raw));
 }
 
@@ -26,11 +26,11 @@ const STATUS_STYLE: Record<StabilityStatus, { bg: string; text: string; dot: str
   FALL_RISK: { bg: "rgba(255,80,60,0.18)",   text: "#ff5040", dot: "#ff5040" },
 };
 
-// Build SVG waveform path representing gait cadence
-function buildWaveform(stepLen: number, footLift: number, speed: number, phase: number): string {
-  const amplitude = (footLift / 100) * 28 + 4;
-  const frequency = (speed / 100) * 2.2 + 0.6;
-  const strideWidth = (stepLen / 100) * 30 + 10;
+// Build SVG waveform path representing gait cadence.
+function buildWaveform(xMoveMm: number, footHeightMm: number, periodMs: number, phase: number): string {
+  const amplitude = (footHeightMm / 80) * 28 + 4;
+  const frequency = (900 - periodMs) / 300 + 0.6;
+  const strideWidth = (xMoveMm / 60) * 30 + 10;
   const points: string[] = [];
   for (let x = 0; x <= 360; x += 3) {
     const y = 48 - Math.sin(((x / strideWidth) + phase) * frequency) * amplitude;
@@ -40,9 +40,9 @@ function buildWaveform(stepLen: number, footLift: number, speed: number, phase: 
 }
 
 // Footstep positions
-function buildFootsteps(stepLen: number, bodyLean: number): Array<{ x: number; y: number; side: "L" | "R" }> {
-  const stride = (stepLen / 100) * 60 + 20;
-  const lateralLean = ((bodyLean - 50) / 50) * 8;
+function buildFootsteps(xMoveMm: number, balanceGain: number): Array<{ x: number; y: number; side: "L" | "R" }> {
+  const stride = (xMoveMm / 60) * 60 + 20;
+  const lateralLean = ((70 - balanceGain) / 70) * 8;
   const steps: Array<{ x: number; y: number; side: "L" | "R" }> = [];
   for (let i = 0; i < 5; i++) {
     steps.push({ x: 40 + i * stride + lateralLean, y: 140, side: i % 2 === 0 ? "L" : "R" });
@@ -52,25 +52,25 @@ function buildFootsteps(stepLen: number, bodyLean: number): Array<{ x: number; y
 }
 
 export function GaitTunerSimulator() {
-  const [stepLen, setStepLen] = useState(50);
-  const [bodyLean, setBodyLean] = useState(50);
-  const [footLift, setFootLift] = useState(40);
-  const [speed, setSpeed] = useState(45);
+  const [xMoveMm, setXMoveMm] = useState(24);
+  const [periodMs, setPeriodMs] = useState(600);
+  const [footHeightMm, setFootHeightMm] = useState(40);
+  const [balanceGain, setBalanceGain] = useState(74);
   const [phase, setPhase] = useState(0);
-  const rafRef = useRef<number>(null);
+  const rafRef = useRef<number | null>(null);
 
-  const stability = computeStability(stepLen, bodyLean, footLift, speed);
+  const stability = computeStability(xMoveMm, periodMs, footHeightMm, balanceGain);
   const status = getStatus(stability);
   const statusStyle = STATUS_STYLE[status];
-  const waveformPath = buildWaveform(stepLen, footLift, speed, phase);
-  const footsteps = buildFootsteps(stepLen, bodyLean);
+  const waveformPath = buildWaveform(xMoveMm, footHeightMm, periodMs, phase);
+  const footsteps = buildFootsteps(xMoveMm, balanceGain);
 
   // Animate waveform
   useEffect(() => {
     let last = 0;
     const tick = (t: number) => {
       if (t - last > 16) {
-        setPhase((p) => p + (speed / 100) * 0.12 + 0.02);
+        setPhase((p) => p + ((900 - periodMs) / 550) * 0.12 + 0.02);
         last = t;
       }
       rafRef.current = requestAnimationFrame(tick);
@@ -79,15 +79,15 @@ export function GaitTunerSimulator() {
     return () => {
       if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
     };
-  }, [speed]);
+  }, [periodMs]);
 
-  const leanOffset = ((bodyLean - 50) / 50) * 12;
+  const leanOffset = ((70 - balanceGain) / 70) * 12;
 
   const controls = [
-    { id: "gait-step-len",  label: "Step Length",   value: stepLen,  setter: setStepLen,  min: 10, max: 100, unit: "%" },
-    { id: "gait-body-lean", label: "Body Lean",     value: bodyLean, setter: setBodyLean, min: 0,  max: 100, unit: "%" },
-    { id: "gait-foot-lift", label: "Foot Lift",     value: footLift, setter: setFootLift, min: 5,  max: 95,  unit: "%" },
-    { id: "gait-speed",     label: "Walking Speed", value: speed,    setter: setSpeed,    min: 5,  max: 100, unit: "%" },
+    { id: "gait-x-move", label: "x_move_amplitude", value: xMoveMm, setter: setXMoveMm, min: 0, max: 60, unit: "mm" },
+    { id: "gait-period", label: "period_time", value: periodMs, setter: setPeriodMs, min: 350, max: 900, unit: "ms" },
+    { id: "gait-foot-height", label: "z_move_amplitude", value: footHeightMm, setter: setFootHeightMm, min: 10, max: 80, unit: "mm" },
+    { id: "gait-balance", label: "balance feedback", value: balanceGain, setter: setBalanceGain, min: 0, max: 100, unit: "%" },
   ];
 
   return (
@@ -150,8 +150,8 @@ export function GaitTunerSimulator() {
         </div>
 
         <div className="rounded-[1rem] border border-[rgba(255,228,92,0.14)] bg-[rgba(248,247,240,0.04)] p-4 text-[0.82rem] leading-[1.7] text-[rgba(248,247,240,0.6)]">
-          Humanoid walking adalah kombinasi panjang langkah, lean tubuh, ketinggian kaki, dan kecepatan.
-          Satu parameter ekstrem bisa mengakibatkan{" "}
+          Di source OP3, walking bukan animasi bebas: parameter seperti x_move_amplitude, period_time,
+          z_move_amplitude, dan balance feedback masuk ke /robotis/walking/set_params. Satu nilai ekstrem bisa mengakibatkan{" "}
           <span className="font-bold text-[rgba(255,80,60,0.9)]">FALL_RISK</span>.
         </div>
       </div>
@@ -215,7 +215,7 @@ export function GaitTunerSimulator() {
               height="36"
               rx="5"
               fill="rgba(248,247,240,0.75)"
-              transform={`rotate(${-footLift * 0.15}, 31, 66)`}
+              transform={`rotate(${-footHeightMm * 0.17}, 31, 66)`}
             />
             {/* Right leg */}
             <rect
@@ -225,7 +225,7 @@ export function GaitTunerSimulator() {
               height="36"
               rx="5"
               fill="rgba(248,247,240,0.75)"
-              transform={`rotate(${footLift * 0.15}, 49, 66)`}
+              transform={`rotate(${footHeightMm * 0.17}, 49, 66)`}
             />
             {/* Feet */}
             <rect x="20" y="98" width="20" height="8" rx="3" fill="rgba(248,247,240,0.6)" />
@@ -254,10 +254,10 @@ export function GaitTunerSimulator() {
         {/* Metrics row */}
         <div className="mt-4 grid grid-cols-4 gap-2">
           {[
-            { label: "Step", value: stepLen },
-            { label: "Lean", value: bodyLean },
-            { label: "Lift", value: footLift },
-            { label: "Speed", value: speed },
+            { label: "x amp", value: `${xMoveMm}mm` },
+            { label: "period", value: `${periodMs}ms` },
+            { label: "z amp", value: `${footHeightMm}mm` },
+            { label: "balance", value: `${balanceGain}%` },
           ].map((m) => (
             <div
               key={m.label}

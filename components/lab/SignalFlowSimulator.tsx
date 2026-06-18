@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-type CommStatus = "COMMAND_OK" | "DELAY_WARNING" | "SAFETY_STOP";
+type CommStatus = "WALK_FORWARD" | "TURN_ACTION" | "KICK_GATE" | "KICK_RELEASED" | "LOST_WAIT" | "STOPPED";
 
 type LogEntry = {
   id: number;
@@ -20,54 +20,77 @@ type PacketDot = {
 };
 
 const PIPE_NODES = [
-  { label: "Vision",    x: 40,  y: 60 },
-  { label: "Strategy",  x: 150, y: 60 },
-  { label: "Comm",      x: 260, y: 60 },
-  { label: "Motion",    x: 370, y: 60 },
+  { label: "Detector",  x: 36,  y: 60 },
+  { label: "Localizer", x: 124, y: 60 },
+  { label: "Bridge",    x: 212, y: 60 },
+  { label: "KickGate",  x: 300, y: 60 },
+  { label: "OP3",       x: 384, y: 60 },
 ];
 
 const MESSAGES_BY_STATUS: Record<CommStatus, Array<{ channel: string; msg: string; level: LogEntry["level"] }>> = {
-  COMMAND_OK: [
-    { channel: "vision",  msg: "BALL_LOCKED",    level: "ok" },
-    { channel: "bridge",  msg: "WALK_FORWARD",   level: "ok" },
-    { channel: "motion",  msg: "EXECUTE",         level: "ok" },
-    { channel: "vision",  msg: "BALL_TRACKED",   level: "ok" },
-    { channel: "bridge",  msg: "KICK_PENDING",    level: "ok" },
-    { channel: "motion",  msg: "ACTION_PAGE_12",  level: "ok" },
+  WALK_FORWARD: [
+    { channel: "/ball_localizer/status", msg: "OK", level: "ok" },
+    { channel: "/ball_polar", msg: "range > forward_min_range_m", level: "ok" },
+    { channel: "bridge", msg: "publish /robotis/walking/command start", level: "ok" },
+    { channel: "op3_walking_module", msg: "walkingCommandCallback(start)", level: "ok" },
   ],
-  DELAY_WARNING: [
-    { channel: "vision",  msg: "BALL_LOCKED",    level: "ok" },
-    { channel: "bridge",  msg: "WALK_FORWARD",   level: "ok" },
-    { channel: "comm",    msg: "DELAY_DETECTED",  level: "warn" },
-    { channel: "motion",  msg: "QUEUED...",        level: "warn" },
-    { channel: "bridge",  msg: "TIMEOUT_WARN",   level: "warn" },
-    { channel: "motion",  msg: "STALE_CMD",       level: "warn" },
+  TURN_ACTION: [
+    { channel: "/ball_polar", msg: "abs(bearing) > turn_bearing_rad", level: "warn" },
+    { channel: "bridge", msg: "stop walking before turn", level: "warn" },
+    { channel: "bridge", msg: "publish /robotis/action/page_num 2/3", level: "ok" },
+    { channel: "op3_action_module", msg: "execute turn action page", level: "ok" },
   ],
-  SAFETY_STOP: [
-    { channel: "vision",  msg: "BALL_LOST",       level: "warn" },
-    { channel: "bridge",  msg: "NO_BALL",         level: "warn" },
-    { channel: "safety",  msg: "STOP_TIMEOUT",    level: "stop" },
-    { channel: "motion",  msg: "STOP",            level: "stop" },
-    { channel: "safety",  msg: "LINK_FAIL",       level: "stop" },
-    { channel: "motion",  msg: "EMERGENCY_HALT",  level: "stop" },
+  KICK_GATE: [
+    { channel: "bridge", msg: "publish kick page 83", level: "ok" },
+    { channel: "kick_gate", msg: "intercept pending kick", level: "warn" },
+    { channel: "kick_gate", msg: "goal not centered -> micro turn", level: "warn" },
+    { channel: "kick_gate", msg: "publish action page 2/3", level: "ok" },
+  ],
+  KICK_RELEASED: [
+    { channel: "bridge", msg: "range < 0.23m and bearing centered", level: "ok" },
+    { channel: "kick_gate", msg: "goal_x within 0.18", level: "ok" },
+    { channel: "kick_gate", msg: "release action page 83", level: "ok" },
+    { channel: "op3_action_module", msg: "execute kick", level: "ok" },
+  ],
+  LOST_WAIT: [
+    { channel: "/ball_localizer/status", msg: "NO_BALL but timeout not reached", level: "warn" },
+    { channel: "bridge", msg: "do not instantly stop on one bad status", level: "warn" },
+    { channel: "bridge", msg: "waiting for lost_timeout_sec=0.8", level: "warn" },
+    { channel: "motion", msg: "hold previous command", level: "warn" },
+  ],
+  STOPPED: [
+    { channel: "/ball_localizer/status", msg: "NO_BALL / TF_FAIL / INVALID_RADIUS", level: "warn" },
+    { channel: "bridge", msg: "lost_timeout_sec -> stop", level: "stop" },
+    { channel: "bridge", msg: "publish /robotis/walking/command stop", level: "stop" },
+    { channel: "op3_walking_module", msg: "walkingCommandCallback(stop)", level: "stop" },
   ],
 };
 
-function computeCommStatus(packetRate: number, linkQuality: number, timeout: number, safetyStop: boolean): CommStatus {
-  if (safetyStop) return "SAFETY_STOP";
-  const delayRisk = packetRate > 80 ? (packetRate - 80) * 0.8 : 0;
-  const linkRisk = (100 - linkQuality) * 0.6;
-  const timeoutRisk = timeout < 100 ? (100 - timeout) * 0.5 : 0;
-  const risk = delayRisk + linkRisk + timeoutRisk;
-  if (risk > 60) return "SAFETY_STOP";
-  if (risk > 28) return "DELAY_WARNING";
-  return "COMMAND_OK";
+function computeCommStatus(
+  rangeM: number,
+  bearingRad: number,
+  localizerOk: boolean,
+  lostAgeMs: number,
+  goalX: number,
+  gateEnabled: boolean,
+): CommStatus {
+  if (!localizerOk) return lostAgeMs > 800 ? "STOPPED" : "LOST_WAIT";
+  if (rangeM < 0.23 && Math.abs(bearingRad) < 0.2) {
+    if (!gateEnabled || Math.abs(goalX) <= 0.18) return "KICK_RELEASED";
+    return "KICK_GATE";
+  }
+  if (Math.abs(bearingRad) > 0.3) return "TURN_ACTION";
+  if (rangeM > 0.3) return "WALK_FORWARD";
+  return "STOPPED";
 }
 
 const STATUS_STYLE: Record<CommStatus, { bg: string; text: string; dot: string }> = {
-  COMMAND_OK:    { bg: "rgba(200,204,216,0.15)", text: "#c8ccd8", dot: "#c8ccd8" },
-  DELAY_WARNING: { bg: "rgba(255,170,40,0.18)",  text: "#ffaa28", dot: "#ffaa28" },
-  SAFETY_STOP:   { bg: "rgba(255,80,60,0.18)",   text: "#ff5040", dot: "#ff5040" },
+  WALK_FORWARD:  { bg: "rgba(200,204,216,0.15)", text: "#c8ccd8", dot: "#c8ccd8" },
+  TURN_ACTION:   { bg: "rgba(255,170,40,0.18)",  text: "#ffaa28", dot: "#ffaa28" },
+  KICK_GATE:     { bg: "rgba(255,170,40,0.18)",  text: "#ffaa28", dot: "#ffaa28" },
+  KICK_RELEASED: { bg: "rgba(255,228,92,0.18)",  text: "#ffe45c", dot: "#ffe45c" },
+  LOST_WAIT:     { bg: "rgba(255,170,40,0.18)",  text: "#ffaa28", dot: "#ffaa28" },
+  STOPPED:       { bg: "rgba(255,80,60,0.18)",   text: "#ff5040", dot: "#ff5040" },
 };
 
 const LOG_LEVEL_COLOR: Record<LogEntry["level"], string> = {
@@ -77,10 +100,12 @@ const LOG_LEVEL_COLOR: Record<LogEntry["level"], string> = {
 };
 
 export function SignalFlowSimulator() {
-  const [packetRate, setPacketRate] = useState(40);
-  const [linkQuality, setLinkQuality] = useState(75);
-  const [timeout, setTimeout_] = useState(300);
-  const [safetyStop, setSafetyStop] = useState(false);
+  const [rangeCm, setRangeCm] = useState(42);
+  const [bearingCentirad, setBearingCentirad] = useState(12);
+  const [lostAgeMs, setLostAgeMs] = useState(120);
+  const [goalXPercent, setGoalXPercent] = useState(8);
+  const [localizerOk, setLocalizerOk] = useState(true);
+  const [gateEnabled, setGateEnabled] = useState(true);
 
   const [packets, setPackets] = useState<PacketDot[]>([]);
   const [log, setLog] = useState<LogEntry[]>([]);
@@ -88,23 +113,35 @@ export function SignalFlowSimulator() {
   const logIdRef = useRef(0);
   const logRef = useRef<HTMLDivElement>(null);
 
-  const status = computeCommStatus(packetRate, linkQuality, timeout, safetyStop);
+  const rangeM = rangeCm / 100;
+  const bearingRad = bearingCentirad / 100;
+  const goalX = goalXPercent / 100;
+  const status = computeCommStatus(rangeM, bearingRad, localizerOk, lostAgeMs, goalX, gateEnabled);
   const ss = STATUS_STYLE[status];
+  const visiblePackets = status === "STOPPED" ? [] : packets;
+  const actionPage = bearingRad > 0 ? 2 : 3;
+  const bridgeOutput =
+    status === "WALK_FORWARD"
+      ? "/robotis/walking/command start"
+      : status === "TURN_ACTION"
+        ? `/robotis/action/page_num ${actionPage}`
+        : status === "KICK_GATE"
+          ? `KickGate holds 83 -> turn page ${goalX > 0 ? 3 : 2}`
+          : status === "KICK_RELEASED"
+            ? "/robotis/action/page_num 83"
+            : status === "LOST_WAIT"
+              ? "hold until lost_timeout_sec"
+              : "/robotis/walking/command stop";
 
   // Animate packet dots
   useEffect(() => {
-    if (safetyStop) {
-      setPackets([]);
-      return;
-    }
+    if (status === "STOPPED") return;
     const interval = setInterval(() => {
-      const dropChance = (100 - linkQuality) / 120;
-      const delayChance = (100 - linkQuality) / 60;
-      const dropped = Math.random() < dropChance;
-      const delayed = !dropped && Math.random() < delayChance;
+      const dropped = false;
+      const delayed = status === "KICK_GATE" || status === "TURN_ACTION";
       setPackets((prev) => {
         const moved = prev
-          .map((p) => ({ ...p, x: p.x + (packetRate / 100) * 4.5 + 1.5 }))
+          .map((p) => ({ ...p, x: p.x + 3.4 }))
           .filter((p) => p.x < 420);
         const newPacket: PacketDot = {
           id: ++packetIdRef.current,
@@ -115,10 +152,10 @@ export function SignalFlowSimulator() {
         };
         return [...moved, newPacket];
       });
-    }, Math.max(30, 120 - packetRate));
+    }, 120);
 
     return () => clearInterval(interval);
-  }, [packetRate, linkQuality, safetyStop]);
+  }, [status]);
 
   // Log messages
   useEffect(() => {
@@ -132,10 +169,10 @@ export function SignalFlowSimulator() {
         ].slice(-24);
         return next;
       });
-    }, Math.max(280, 800 - packetRate * 6));
+    }, 520);
 
     return () => clearInterval(interval);
-  }, [status, packetRate]);
+  }, [status]);
 
   // Auto-scroll log
   useEffect(() => {
@@ -143,9 +180,10 @@ export function SignalFlowSimulator() {
   }, [log]);
 
   const controls = [
-    { id: "sig-rate",    label: "Packet Rate",     value: packetRate,   setter: setPacketRate,   min: 5,  max: 100, unit: " pkt/s", color: "#c8ccd8" },
-    { id: "sig-quality", label: "Link Quality",    value: linkQuality,  setter: setLinkQuality,  min: 10, max: 100, unit: "%",       color: "#c8ccd8" },
-    { id: "sig-timeout", label: "Timeout (ms)",    value: timeout,      setter: setTimeout_,     min: 50, max: 800, unit: "ms",      color: "#c8ccd8" },
+    { id: "sig-range", label: "/ball_polar range", value: rangeCm, setter: setRangeCm, min: 10, max: 120, unit: "cm", display: `${rangeM.toFixed(2)}m`, color: "#c8ccd8" },
+    { id: "sig-bearing", label: "/ball_polar bearing", value: bearingCentirad, setter: setBearingCentirad, min: -80, max: 80, unit: "", display: `${bearingRad.toFixed(2)}rad`, color: "#c8ccd8" },
+    { id: "sig-lost-age", label: "lost ball age", value: lostAgeMs, setter: setLostAgeMs, min: 0, max: 1500, unit: "ms", display: `${lostAgeMs}ms`, color: "#c8ccd8" },
+    { id: "sig-goal-x", label: "/goal_detector center_x", value: goalXPercent, setter: setGoalXPercent, min: -100, max: 100, unit: "", display: `${goalX.toFixed(2)}`, color: "#c8ccd8" },
   ];
 
   return (
@@ -162,10 +200,21 @@ export function SignalFlowSimulator() {
             {status}
           </div>
           <p className="mt-3 text-[0.8rem] leading-[1.65] text-[rgba(248,247,240,0.5)]">
-            {status === "COMMAND_OK" && "Pipeline lancar. Semua packet sampai tanpa delay."}
-            {status === "DELAY_WARNING" && "Ada delay di link. Packet mulai drop — robot bisa lag."}
-            {status === "SAFETY_STOP" && "Safety stop aktif atau link gagal. Robot berhenti."}
+            {status === "WALK_FORWARD" && "Bridge membaca bola masih jauh dan cukup lurus, lalu mengirim walking start."}
+            {status === "TURN_ACTION" && "Bearing terlalu besar. Bridge stop walking lalu kirim turn action page 2/3."}
+            {status === "KICK_GATE" && "Bola siap ditendang, tapi KickGate menahan page 83 sampai goal lebih center."}
+            {status === "KICK_RELEASED" && "Range, bearing, dan goal alignment aman. KickGate melepas action page 83."}
+            {status === "LOST_WAIT" && "Localizer memberi status buruk, tapi bridge belum stop sampai lost_timeout_sec lewat."}
+            {status === "STOPPED" && "Localizer error, bola hilang, atau posisi belum aman. Bridge mengirim stop."}
           </p>
+          <div className="mt-4 rounded-[0.9rem] border border-[rgba(200,204,216,0.14)] bg-[rgba(3,6,16,0.45)] p-3">
+            <div className="font-mono text-[0.5rem] font-black uppercase tracking-[0.14em] text-[rgba(248,247,240,0.38)]">
+              Bridge Output
+            </div>
+            <div className="mt-2 font-mono text-[0.72rem] font-black text-[#c8ccd8]">
+              {bridgeOutput}
+            </div>
+          </div>
         </div>
 
         <div className="grid gap-5">
@@ -174,12 +223,12 @@ export function SignalFlowSimulator() {
               <span className="mb-2 flex items-center justify-between gap-2">
                 <span className="text-[0.82rem] font-bold text-[rgba(248,247,240,0.9)]">{ctrl.label}</span>
                 <span className="font-mono text-[0.7rem] font-black" style={{ color: ctrl.color }}>
-                  {ctrl.value}{ctrl.unit}
+                  {ctrl.display ?? `${ctrl.value}${ctrl.unit}`}
                 </span>
               </span>
               <input
                 id={ctrl.id}
-                aria-label={`${ctrl.label}: ${ctrl.value}${ctrl.unit}`}
+                aria-label={`${ctrl.label}: ${ctrl.display ?? `${ctrl.value}${ctrl.unit}`}`}
                 className="w-full cursor-pointer accent-[#c8ccd8]"
                 max={ctrl.max}
                 min={ctrl.min}
@@ -191,32 +240,54 @@ export function SignalFlowSimulator() {
           ))}
         </div>
 
-        {/* Safety Stop Toggle */}
-        <div className="flex items-center justify-between gap-4 rounded-[1rem] border border-[rgba(255,80,60,0.25)] bg-[rgba(255,80,60,0.06)] p-4">
+        <div className="flex items-center justify-between gap-4 rounded-[1rem] border border-[rgba(200,204,216,0.2)] bg-[rgba(200,204,216,0.06)] p-4">
           <div>
-            <div className="text-[0.82rem] font-bold text-[rgba(248,247,240,0.9)]">Safety Stop</div>
-            <div className="text-[0.72rem] text-[rgba(248,247,240,0.45)] mt-0.5">Forces SAFETY_STOP on all channels</div>
+            <div className="text-[0.82rem] font-bold text-[rgba(248,247,240,0.9)]">Localizer Status</div>
+            <div className="text-[0.72rem] text-[rgba(248,247,240,0.45)] mt-0.5">OK lets /ball_polar drive bridge decisions</div>
           </div>
           <button
-            id="sig-safety-toggle"
+            id="sig-localizer-toggle"
             role="switch"
-            aria-checked={safetyStop}
-            aria-label="Safety stop toggle"
-            onClick={() => setSafetyStop((v) => !v)}
+            aria-checked={localizerOk}
+            aria-label="Localizer status OK toggle"
+            onClick={() => setLocalizerOk((v) => !v)}
             type="button"
             className="relative h-7 w-12 rounded-full transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--yellow)]"
-            style={{ background: safetyStop ? "#ff5040" : "rgba(248,247,240,0.15)" }}
+            style={{ background: localizerOk ? "#c8ccd8" : "#ff5040" }}
           >
             <span
               className="absolute top-1 h-5 w-5 rounded-full bg-white shadow transition-all duration-200"
-              style={{ left: safetyStop ? "calc(100% - 1.4rem)" : "0.2rem" }}
+              style={{ left: localizerOk ? "calc(100% - 1.4rem)" : "0.2rem" }}
+              aria-hidden="true"
+            />
+          </button>
+        </div>
+
+        <div className="flex items-center justify-between gap-4 rounded-[1rem] border border-[rgba(255,228,92,0.22)] bg-[rgba(255,228,92,0.06)] p-4">
+          <div>
+            <div className="text-[0.82rem] font-bold text-[rgba(248,247,240,0.9)]">KickGate</div>
+            <div className="text-[0.72rem] text-[rgba(248,247,240,0.45)] mt-0.5">Intercepts kick page 83 for goal alignment</div>
+          </div>
+          <button
+            id="sig-kick-gate-toggle"
+            role="switch"
+            aria-checked={gateEnabled}
+            aria-label="Kick gate enabled toggle"
+            onClick={() => setGateEnabled((v) => !v)}
+            type="button"
+            className="relative h-7 w-12 rounded-full transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--yellow)]"
+            style={{ background: gateEnabled ? "#ffe45c" : "rgba(248,247,240,0.15)" }}
+          >
+            <span
+              className="absolute top-1 h-5 w-5 rounded-full bg-white shadow transition-all duration-200"
+              style={{ left: gateEnabled ? "calc(100% - 1.4rem)" : "0.2rem" }}
               aria-hidden="true"
             />
           </button>
         </div>
 
         <div className="rounded-[1rem] border border-[rgba(200,204,216,0.15)] bg-[rgba(3,6,16,0.5)] p-4 text-[0.82rem] leading-[1.7] text-[rgba(248,247,240,0.55)]">
-          Communication menghubungkan data dan command — bukan sekadar koding serial. Satu timeout bisa membuat robot berhenti di tengah lapangan.
+          Source robot paling penting untuk dipahami: /ball_polar tidak langsung menggerakkan servo. Bridge menerjemahkan range dan bearing menjadi walking command atau action page, lalu KickGate bisa menahan kick sampai goal selaras.
         </div>
       </div>
 
@@ -230,25 +301,25 @@ export function SignalFlowSimulator() {
         <svg
           viewBox="0 0 420 120"
           className="w-full rounded-[1.2rem] border border-[rgba(200,204,216,0.1)] bg-[rgba(3,6,16,0.5)]"
-          aria-label="Animated signal pipeline: Vision to Strategy to Communication to Motion"
+          aria-label="Animated signal pipeline from detector to localizer, bridge, kick gate, and OP3 motion"
           role="img"
         >
           {/* Connection lines */}
           {PIPE_NODES.slice(0, -1).map((node, i) => (
             <line
               key={i}
-              x1={node.x + 30}
+              x1={node.x + 32}
               y1={node.y}
-              x2={PIPE_NODES[i + 1].x - 30}
+              x2={PIPE_NODES[i + 1].x - 32}
               y2={PIPE_NODES[i + 1].y}
-              stroke={safetyStop ? "rgba(255,80,60,0.3)" : "rgba(200,204,216,0.25)"}
+              stroke={status === "STOPPED" ? "rgba(255,80,60,0.3)" : "rgba(200,204,216,0.25)"}
               strokeWidth="2"
               strokeDasharray="5 4"
             />
           ))}
 
           {/* Packet dots */}
-          {packets.map((p) => (
+          {visiblePackets.map((p) => (
             <circle
               key={p.id}
               cx={p.x}
@@ -269,22 +340,22 @@ export function SignalFlowSimulator() {
           {PIPE_NODES.map((node) => (
             <g key={node.label}>
               <rect
-                x={node.x - 30}
+                x={node.x - 34}
                 y={node.y - 22}
-                width={60}
+                width={68}
                 height={44}
                 rx={8}
-                fill={safetyStop ? "rgba(255,80,60,0.15)" : "rgba(200,204,216,0.1)"}
-                stroke={safetyStop ? "rgba(255,80,60,0.4)" : "rgba(200,204,216,0.28)"}
+                fill={status === "STOPPED" ? "rgba(255,80,60,0.15)" : "rgba(200,204,216,0.1)"}
+                stroke={status === "STOPPED" ? "rgba(255,80,60,0.4)" : "rgba(200,204,216,0.28)"}
                 strokeWidth="1.5"
               />
               <text
                 x={node.x}
                 y={node.y + 5}
                 textAnchor="middle"
-                fill={safetyStop ? "#ff5040" : "#c8ccd8"}
+                fill={status === "STOPPED" ? "#ff5040" : "#c8ccd8"}
                 fontFamily="monospace"
-                fontSize="10"
+                fontSize="8"
                 fontWeight="bold"
               >
                 {node.label}

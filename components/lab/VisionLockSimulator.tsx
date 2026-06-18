@@ -2,78 +2,74 @@
 
 import { useState } from "react";
 
-type VisionStatus = "BALL_LOCKED" | "NOISE_HIGH" | "BALL_LOST";
-
-function inHueRange(value: number, min: number, max: number) {
-  if (min <= max) return value >= min && value <= max;
-  return value >= min || value <= max;
-}
+type VisionStatus = "BALL_FOUND" | "SEARCHING" | "NO_BALL" | "INVALID_RADIUS";
 
 function computeVision(
-  exposure: number,
-  tolerance: number,
+  confidenceThreshold: number,
+  inputSize: number,
+  frameSkip: number,
   minSize: number,
-  confidence: number
-): { detected: boolean; noise: number; status: VisionStatus; boundingBoxOpacity: number } {
-  const ballHue = 18;
-  const ballSat = 84;
-  const ballVal = 92;
+): {
+  detected: boolean;
+  modelConfidence: number;
+  processedFps: number;
+  latencyMs: number;
+  localizerStatus: string;
+  status: VisionStatus;
+  boundingBoxOpacity: number;
+} {
   const ballRadius = 38;
-
-  // Exposure affects effective saturation/value thresholds
-  const effectiveSat = ballSat * (exposure / 100);
-  const effectiveVal = ballVal * (exposure / 100) * 1.05;
-
-  const hueMin = 18 - tolerance;
-  const hueMax = 18 + tolerance;
-  const ballInHue = inHueRange(ballHue, hueMin, hueMax);
-  const satOk = effectiveSat >= 40;
-  const valOk = effectiveVal >= 40;
+  const normalizedInput = (inputSize - 160) / 480;
+  const modelConfidence = Math.max(0.35, Math.min(0.9, 0.58 + normalizedInput * 0.28 - Math.max(0, frameSkip - 2) * 0.025));
+  const detected = modelConfidence >= confidenceThreshold / 100;
   const sizeOk = minSize <= ballRadius;
-  const colorMatch = ballInHue && satOk && valOk;
-  const detected = colorMatch && sizeOk;
+  const processedFps = Math.max(2, Math.round((30 / frameSkip) * Math.pow(320 / inputSize, 1.35)));
+  const latencyMs = Math.round(1000 / processedFps);
 
-  // Noise: increases with wide tolerance or low confidence
-  const toleranceNoise = tolerance > 30 ? (tolerance - 30) * 1.8 : 0;
-  const confNoise = (100 - confidence) * 0.5;
-  const exposureNoise = exposure > 85 ? (exposure - 85) * 1.5 : 0;
-  const noise = Math.min(100, Math.round(toleranceNoise + confNoise + exposureNoise));
+  let status: VisionStatus = "SEARCHING";
+  if (detected && !sizeOk) status = "INVALID_RADIUS";
+  else if (detected) status = "BALL_FOUND";
+  else if (confidenceThreshold > 78) status = "NO_BALL";
 
-  let status: VisionStatus = "BALL_LOST";
-  if (detected && noise >= 50) status = "NOISE_HIGH";
-  else if (detected && noise < 50) status = "BALL_LOCKED";
+  const localizerStatus = !detected ? "WAITING" : sizeOk ? "OK" : "INVALID_RADIUS";
+  const boundingBoxOpacity = detected ? Math.max(0.45, modelConfidence) : 0;
 
-  const boundingBoxOpacity = detected ? Math.max(0.4, (confidence / 100)) : 0;
-
-  return { detected, noise, status, boundingBoxOpacity };
+  return { detected, modelConfidence, processedFps, latencyMs, localizerStatus, status, boundingBoxOpacity };
 }
 
 const STATUS_STYLE: Record<VisionStatus, { bg: string; text: string; dot: string }> = {
-  BALL_LOCKED: { bg: "rgba(123,147,232,0.18)", text: "#7b93e8", dot: "#7b93e8" },
-  NOISE_HIGH:  { bg: "rgba(255,170,40,0.18)",  text: "#ffaa28", dot: "#ffaa28" },
-  BALL_LOST:   { bg: "rgba(255,80,60,0.18)",   text: "#ff5040", dot: "#ff5040" },
+  BALL_FOUND:     { bg: "rgba(123,147,232,0.18)", text: "#7b93e8", dot: "#7b93e8" },
+  SEARCHING:      { bg: "rgba(255,170,40,0.18)",  text: "#ffaa28", dot: "#ffaa28" },
+  NO_BALL:        { bg: "rgba(255,80,60,0.18)",   text: "#ff5040", dot: "#ff5040" },
+  INVALID_RADIUS: { bg: "rgba(255,80,60,0.18)",   text: "#ff5040", dot: "#ff5040" },
 };
 
 export function VisionLockSimulator() {
-  const [exposure, setExposure] = useState(65);
-  const [tolerance, setTolerance] = useState(20);
+  const [confidenceThreshold, setConfidenceThreshold] = useState(15);
+  const [inputSize, setInputSize] = useState(320);
+  const [frameSkip, setFrameSkip] = useState(2);
   const [minSize, setMinSize] = useState(18);
-  const [confidence, setConfidence] = useState(70);
 
-  const { detected, noise, status, boundingBoxOpacity } = computeVision(exposure, tolerance, minSize, confidence);
+  const { detected, modelConfidence, processedFps, latencyMs, localizerStatus, status, boundingBoxOpacity } = computeVision(
+    confidenceThreshold,
+    inputSize,
+    frameSkip,
+    minSize,
+  );
   const ss = STATUS_STYLE[status];
 
   const controls = [
-    { id: "vis-exposure",    label: "Exposure / Brightness", value: exposure,    setter: setExposure,    min: 10,  max: 100, unit: "" },
-    { id: "vis-tolerance",  label: "HSV Color Tolerance",   value: tolerance,   setter: setTolerance,   min: 1,   max: 60,  unit: "" },
-    { id: "vis-minsize",    label: "Min Object Size (px)",  value: minSize,     setter: setMinSize,     min: 4,   max: 60,  unit: "" },
-    { id: "vis-confidence", label: "Confidence Threshold",  value: confidence,  setter: setConfidence,  min: 10,  max: 100, unit: "%" },
+    { id: "vis-confidence", label: "confidence_threshold", value: confidenceThreshold, setter: setConfidenceThreshold, min: 5, max: 95, unit: "%" },
+    { id: "vis-input-size", label: "YOLO input_size", value: inputSize, setter: setInputSize, min: 160, max: 640, unit: "px" },
+    { id: "vis-frame-skip", label: "frame_skip", value: frameSkip, setter: setFrameSkip, min: 1, max: 6, unit: "" },
+    { id: "vis-minsize", label: "localizer min_radius_px", value: minSize, setter: setMinSize, min: 4, max: 60, unit: "px" },
   ];
 
   const insightMap: Record<VisionStatus, string> = {
-    BALL_LOCKED: "Deteksi stabil. Bola terbaca dengan noise rendah — parameter siap untuk match.",
-    NOISE_HIGH: "Bola terdeteksi, tetapi noise terlalu tinggi. Persempit color tolerance atau naikkan confidence.",
-    BALL_LOST: "Robot tidak menemukan bola. Sesuaikan exposure dan HSV tolerance ke rentang warna oranye.",
+    BALL_FOUND: "Sesuai source: detector publish /ball_detector_node/circle_set, lalu localizer mengubah center+radius menjadi /ball_polar.",
+    SEARCHING: "Threshold terlalu ketat untuk confidence frame ini. Source akan publish SEARCHING sebelum akhirnya NO_BALL.",
+    NO_BALL: "Confidence threshold terlalu tinggi. Tidak ada circle_set yang cukup kuat untuk dipakai localizer.",
+    INVALID_RADIUS: "Detector melihat bola, tapi radius terlalu kecil untuk localizer. Output berhenti di status INVALID_RADIUS.",
   };
 
   return (
@@ -91,18 +87,18 @@ export function VisionLockSimulator() {
           </div>
 
           <div className="mt-4 grid grid-cols-2 gap-3">
-            <div className="rounded-xl border border-[rgba(123,147,232,0.2)] bg-[rgba(3,6,16,0.5)] p-3">
-              <div className="font-mono text-[0.5rem] font-black uppercase tracking-[0.14em] text-[rgba(248,247,240,0.4)]">Noise</div>
-              <div className="mt-1 font-mono text-[1.1rem] font-black" style={{ color: noise > 50 ? "#ffaa28" : "#7b93e8" }}>
-                {noise}%
+              <div className="rounded-xl border border-[rgba(123,147,232,0.2)] bg-[rgba(3,6,16,0.5)] p-3">
+                <div className="font-mono text-[0.5rem] font-black uppercase tracking-[0.14em] text-[rgba(248,247,240,0.4)]">Model Conf</div>
+                <div className="mt-1 font-mono text-[1.1rem] font-black" style={{ color: detected ? "#7b93e8" : "#ffaa28" }}>
+                  {Math.round(modelConfidence * 100)}%
+                </div>
               </div>
-            </div>
-            <div className="rounded-xl border border-[rgba(123,147,232,0.2)] bg-[rgba(3,6,16,0.5)] p-3">
-              <div className="font-mono text-[0.5rem] font-black uppercase tracking-[0.14em] text-[rgba(248,247,240,0.4)]">Detection</div>
-              <div className="mt-1 font-mono text-[1.1rem] font-black" style={{ color: detected ? "#7b93e8" : "#ff5040" }}>
-                {detected ? "PASS" : "FAIL"}
+              <div className="rounded-xl border border-[rgba(123,147,232,0.2)] bg-[rgba(3,6,16,0.5)] p-3">
+                <div className="font-mono text-[0.5rem] font-black uppercase tracking-[0.14em] text-[rgba(248,247,240,0.4)]">Localizer</div>
+                <div className="mt-1 font-mono text-[1.1rem] font-black" style={{ color: localizerStatus === "OK" ? "#7b93e8" : "#ff5040" }}>
+                  {localizerStatus}
+                </div>
               </div>
-            </div>
           </div>
         </div>
 
@@ -137,14 +133,14 @@ export function VisionLockSimulator() {
       {/* Visualization */}
       <div className="border-t border-[rgba(123,147,232,0.12)] p-4 sm:p-6 lg:border-l lg:border-t-0">
         <div className="font-mono text-[0.54rem] font-black uppercase tracking-[0.16em] text-[rgba(248,247,240,0.4)] mb-3">
-          Camera Feed
+          YOLO Ball Pipeline
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
           {/* Camera frame */}
           <div>
             <div className="mb-2 font-mono text-[0.5rem] font-black uppercase tracking-[0.13em] text-[rgba(248,247,240,0.35)]">
-              Raw Frame
+              Debug Image: /ball_detector_node/image_out
             </div>
             <svg
               viewBox="0 0 360 240"
@@ -157,22 +153,11 @@ export function VisionLockSimulator() {
               <line x1="0" y1="120" x2="360" y2="120" stroke="rgba(255,255,255,0.2)" strokeWidth="3" />
               <line x1="180" y1="0" x2="180" y2="240" stroke="rgba(255,255,255,0.2)" strokeWidth="3" />
               <circle cx="180" cy="120" r="52" fill="none" stroke="rgba(255,255,255,0.18)" strokeWidth="3" />
-              {/* Exposure overlay */}
-              <rect
-                fill={`rgba(255,255,255,${(exposure - 50) * 0.004})`}
-                width="360" height="240"
-              />
               {/* Ball */}
-              <circle cx="222" cy="132" r="38" fill={`hsl(25, ${Math.round(exposure * 0.84)}%, ${Math.round(exposure * 0.48)}%)`} />
+              <circle cx="222" cy="132" r="38" fill="#f07c1d" />
               <circle cx="211" cy="118" fill="rgba(255,255,255,0.3)" r="9" />
-              {/* Noise specks */}
-              {tolerance > 25 && (
-                <>
-                  <circle cx="68" cy="49" fill="rgba(255,100,20,0.6)" r="5" />
-                  <circle cx="96" cy="184" fill="rgba(255,80,10,0.5)" r="4" />
-                  <circle cx="306" cy="71" fill="rgba(255,120,30,0.55)" r="6" />
-                </>
-              )}
+              <circle cx="68" cy="49" fill="rgba(255,100,20,0.28)" r="5" />
+              <circle cx="306" cy="71" fill="rgba(255,120,30,0.22)" r="6" />
               {/* Bounding box */}
               {detected && (
                 <g opacity={boundingBoxOpacity}>
@@ -182,7 +167,7 @@ export function VisionLockSimulator() {
                   />
                   <rect x="184" y="84" width="76" height="14" rx="3" fill="rgba(123,147,232,0.85)" />
                   <text x="222" y="94" textAnchor="middle" fill="white" fontFamily="monospace" fontSize="8" fontWeight="bold">
-                    BALL {Math.round(confidence)}%
+                    ball {Math.round(modelConfidence * 100)}%
                   </text>
                 </g>
               )}
@@ -192,7 +177,7 @@ export function VisionLockSimulator() {
           {/* Mask frame */}
           <div>
             <div className="mb-2 font-mono text-[0.5rem] font-black uppercase tracking-[0.13em] text-[rgba(248,247,240,0.35)]">
-              Threshold Mask
+              CircleSet + Localizer
             </div>
             <svg
               viewBox="0 0 360 240"
@@ -201,15 +186,6 @@ export function VisionLockSimulator() {
               role="img"
             >
               <rect fill="#07101f" width="360" height="240" />
-              {/* Noise blobs */}
-              {noise > 30 && (
-                <>
-                  <circle cx="68" cy="49" fill="rgba(123,147,232,0.65)" r="5" />
-                  <circle cx="96" cy="184" fill="rgba(123,147,232,0.55)" r="4" />
-                  <circle cx="306" cy="71" fill="rgba(123,147,232,0.6)" r="6" />
-                  {noise > 60 && <circle cx="140" cy="90" fill="rgba(123,147,232,0.45)" r="3" />}
-                </>
-              )}
               {/* Ball mask */}
               {detected ? (
                 <circle cx="222" cy="132" r={Math.max(10, 38 - Math.max(0, minSize - 38))} fill="#7b93e8" />
@@ -221,6 +197,18 @@ export function VisionLockSimulator() {
               <text x="50" y="213" textAnchor="middle" fill="rgba(255,228,92,0.5)" fontFamily="monospace" fontSize="7">
                 min
               </text>
+              {detected && (
+                <>
+                  <line x1="222" y1="132" x2="300" y2="70" stroke="rgba(123,147,232,0.45)" strokeDasharray="4 3" />
+                  <rect x="230" y="42" width="112" height="42" rx="7" fill="rgba(3,6,16,0.82)" />
+                  <text x="286" y="58" textAnchor="middle" fill="#7b93e8" fontFamily="monospace" fontSize="8" fontWeight="bold">
+                    x=0.23 y=0.10
+                  </text>
+                  <text x="286" y="72" textAnchor="middle" fill="#7b93e8" fontFamily="monospace" fontSize="8" fontWeight="bold">
+                    z=38px
+                  </text>
+                </>
+              )}
             </svg>
           </div>
         </div>
@@ -228,9 +216,9 @@ export function VisionLockSimulator() {
         {/* Stats row */}
         <div className="mt-3 grid grid-cols-3 gap-2">
           {[
-            { label: "Exposure", value: `${exposure}` },
-            { label: "Tolerance", value: `±${tolerance}` },
-            { label: "Confidence", value: `${confidence}%` },
+            { label: "FPS", value: `${processedFps}` },
+            { label: "Latency", value: `${latencyMs}ms` },
+            { label: "Circle z", value: detected ? "38px" : "--" },
           ].map((m) => (
             <div
               key={m.label}
