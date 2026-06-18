@@ -19,6 +19,47 @@ type PacketDot = {
   delayed: boolean;
 };
 
+type CommPreset = {
+  id: string;
+  label: string;
+  description: string;
+  values: {
+    bearingCentirad: number;
+    gateEnabled: boolean;
+    goalXPercent: number;
+    localizerOk: boolean;
+    lostAgeMs: number;
+    rangeCm: number;
+  };
+};
+
+const COMM_PRESETS: CommPreset[] = [
+  {
+    id: "approach",
+    label: "Approach Ball",
+    description: "Bola masih jauh dan bearing kecil. Bridge memilih walking start.",
+    values: { rangeCm: 62, bearingCentirad: 12, lostAgeMs: 120, goalXPercent: 8, localizerOk: true, gateEnabled: true },
+  },
+  {
+    id: "turn",
+    label: "Turn To Ball",
+    description: "Bearing melewati turn_bearing_rad. Walking di-stop, lalu action page 2/3 dikirim.",
+    values: { rangeCm: 55, bearingCentirad: 48, lostAgeMs: 120, goalXPercent: 8, localizerOk: true, gateEnabled: true },
+  },
+  {
+    id: "kick-gate",
+    label: "Kick Gate",
+    description: "Bola sudah dekat, tetapi goal belum center. Page 83 ditahan dulu.",
+    values: { rangeCm: 18, bearingCentirad: 8, lostAgeMs: 120, goalXPercent: 42, localizerOk: true, gateEnabled: true },
+  },
+  {
+    id: "lost-ball",
+    label: "Lost Ball",
+    description: "Status localizer buruk melewati lost_timeout_sec, bridge mengirim stop.",
+    values: { rangeCm: 42, bearingCentirad: 12, lostAgeMs: 980, goalXPercent: 8, localizerOk: false, gateEnabled: true },
+  },
+];
+
 const PIPE_NODES = [
   { label: "Detector",  x: 36,  y: 60 },
   { label: "Localizer", x: 124, y: 60 },
@@ -132,6 +173,14 @@ export function SignalFlowSimulator() {
             : status === "LOST_WAIT"
               ? "hold until lost_timeout_sec"
               : "/robotis/walking/command stop";
+  const activeNodes =
+    status === "KICK_RELEASED"
+      ? ["Detector", "Localizer", "Bridge", "KickGate", "OP3"]
+      : status === "KICK_GATE"
+        ? ["Detector", "Localizer", "Bridge", "KickGate"]
+        : status === "STOPPED"
+          ? ["Localizer", "Bridge", "OP3"]
+          : ["Detector", "Localizer", "Bridge", "OP3"];
 
   // Animate packet dots
   useEffect(() => {
@@ -217,6 +266,36 @@ export function SignalFlowSimulator() {
           </div>
         </div>
 
+        <div>
+          <div className="mb-2 font-mono text-[0.54rem] font-black uppercase tracking-[0.16em] text-[rgba(248,247,240,0.38)]">
+            Scenario Preset
+          </div>
+          <div className="grid gap-2">
+            {COMM_PRESETS.map((preset) => (
+              <button
+                className="rounded-[0.95rem] border border-[rgba(200,204,216,0.15)] bg-[rgba(200,204,216,0.05)] px-3 py-2 text-left transition duration-200 hover:border-[rgba(200,204,216,0.48)] hover:bg-[rgba(200,204,216,0.09)]"
+                key={preset.id}
+                onClick={() => {
+                  setRangeCm(preset.values.rangeCm);
+                  setBearingCentirad(preset.values.bearingCentirad);
+                  setLostAgeMs(preset.values.lostAgeMs);
+                  setGoalXPercent(preset.values.goalXPercent);
+                  setLocalizerOk(preset.values.localizerOk);
+                  setGateEnabled(preset.values.gateEnabled);
+                  setPackets([]);
+                  setLog([]);
+                }}
+                type="button"
+              >
+                <span className="block text-[0.78rem] font-black text-[rgba(248,247,240,0.9)]">{preset.label}</span>
+                <span className="mt-1 block text-[0.68rem] leading-[1.45] text-[rgba(248,247,240,0.48)]">
+                  {preset.description}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="grid gap-5">
           {controls.map((ctrl) => (
             <label key={ctrl.id} className="block">
@@ -289,6 +368,21 @@ export function SignalFlowSimulator() {
         <div className="rounded-[1rem] border border-[rgba(200,204,216,0.15)] bg-[rgba(3,6,16,0.5)] p-4 text-[0.82rem] leading-[1.7] text-[rgba(248,247,240,0.55)]">
           Source robot paling penting untuk dipahami: /ball_polar tidak langsung menggerakkan servo. Bridge menerjemahkan range dan bearing menjadi walking command atau action page, lalu KickGate bisa menahan kick sampai goal selaras.
         </div>
+
+        <div className="grid grid-cols-3 gap-2 rounded-[1rem] border border-[rgba(200,204,216,0.12)] bg-[rgba(3,6,16,0.42)] p-3">
+          {[
+            { label: "kick", value: "r<0.23" },
+            { label: "turn", value: "|brg|>0.30" },
+            { label: "lost", value: "0.8s" },
+          ].map((item) => (
+            <div key={item.label} className="text-center">
+              <div className="font-mono text-[0.48rem] font-black uppercase tracking-[0.14em] text-[rgba(248,247,240,0.34)]">
+                {item.label}
+              </div>
+              <div className="mt-1 font-mono text-[0.72rem] font-black text-[#c8ccd8]">{item.value}</div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Pipeline Visualization + Log */}
@@ -337,7 +431,10 @@ export function SignalFlowSimulator() {
           ))}
 
           {/* Nodes */}
-          {PIPE_NODES.map((node) => (
+          {PIPE_NODES.map((node) => {
+            const isActiveNode = activeNodes.includes(node.label);
+
+            return (
             <g key={node.label}>
               <rect
                 x={node.x - 34}
@@ -345,15 +442,15 @@ export function SignalFlowSimulator() {
                 width={68}
                 height={44}
                 rx={8}
-                fill={status === "STOPPED" ? "rgba(255,80,60,0.15)" : "rgba(200,204,216,0.1)"}
-                stroke={status === "STOPPED" ? "rgba(255,80,60,0.4)" : "rgba(200,204,216,0.28)"}
+                fill={status === "STOPPED" && isActiveNode ? "rgba(255,80,60,0.15)" : isActiveNode ? "rgba(200,204,216,0.16)" : "rgba(200,204,216,0.06)"}
+                stroke={status === "STOPPED" && isActiveNode ? "rgba(255,80,60,0.4)" : isActiveNode ? "rgba(200,204,216,0.48)" : "rgba(200,204,216,0.14)"}
                 strokeWidth="1.5"
               />
               <text
                 x={node.x}
                 y={node.y + 5}
                 textAnchor="middle"
-                fill={status === "STOPPED" ? "#ff5040" : "#c8ccd8"}
+                fill={status === "STOPPED" && isActiveNode ? "#ff5040" : isActiveNode ? "#c8ccd8" : "rgba(248,247,240,0.34)"}
                 fontFamily="monospace"
                 fontSize="8"
                 fontWeight="bold"
@@ -361,7 +458,8 @@ export function SignalFlowSimulator() {
                 {node.label}
               </text>
             </g>
-          ))}
+          );
+          })}
 
           {/* Status overlay */}
           <rect x="150" y="90" width="120" height="22" rx="5" fill="rgba(3,6,16,0.8)" />

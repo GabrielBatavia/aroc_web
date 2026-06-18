@@ -135,12 +135,17 @@ export function LabExperience({ stats = labHeroStats }: LabExperienceProps) {
         <div className="mx-auto max-w-[1280px] px-4 sm:px-8">
 
           {/* Section header */}
-          <div className="mb-8">
-            <div className="kicker kicker-on-ink">Playable Simulators</div>
-            <h2 className="headline mt-4 text-[clamp(2.4rem,6vw,5rem)] text-[var(--cream)]">
-              Pilih divisi,{" "}
-              <span className="headline-italic-on-ink">eksplorasi.</span>
-            </h2>
+          <div className="mb-8 grid gap-5 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+            <div>
+              <div className="kicker kicker-on-ink">Playable Simulators</div>
+              <h2 className="headline mt-4 text-[clamp(2.4rem,6vw,5rem)] text-[var(--cream)]">
+                Pilih divisi,{" "}
+                <span className="headline-italic-on-ink">eksplorasi.</span>
+              </h2>
+            </div>
+            <div className="rounded-[1.4rem] border border-[rgba(248,247,240,0.1)] bg-[rgba(248,247,240,0.04)] p-5 text-[0.92rem] leading-[1.75] text-[rgba(248,247,240,0.58)]">
+              Setiap simulator punya preset skenario source-aware. Pilih preset dulu, lalu geser parameter untuk melihat kapan robot berjalan, kehilangan bola, atau menahan kick.
+            </div>
           </div>
 
           {/* Tab selector */}
@@ -198,7 +203,7 @@ export function LabExperience({ stats = labHeroStats }: LabExperienceProps) {
             id={`panel-${activeId}`}
             role="tabpanel"
             aria-labelledby={`tab-${activeId}`}
-            className="overflow-hidden rounded-[1.8rem] border border-[rgba(255,228,92,0.14)] bg-[rgba(7,16,31,0.85)] shadow-[0_40px_120px_-60px_rgba(3,6,16,0.9)] backdrop-blur-sm"
+            className="overflow-hidden rounded-[1.8rem] border border-[rgba(255,228,92,0.14)] bg-[rgba(7,16,31,0.85)] shadow-[0_40px_120px_-60px_rgba(3,6,16,0.9)] backdrop-blur-sm transition-colors duration-500"
             style={{ borderColor: `rgba(${activeSim.colorRgb}, 0.2)` }}
           >
             {/* Simulator header strip */}
@@ -226,7 +231,7 @@ export function LabExperience({ stats = labHeroStats }: LabExperienceProps) {
             </div>
 
             {/* The simulator itself */}
-            <ActiveSimulator />
+            <ActiveSimulator key={activeId} />
           </div>
 
           {/* Bottom hints — other simulators */}

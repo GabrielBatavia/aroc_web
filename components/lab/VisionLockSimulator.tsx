@@ -4,6 +4,45 @@ import { useState } from "react";
 
 type VisionStatus = "BALL_FOUND" | "SEARCHING" | "NO_BALL" | "INVALID_RADIUS";
 
+type VisionPreset = {
+  id: string;
+  label: string;
+  description: string;
+  values: {
+    confidenceThreshold: number;
+    frameSkip: number;
+    inputSize: number;
+    minSize: number;
+  };
+};
+
+const VISION_PRESETS: VisionPreset[] = [
+  {
+    id: "source-default",
+    label: "Source Default",
+    description: "Mirip detector_config: confidence 0.15, input 320, frame_skip 2.",
+    values: { confidenceThreshold: 15, inputSize: 320, frameSkip: 2, minSize: 4 },
+  },
+  {
+    id: "precision-mode",
+    label: "Precision Mode",
+    description: "Input lebih besar dan frame_skip kecil. Lebih yakin, tapi latency naik.",
+    values: { confidenceThreshold: 42, inputSize: 640, frameSkip: 1, minSize: 4 },
+  },
+  {
+    id: "strict-fail",
+    label: "Too Strict",
+    description: "Confidence terlalu tinggi. Detector gagal publish circle yang cukup kuat.",
+    values: { confidenceThreshold: 88, inputSize: 320, frameSkip: 2, minSize: 4 },
+  },
+  {
+    id: "radius-reject",
+    label: "Radius Reject",
+    description: "Detector melihat bola, tapi localizer menolak karena min_radius_px terlalu besar.",
+    values: { confidenceThreshold: 15, inputSize: 320, frameSkip: 2, minSize: 48 },
+  },
+];
+
 function computeVision(
   confidenceThreshold: number,
   inputSize: number,
@@ -48,7 +87,7 @@ export function VisionLockSimulator() {
   const [confidenceThreshold, setConfidenceThreshold] = useState(15);
   const [inputSize, setInputSize] = useState(320);
   const [frameSkip, setFrameSkip] = useState(2);
-  const [minSize, setMinSize] = useState(18);
+  const [minSize, setMinSize] = useState(4);
 
   const { detected, modelConfidence, processedFps, latencyMs, localizerStatus, status, boundingBoxOpacity } = computeVision(
     confidenceThreshold,
@@ -71,6 +110,8 @@ export function VisionLockSimulator() {
     NO_BALL: "Confidence threshold terlalu tinggi. Tidak ada circle_set yang cukup kuat untuk dipakai localizer.",
     INVALID_RADIUS: "Detector melihat bola, tapi radius terlalu kecil untuk localizer. Output berhenti di status INVALID_RADIUS.",
   };
+  const publishStatus = detected ? `BALL_FOUND conf=${modelConfidence.toFixed(3)}` : confidenceThreshold > 78 ? "NO_BALL" : "SEARCHING";
+  const polarOutput = localizerStatus === "OK" ? "/ball_polar x=0.48 y=0.19" : "no /ball_polar";
 
   return (
     <div className="grid gap-0 lg:grid-cols-[340px_1fr]">
@@ -87,18 +128,44 @@ export function VisionLockSimulator() {
           </div>
 
           <div className="mt-4 grid grid-cols-2 gap-3">
-              <div className="rounded-xl border border-[rgba(123,147,232,0.2)] bg-[rgba(3,6,16,0.5)] p-3">
-                <div className="font-mono text-[0.5rem] font-black uppercase tracking-[0.14em] text-[rgba(248,247,240,0.4)]">Model Conf</div>
-                <div className="mt-1 font-mono text-[1.1rem] font-black" style={{ color: detected ? "#7b93e8" : "#ffaa28" }}>
-                  {Math.round(modelConfidence * 100)}%
-                </div>
+            <div className="rounded-xl border border-[rgba(123,147,232,0.2)] bg-[rgba(3,6,16,0.5)] p-3">
+              <div className="font-mono text-[0.5rem] font-black uppercase tracking-[0.14em] text-[rgba(248,247,240,0.4)]">Model Conf</div>
+              <div className="mt-1 font-mono text-[1.1rem] font-black" style={{ color: detected ? "#7b93e8" : "#ffaa28" }}>
+                {Math.round(modelConfidence * 100)}%
               </div>
-              <div className="rounded-xl border border-[rgba(123,147,232,0.2)] bg-[rgba(3,6,16,0.5)] p-3">
-                <div className="font-mono text-[0.5rem] font-black uppercase tracking-[0.14em] text-[rgba(248,247,240,0.4)]">Localizer</div>
-                <div className="mt-1 font-mono text-[1.1rem] font-black" style={{ color: localizerStatus === "OK" ? "#7b93e8" : "#ff5040" }}>
-                  {localizerStatus}
-                </div>
+            </div>
+            <div className="rounded-xl border border-[rgba(123,147,232,0.2)] bg-[rgba(3,6,16,0.5)] p-3">
+              <div className="font-mono text-[0.5rem] font-black uppercase tracking-[0.14em] text-[rgba(248,247,240,0.4)]">Localizer</div>
+              <div className="mt-1 font-mono text-[1.1rem] font-black" style={{ color: localizerStatus === "OK" ? "#7b93e8" : "#ff5040" }}>
+                {localizerStatus}
               </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div className="mb-2 font-mono text-[0.54rem] font-black uppercase tracking-[0.16em] text-[rgba(248,247,240,0.38)]">
+            Scenario Preset
+          </div>
+          <div className="grid gap-2">
+            {VISION_PRESETS.map((preset) => (
+              <button
+                className="rounded-[0.95rem] border border-[rgba(123,147,232,0.15)] bg-[rgba(123,147,232,0.05)] px-3 py-2 text-left transition duration-200 hover:border-[rgba(123,147,232,0.48)] hover:bg-[rgba(123,147,232,0.09)]"
+                key={preset.id}
+                onClick={() => {
+                  setConfidenceThreshold(preset.values.confidenceThreshold);
+                  setInputSize(preset.values.inputSize);
+                  setFrameSkip(preset.values.frameSkip);
+                  setMinSize(preset.values.minSize);
+                }}
+                type="button"
+              >
+                <span className="block text-[0.78rem] font-black text-[rgba(248,247,240,0.9)]">{preset.label}</span>
+                <span className="mt-1 block text-[0.68rem] leading-[1.45] text-[rgba(248,247,240,0.48)]">
+                  {preset.description}
+                </span>
+              </button>
+            ))}
           </div>
         </div>
 
@@ -127,6 +194,22 @@ export function VisionLockSimulator() {
 
         <div className="rounded-[1rem] border border-[rgba(123,147,232,0.2)] bg-[rgba(3,6,16,0.5)] p-4 text-[0.82rem] leading-[1.7] text-[rgba(248,247,240,0.6)]">
           {insightMap[status]}
+        </div>
+
+        <div className="grid grid-cols-2 gap-2 rounded-[1rem] border border-[rgba(123,147,232,0.15)] bg-[rgba(3,6,16,0.42)] p-3">
+          {[
+            { label: "detector", value: publishStatus },
+            { label: "localizer", value: polarOutput },
+          ].map((item) => (
+            <div key={item.label} className="min-w-0">
+              <div className="font-mono text-[0.48rem] font-black uppercase tracking-[0.14em] text-[rgba(248,247,240,0.34)]">
+                {item.label}
+              </div>
+              <div className="mt-1 truncate font-mono text-[0.66rem] font-black text-[#7b93e8]">
+                {item.value}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -182,10 +265,30 @@ export function VisionLockSimulator() {
             <svg
               viewBox="0 0 360 240"
               className="w-full rounded-[1rem] border border-[rgba(123,147,232,0.15)]"
-              aria-label="Threshold mask result showing detected regions"
+              aria-label="CircleSet and localizer pipeline output"
               role="img"
             >
               <rect fill="#07101f" width="360" height="240" />
+              <g transform="translate(18, 18)">
+                {[
+                  { label: "YOLO", active: detected || status === "SEARCHING" },
+                  { label: "CircleSet", active: detected },
+                  { label: "Localizer", active: localizerStatus === "OK" },
+                ].map((stage, index) => (
+                  <g key={stage.label} transform={`translate(${index * 88}, 0)`}>
+                    <rect
+                      fill={stage.active ? "rgba(123,147,232,0.18)" : "rgba(248,247,240,0.055)"}
+                      height="22"
+                      rx="5"
+                      stroke={stage.active ? "rgba(123,147,232,0.52)" : "rgba(248,247,240,0.11)"}
+                      width="74"
+                    />
+                    <text x="37" y="14" textAnchor="middle" fill={stage.active ? "#7b93e8" : "rgba(248,247,240,0.36)"} fontFamily="monospace" fontSize="7" fontWeight="bold">
+                      {stage.label}
+                    </text>
+                  </g>
+                ))}
+              </g>
               {/* Ball mask */}
               {detected ? (
                 <circle cx="222" cy="132" r={Math.max(10, 38 - Math.max(0, minSize - 38))} fill="#7b93e8" />

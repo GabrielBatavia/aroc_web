@@ -4,6 +4,39 @@ import { useEffect, useRef, useState } from "react";
 
 type StabilityStatus = "STABLE" | "WOBBLE" | "FALL_RISK";
 
+type GaitPreset = {
+  id: string;
+  label: string;
+  description: string;
+  values: {
+    balanceGain: number;
+    footHeightMm: number;
+    periodMs: number;
+    xMoveMm: number;
+  };
+};
+
+const GAIT_PRESETS: GaitPreset[] = [
+  {
+    id: "match-safe",
+    label: "Match Safe",
+    description: "Parameter mendekati default OP3: cadence aman, foot clearance cukup, balance aktif.",
+    values: { xMoveMm: 24, periodMs: 600, footHeightMm: 40, balanceGain: 74 },
+  },
+  {
+    id: "fast-approach",
+    label: "Fast Approach",
+    description: "Robot mengejar bola lebih agresif. Lebih cepat, tapi margin stabilitas turun.",
+    values: { xMoveMm: 42, periodMs: 470, footHeightMm: 42, balanceGain: 68 },
+  },
+  {
+    id: "fall-risk",
+    label: "Fall Risk",
+    description: "Langkah terlalu besar, period terlalu pendek, dan balance feedback terlalu lemah.",
+    values: { xMoveMm: 56, periodMs: 380, footHeightMm: 68, balanceGain: 44 },
+  },
+];
+
 function computeStability(xMoveMm: number, periodMs: number, footHeightMm: number, balanceGain: number): number {
   // OP3 walking is sensitive to stride, cadence, foot clearance, and balance feedback.
   const stridePenalty = xMoveMm > 38 ? (xMoveMm - 38) * 1.6 : xMoveMm < 6 ? (6 - xMoveMm) * 1.1 : 0;
@@ -64,6 +97,8 @@ export function GaitTunerSimulator() {
   const statusStyle = STATUS_STYLE[status];
   const waveformPath = buildWaveform(xMoveMm, footHeightMm, periodMs, phase);
   const footsteps = buildFootsteps(xMoveMm, balanceGain);
+  const sourceOutput = status === "FALL_RISK" ? "hold tuning" : "/robotis/walking/set_params";
+  const commandHint = status === "STABLE" ? "/robotis/walking/command start" : "tune before start";
 
   // Animate waveform
   useEffect(() => {
@@ -119,9 +154,35 @@ export function GaitTunerSimulator() {
           </div>
           <div className="mt-3 h-2 overflow-hidden rounded-full bg-[rgba(248,247,240,0.1)]">
             <div
-              className="h-full rounded-full transition-all duration-500"
+              className="h-full rounded-full transition-all duration-700 ease-out"
               style={{ width: `${stability}%`, background: statusStyle.dot }}
             />
+          </div>
+        </div>
+
+        <div>
+          <div className="mb-2 font-mono text-[0.54rem] font-black uppercase tracking-[0.16em] text-[rgba(248,247,240,0.38)]">
+            Scenario Preset
+          </div>
+          <div className="grid gap-2">
+            {GAIT_PRESETS.map((preset) => (
+              <button
+                className="rounded-[0.95rem] border border-[rgba(255,228,92,0.12)] bg-[rgba(255,228,92,0.045)] px-3 py-2 text-left transition duration-200 hover:border-[rgba(255,228,92,0.4)] hover:bg-[rgba(255,228,92,0.08)]"
+                key={preset.id}
+                onClick={() => {
+                  setXMoveMm(preset.values.xMoveMm);
+                  setPeriodMs(preset.values.periodMs);
+                  setFootHeightMm(preset.values.footHeightMm);
+                  setBalanceGain(preset.values.balanceGain);
+                }}
+                type="button"
+              >
+                <span className="block text-[0.78rem] font-black text-[rgba(248,247,240,0.9)]">{preset.label}</span>
+                <span className="mt-1 block text-[0.68rem] leading-[1.45] text-[rgba(248,247,240,0.48)]">
+                  {preset.description}
+                </span>
+              </button>
+            ))}
           </div>
         </div>
 
@@ -153,6 +214,22 @@ export function GaitTunerSimulator() {
           Di source OP3, walking bukan animasi bebas: parameter seperti x_move_amplitude, period_time,
           z_move_amplitude, dan balance feedback masuk ke /robotis/walking/set_params. Satu nilai ekstrem bisa mengakibatkan{" "}
           <span className="font-bold text-[rgba(255,80,60,0.9)]">FALL_RISK</span>.
+        </div>
+
+        <div className="grid grid-cols-2 gap-2 rounded-[1rem] border border-[rgba(255,228,92,0.12)] bg-[rgba(3,6,16,0.42)] p-3">
+          {[
+            { label: "topic", value: sourceOutput },
+            { label: "command", value: commandHint },
+          ].map((item) => (
+            <div key={item.label} className="min-w-0">
+              <div className="font-mono text-[0.48rem] font-black uppercase tracking-[0.14em] text-[rgba(248,247,240,0.34)]">
+                {item.label}
+              </div>
+              <div className="mt-1 truncate font-mono text-[0.66rem] font-black text-[var(--yellow)]">
+                {item.value}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -191,7 +268,11 @@ export function GaitTunerSimulator() {
             />
           ))}
 
-          {/* Robot silhouette — centered, leans with bodyLean */}
+          {/* Center of mass indicator */}
+          <line x1="120" y1="42" x2="120" y2="166" stroke={statusStyle.dot} strokeDasharray="3 5" opacity="0.28" />
+          <circle cx={120 + leanOffset * 1.4} cy="102" r="5" fill={statusStyle.dot} opacity="0.85" />
+
+          {/* Robot silhouette */}
           <g transform={`translate(80, 30) rotate(${leanOffset}, 40, 80)`}>
             {/* Head */}
             <rect x="30" y="0" width="20" height="22" rx="5" fill="rgba(248,247,240,0.85)" />
@@ -245,8 +326,8 @@ export function GaitTunerSimulator() {
           </g>
 
           {/* Status label overlay */}
-          <rect x="310" y="12" width="96" height="28" rx="6" fill="rgba(3,6,16,0.85)" />
-          <text x="358" y="30" textAnchor="middle" fill={statusStyle.dot} fontFamily="monospace" fontSize="10" fontWeight="bold">
+          <rect x="286" y="12" width="120" height="28" rx="6" fill="rgba(3,6,16,0.85)" />
+          <text x="346" y="30" textAnchor="middle" fill={statusStyle.dot} fontFamily="monospace" fontSize="10" fontWeight="bold">
             {status}
           </text>
         </svg>
