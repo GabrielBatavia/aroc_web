@@ -25,9 +25,10 @@ export function TeamDirectory({ cohorts }: TeamDirectoryProps) {
         <div className="mt-12 space-y-5">
           {cohorts.map((cohort) => {
             const isOpen = cohort.year === openYear;
+            const panelId = `team-cohort-${cohort.year}`;
             return (
               <div className="luxury-surface overflow-hidden rounded-[2rem] border border-[var(--rule)] bg-white/[0.76] shadow-[0_22px_55px_-42px_rgba(7,12,34,0.55)] transition" key={cohort.year}>
-                <button aria-expanded={isOpen} className="flex w-full items-center justify-between gap-5 px-5 py-5 text-left sm:px-7" onClick={() => setOpenYear(isOpen ? "" : cohort.year)} type="button">
+                <button aria-controls={panelId} aria-expanded={isOpen} className="flex w-full items-center justify-between gap-5 px-5 py-5 text-left sm:px-7" onClick={() => setOpenYear(isOpen ? "" : cohort.year)} type="button">
                   <div className="flex flex-wrap items-baseline gap-x-5 gap-y-2">
                     <span className="numeral text-[2.6rem] leading-none text-[var(--gold-deep)]">{cohort.year}</span>
                     <span className="font-display text-[1.7rem] font-black uppercase leading-none tracking-[-0.03em] text-[var(--navy-deep)]">{cohort.label}</span>
@@ -36,10 +37,10 @@ export function TeamDirectory({ cohorts }: TeamDirectoryProps) {
                   <ChevronDownIcon className={["size-6 shrink-0 text-[var(--navy-deep)] transition-transform duration-300", isOpen ? "rotate-180" : ""].join(" ")} />
                 </button>
 
-                <div className={["grid transition-[grid-template-rows] duration-500", isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"].join(" ")}>
+                <div className={["grid transition-[grid-template-rows] duration-500", isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"].join(" ")} id={panelId}>
                   <div className="overflow-hidden">
                     <div className="border-t border-[var(--rule)] bg-[var(--cream-soft)] px-5 pb-7 pt-7 sm:px-7">
-                    <div className="grid gap-7 sm:grid-cols-2 xl:grid-cols-4">
+                      <div className="grid gap-7 sm:grid-cols-2 xl:grid-cols-4">
                       {cohort.members.map((member, index) => (
                         <article className="group luxury-surface rounded-[1.35rem]" key={`${cohort.year}-${member.name}`}>
                           <div className="luxury-image-frame relative aspect-[3/4] overflow-hidden rounded-[1.35rem] bg-[var(--navy-deep)] shadow-[0_26px_62px_-44px_rgba(7,12,34,0.8)]">
@@ -74,7 +75,7 @@ export function TeamDirectory({ cohorts }: TeamDirectoryProps) {
                           </div>
                         </article>
                       ))}
-                    </div>
+                      </div>
                     </div>
                   </div>
                 </div>

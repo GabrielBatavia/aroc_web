@@ -96,7 +96,7 @@ export default function Robot3DPage() {
           <div className="relative z-10 mx-auto max-w-[1320px] px-4 sm:px-8">
             <div className="mb-7 flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
               <div>
-                <div className="kicker kicker-on-ink">Interactive Model</div>
+                <div className="kicker kicker-on-ink">Model Interaktif</div>
                 <h2 className="headline mt-5 max-w-[12ch] text-[clamp(3rem,8vw,6.4rem)] text-[var(--cream)]">
                   Klik hotspot. Fokus ke sistem.
                 </h2>

@@ -24,6 +24,17 @@ export function Navbar({ links }: NavbarProps) {
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
+  useEffect(() => {
+    if (!open) return;
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [open]);
+
   const isActive = (link: NavLink) => {
     if (!link.matchPath) return false;
     return pathname === link.matchPath;
@@ -90,9 +101,10 @@ export function Navbar({ links }: NavbarProps) {
           </Link>
           {/* Hamburger — hidden on lg */}
           <button
+            aria-controls="main-mobile-navigation"
             aria-expanded={open}
             aria-label={open ? "Tutup menu" : "Buka menu"}
-            className="luxury-chip flex size-10 items-center justify-center rounded-full border border-[rgba(255,228,92,0.32)] bg-[rgba(255,228,92,0.08)] text-[var(--yellow)] transition hover:bg-[rgba(255,228,92,0.18)] lg:hidden"
+            className="luxury-chip flex size-11 items-center justify-center rounded-full border border-[rgba(255,228,92,0.28)] bg-[rgba(255,228,92,0.07)] text-[var(--yellow)] transition hover:bg-[rgba(255,228,92,0.14)] lg:hidden"
             onClick={() => setOpen((v) => !v)}
             type="button"
           >
@@ -103,7 +115,7 @@ export function Navbar({ links }: NavbarProps) {
 
       {/* ── Mobile dropdown ── */}
       {open && (
-        <div className="nav-mobile-panel mx-auto mt-2 max-w-[1280px] overflow-hidden rounded-[1.6rem] border border-[rgba(255,228,92,0.2)] bg-[rgba(5,8,22,0.97)] shadow-[0_32px_80px_-40px_rgba(0,0,0,0.95)] backdrop-blur-2xl lg:hidden">
+        <div className="nav-mobile-panel mx-auto mt-2 max-w-[1280px] overflow-hidden rounded-[1.6rem] border border-[rgba(255,228,92,0.16)] bg-[rgba(5,8,22,0.96)] shadow-[0_32px_80px_-44px_rgba(0,0,0,0.95)] backdrop-blur-2xl lg:hidden" id="main-mobile-navigation">
           <div className="grid gap-1.5 p-4">
             {links.map((link) => (
               <Link

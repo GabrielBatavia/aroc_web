@@ -708,7 +708,7 @@ button { cursor: pointer; }
 .btn-gold:hover,
 .btn-ghost-ink:hover,
 .btn-ghost-paper:hover {
-  transform: translateY(-0.22rem) rotate(-0.55deg) scale(0.985);
+  transform: translateY(-0.14rem) scale(0.992);
 }
 
 .btn-primary:focus-visible,
@@ -920,12 +920,12 @@ button { cursor: pointer; }
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 228, 92, 0.04),
-    rgba(255, 228, 92, 0.08),
-    rgba(255, 228, 92, 0.04),
+    rgba(255, 228, 92, 0.025),
+    rgba(255, 228, 92, 0.055),
+    rgba(255, 228, 92, 0.025),
     transparent
   );
-  animation: volumetricSweep 8s ease-in-out infinite;
+  animation: volumetricSweep 11s ease-in-out infinite;
   transform-origin: top center;
 }
 
@@ -939,12 +939,12 @@ button { cursor: pointer; }
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 228, 92, 0.03),
-    rgba(255, 228, 92, 0.06),
-    rgba(255, 228, 92, 0.03),
+    rgba(255, 228, 92, 0.02),
+    rgba(255, 228, 92, 0.045),
+    rgba(255, 228, 92, 0.02),
     transparent
   );
-  animation: volumetricSweep 12s ease-in-out 3s infinite;
+  animation: volumetricSweep 15s ease-in-out 3s infinite;
   transform-origin: top center;
 }
 
@@ -954,10 +954,10 @@ button { cursor: pointer; }
   width: 200%;
   height: 200%;
   pointer-events: none;
-  opacity: 0.035;
+  opacity: 0.02;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
   background-size: 256px 256px;
-  animation: grainShift 0.5s steps(6) infinite;
+  animation: grainShift 1.2s steps(6) infinite;
   mix-blend-mode: overlay;
 }
 
@@ -1045,7 +1045,7 @@ button { cursor: pointer; }
 
 .luxury-surface:hover,
 .luxury-surface:focus-within {
-  transform: translate3d(0, -0.28rem, 0);
+  transform: translate3d(0, -0.18rem, 0);
 }
 
 .luxury-surface:hover::before,
@@ -1083,7 +1083,7 @@ button { cursor: pointer; }
 .luxury-image-frame:hover .luxury-image,
 .group:hover .luxury-image,
 .group:focus-within .luxury-image {
-  transform: scale(1.045);
+  transform: scale(1.025);
   filter: saturate(1.06) contrast(1.03);
 }
 
@@ -1136,7 +1136,7 @@ button { cursor: pointer; }
 
 .luxury-chip:hover,
 .luxury-chip:focus-visible {
-  transform: translateY(-0.16rem);
+  transform: translateY(-0.08rem);
 }
 
 /* Scroll-linked cinematic atmosphere */
@@ -1147,7 +1147,12 @@ button { cursor: pointer; }
   pointer-events: none;
   overflow: hidden;
   mix-blend-mode: screen;
-  opacity: 0.42;
+  opacity: 0.24;
+  --atmosphere-a-x: 0vw;
+  --atmosphere-a-y: 0vh;
+  --atmosphere-b-x: 0vw;
+  --atmosphere-b-y: 0vh;
+  --atmosphere-line-y: 0vh;
 }
 
 .scroll-atmosphere-orb,
@@ -1168,6 +1173,7 @@ button { cursor: pointer; }
   width: 24rem;
   height: 24rem;
   background: rgba(255, 228, 92, 0.13);
+  transform: translate3d(var(--atmosphere-a-x), var(--atmosphere-a-y), 0);
 }
 
 .scroll-atmosphere-orb-b {
@@ -1176,6 +1182,7 @@ button { cursor: pointer; }
   width: 28rem;
   height: 28rem;
   background: rgba(42, 61, 130, 0.24);
+  transform: translate3d(var(--atmosphere-b-x), var(--atmosphere-b-y), 0);
 }
 
 .scroll-atmosphere-line {
@@ -1183,8 +1190,9 @@ button { cursor: pointer; }
   top: 18vh;
   width: 84vw;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 228, 92, 0.42), transparent);
-  animation: atmosphereLineDrift 5.5s ease-in-out infinite;
+  background: linear-gradient(90deg, transparent, rgba(255, 228, 92, 0.26), transparent);
+  transform: translateY(var(--atmosphere-line-y)) rotate(-8deg);
+  animation: atmosphereLineDrift 8s ease-in-out infinite;
 }
 
 /* Cinematic robot slider */

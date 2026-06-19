@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 
 export function ScrollAtmosphere() {
-  const [progress, setProgress] = useState(0);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const query = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -14,7 +14,15 @@ export function ScrollAtmosphere() {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
         const max = document.documentElement.scrollHeight - window.innerHeight;
-        setProgress(max > 0 ? window.scrollY / max : 0);
+        const progress = max > 0 ? window.scrollY / max : 0;
+        const root = rootRef.current;
+
+        if (!root) return;
+        root.style.setProperty("--atmosphere-a-x", `${progress * 5}vw`);
+        root.style.setProperty("--atmosphere-a-y", `${progress * 12}vh`);
+        root.style.setProperty("--atmosphere-b-x", `${progress * -6}vw`);
+        root.style.setProperty("--atmosphere-b-y", `${progress * 9}vh`);
+        root.style.setProperty("--atmosphere-line-y", `${progress * 24}vh`);
       });
     };
 
@@ -29,19 +37,10 @@ export function ScrollAtmosphere() {
   }, []);
 
   return (
-    <div aria-hidden="true" className="scroll-atmosphere">
-      <div
-        className="scroll-atmosphere-orb scroll-atmosphere-orb-a"
-        style={{ transform: `translate3d(${progress * 7}vw, ${progress * 18}vh, 0)` }}
-      />
-      <div
-        className="scroll-atmosphere-orb scroll-atmosphere-orb-b"
-        style={{ transform: `translate3d(${-progress * 9}vw, ${progress * 12}vh, 0)` }}
-      />
-      <div
-        className="scroll-atmosphere-line"
-        style={{ transform: `translateY(${progress * 34}vh) rotate(-8deg)` }}
-      />
+    <div aria-hidden="true" className="scroll-atmosphere" ref={rootRef}>
+      <div className="scroll-atmosphere-orb scroll-atmosphere-orb-a" />
+      <div className="scroll-atmosphere-orb scroll-atmosphere-orb-b" />
+      <div className="scroll-atmosphere-line" />
     </div>
   );
 }

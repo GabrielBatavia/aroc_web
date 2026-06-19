@@ -146,7 +146,7 @@ export default function PressPage() {
           <div className="relative z-10 mx-auto max-w-[1240px] px-4 sm:px-8">
             <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
               <div>
-                <div className="kicker">Download Pack</div>
+                <div className="kicker">Paket Unduhan</div>
                 <h2 className="headline mt-5 text-[clamp(3rem,8vw,6rem)] text-[var(--navy-deep)]">Slot siap untuk proposal dan sponsor kit.</h2>
               </div>
               <div className="grid gap-4">
@@ -155,7 +155,7 @@ export default function PressPage() {
                     <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
                       <div>
                         <div className="font-mono text-[0.62rem] font-black uppercase tracking-[0.18em] text-[var(--gold-deep)]">
-                          {item.status === "ready" ? "Ready" : "Request Access"}
+                          {item.status === "ready" ? "Siap Diunduh" : "Minta Akses"}
                         </div>
                         <h3 className="font-display mt-2 text-[2.2rem] font-black uppercase leading-none tracking-[-0.04em] text-[var(--navy-deep)]">{item.title}</h3>
                         <p className="mt-3 max-w-[34rem] text-[0.95rem] leading-[1.7] text-[var(--muted-dark)]">{item.description}</p>

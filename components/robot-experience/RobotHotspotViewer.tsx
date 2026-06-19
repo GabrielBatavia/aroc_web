@@ -289,7 +289,6 @@ export function RobotHotspotViewer({
               showPoster ? "scale-100 opacity-100" : "scale-[0.98] opacity-0"
             }`}
             fill
-            priority
             sizes="(max-width: 1024px) 100vw, 65vw"
             src={posterSrc}
           />

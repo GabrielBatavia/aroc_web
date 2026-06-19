@@ -174,6 +174,12 @@ function StatusMark({ status }: { status: ComparisonStatus }) {
   return <CrossMark />;
 }
 
+function statusLabel(status: ComparisonStatus) {
+  if (status === true) return "Ya";
+  if (status === "partial") return "Sebagian";
+  return "Tidak";
+}
+
 /* ===================================================================
    1. Loader / entry atmosphere
    =================================================================== */
@@ -271,12 +277,14 @@ function CampaignHero({ hero }: { hero: HeroData }) {
         }}
       >
         <video
-          autoPlay
+          autoPlay={canMove}
           loop
           muted
+          poster="/images/hero-integrated.png"
           playsInline
           className="h-full w-full object-cover object-center"
-          src="/images/hero-integrated-video.mp4"
+          preload={canMove ? "metadata" : "none"}
+          src={canMove ? "/images/hero-integrated-video.mp4" : undefined}
         />
       </div>
 
@@ -288,16 +296,12 @@ function CampaignHero({ hero }: { hero: HeroData }) {
 
       {/* Floating particles */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-        {[
+        {(canMove ? [
           { left: "15%", top: "30%", size: "3px", driftX: "80px", driftY: "-150px", duration: "7s", delay: "0s", color: "rgba(255,228,92,0.8)" },
           { left: "70%", top: "50%", size: "2px", driftX: "-60px", driftY: "-100px", duration: "8s", delay: "1.2s", color: "rgba(255,228,92,0.6)" },
           { left: "45%", top: "70%", size: "4px", driftX: "40px", driftY: "-180px", duration: "9s", delay: "2.5s", color: "rgba(255,228,92,0.7)" },
           { left: "80%", top: "25%", size: "2px", driftX: "-90px", driftY: "-120px", duration: "6s", delay: "0.8s", color: "rgba(248,247,240,0.5)" },
-          { left: "30%", top: "60%", size: "3px", driftX: "50px", driftY: "-140px", duration: "10s", delay: "3s", color: "rgba(255,228,92,0.5)" },
-          { left: "55%", top: "40%", size: "2px", driftX: "-30px", driftY: "-160px", duration: "7.5s", delay: "1.8s", color: "rgba(248,247,240,0.4)" },
-          { left: "88%", top: "65%", size: "3px", driftX: "-70px", driftY: "-110px", duration: "8.5s", delay: "4s", color: "rgba(255,228,92,0.6)" },
-          { left: "10%", top: "80%", size: "2px", driftX: "100px", driftY: "-90px", duration: "11s", delay: "2s", color: "rgba(255,228,92,0.4)" },
-        ].map((p, i) => (
+        ] : []).map((p, i) => (
           <div
             key={i}
             className="hero-particle"
@@ -316,19 +320,21 @@ function CampaignHero({ hero }: { hero: HeroData }) {
       </div>
 
       {/* Breathing glow behind robot area */}
-      <div
-        aria-hidden="true"
-        className="absolute"
-        style={{
-          top: "10%",
-          right: "5%",
-          width: "50%",
-          height: "70%",
-          background: "radial-gradient(ellipse at center, rgba(255,228,92,0.12), transparent 65%)",
-          animation: "heroGlowBreathe 6s ease-in-out infinite",
-          pointerEvents: "none",
-        }}
-      />
+      {canMove ? (
+        <div
+          aria-hidden="true"
+          className="absolute"
+          style={{
+            top: "10%",
+            right: "5%",
+            width: "50%",
+            height: "70%",
+            background: "radial-gradient(ellipse at center, rgba(255,228,92,0.08), transparent 65%)",
+            animation: "heroGlowBreathe 8s ease-in-out infinite",
+            pointerEvents: "none",
+          }}
+        />
+      ) : null}
 
       {/* ── Left gradient veil — keeps text readable ── */}
       <div
@@ -511,7 +517,7 @@ function CampaignHero({ hero }: { hero: HeroData }) {
             </div>
 
             {/* Quick stats */}
-            <div className="hero-sequence mt-10 flex items-center gap-3" style={{ "--sequence-delay": "1.08s" } as CSSProperties}>
+            <div className="hero-sequence mt-10 flex flex-wrap items-center gap-3" style={{ "--sequence-delay": "1.08s" } as CSSProperties}>
               {heroFacts.map((fact) => (
                 <div key={fact.label} className="stat-pill luxury-surface">
                   <span className="numeral text-[1.55rem] leading-none text-[var(--yellow)]">
@@ -1054,6 +1060,7 @@ function RobotLineupSlider({ robots }: { robots: RobotCard[] }) {
           {robots.map((r, i) => (
             <button
               aria-label={`Pilih ${r.name}`}
+              aria-pressed={i === activeIndex}
               className={`luxury-chip rounded-full border px-5 py-2.5 font-mono text-[0.68rem] font-black uppercase tracking-[0.16em] transition-all duration-300 ${
                 i === activeIndex
                   ? "border-[var(--yellow)] bg-[var(--yellow)] text-[var(--navy-deep)] shadow-[0_6px_0_var(--navy-black)]"
@@ -1232,9 +1239,11 @@ function ComparisonTable() {
               </div>
               <div className="grid place-items-center bg-[rgba(255,228,92,0.06)] p-4 sm:p-5">
                 <StatusMark status={row.aroc} />
+                <span className="sr-only">{statusLabel(row.aroc)}</span>
               </div>
               <div className="grid place-items-center p-4 sm:p-5">
                 <StatusMark status={row.generic} />
+                <span className="sr-only">{statusLabel(row.generic)}</span>
               </div>
             </div>
           ))}
@@ -1385,6 +1394,7 @@ function InsiderProof({ achievements, teamLead, teamStats, teamYears }: { achiev
 function CampaignGallery({ gallery }: { gallery: GalleryItem[] }) {
   const { ref, isVisible } = useScrollReveal();
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const lightboxRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const activeItem = lightboxIndex === null ? null : gallery[lightboxIndex];
@@ -1413,8 +1423,22 @@ function CampaignGallery({ gallery }: { gallery: GalleryItem[] }) {
       if (event.key === "ArrowLeft") goLightbox(-1);
       if (event.key === "ArrowRight") goLightbox(1);
       if (event.key === "Tab") {
-        event.preventDefault();
-        closeButtonRef.current?.focus();
+        const focusable = Array.from(
+          lightboxRef.current?.querySelectorAll<HTMLElement>(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          ) ?? []
+        ).filter((element) => !element.hasAttribute("disabled"));
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (!first || !last) return;
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
       }
     };
 
@@ -1504,7 +1528,7 @@ function CampaignGallery({ gallery }: { gallery: GalleryItem[] }) {
       </div>
 
       {activeItem ? (
-        <div aria-label="Pratinjau dokumentasi" aria-modal="true" className="lightbox-overlay" onClick={closeLightbox} role="dialog">
+        <div aria-label="Pratinjau dokumentasi" aria-modal="true" className="lightbox-overlay" onClick={closeLightbox} ref={lightboxRef} role="dialog">
           <button ref={closeButtonRef} aria-label="Tutup pratinjau" className="luxury-chip absolute right-4 top-4 z-[103] flex size-12 items-center justify-center rounded-full border border-[rgba(248,247,240,0.2)] bg-[rgba(5,8,22,0.7)] text-[var(--cream)] backdrop-blur-sm transition hover:border-[rgba(255,228,92,0.45)] hover:bg-[rgba(5,8,22,0.9)] hover:text-[var(--yellow)]" onClick={closeLightbox} type="button">
             <CloseIcon className="size-6" />
           </button>

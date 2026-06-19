@@ -26,7 +26,7 @@ const iconMap = {
   map: MapPinIcon,
 };
 
-export function Footer({ sponsors, navigation, contact }: FooterProps) {
+export function Footer({ description, sponsors, navigation, contact }: FooterProps) {
   const { ref, isVisible } = useScrollReveal({ threshold: 0.05 });
 
   return (
@@ -42,7 +42,7 @@ export function Footer({ sponsors, navigation, contact }: FooterProps) {
                 </span>
               ))}
               <Link className="font-mono text-[0.72rem] font-black uppercase tracking-[0.2em] text-[var(--yellow)] underline-offset-4 hover:underline" href="/#sponsor">
-                + logo mitra di sini
+                peluang kemitraan
               </Link>
             </div>
           </div>
@@ -64,7 +64,7 @@ export function Footer({ sponsors, navigation, contact }: FooterProps) {
               </span>
             </Link>
             <p className="mt-6 max-w-[26rem] text-[0.98rem] leading-[1.85] text-[rgba(248,247,240,0.62)]">
-              Advance Robosoccer Polinema. Development Team robot humanoid Politeknik Negeri Malang untuk riset, pengembangan, dan kompetisi.
+              {description}
             </p>
           </div>
 

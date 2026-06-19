@@ -28,6 +28,10 @@ function formatDate(value: string) {
   return dateFormatter.format(new Date(value));
 }
 
+function categorySlug(value: string) {
+  return value.toLowerCase().replace(/\s+/g, "-");
+}
+
 export default function UpdatesPage() {
   const timelineUpdates = updates.filter((item) => item !== featuredUpdate);
 
@@ -51,7 +55,7 @@ export default function UpdatesPage() {
                 </p>
                 <div className="mt-8 flex flex-wrap gap-2">
                   {updateCategories.map((category) => (
-                    <a className="luxury-chip rounded-full border border-[rgba(255,228,92,0.28)] bg-[rgba(255,228,92,0.08)] px-4 py-2 font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-[var(--yellow)]" href={`#${category.label.toLowerCase()}`} key={category.label}>
+                    <a className="luxury-chip rounded-full border border-[rgba(255,228,92,0.28)] bg-[rgba(255,228,92,0.08)] px-4 py-2 font-mono text-[0.62rem] font-black uppercase tracking-[0.16em] text-[var(--yellow)]" href={`#updates-${categorySlug(category.label)}`} key={category.label}>
                       {category.label}
                     </a>
                   ))}
@@ -69,7 +73,7 @@ export default function UpdatesPage() {
                 <Image alt={featuredUpdate.title} className="luxury-image object-cover" fill priority sizes="(max-width: 1024px) 100vw, 54vw" src={featuredUpdate.image} />
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,rgba(3,6,16,0.78))]" />
                 <div className="absolute bottom-5 left-5 rounded-full bg-[var(--yellow)] px-4 py-2 font-mono text-[0.62rem] font-black uppercase tracking-[0.18em] text-[var(--navy-deep)]">
-                  Featured / {featuredUpdate.category}
+                  Sorotan / {featuredUpdate.category}
                 </div>
               </div>
               <div className="p-6 sm:p-8 lg:p-10">
@@ -82,7 +86,7 @@ export default function UpdatesPage() {
                 <p className="mt-6 text-[1rem] leading-[1.85] text-[var(--muted-dark)]">{featuredUpdate.excerpt}</p>
                 {featuredUpdate.result ? (
                   <div className="mt-6 rounded-[1.2rem] border border-[rgba(7,12,34,0.12)] bg-[var(--cream-soft)] p-4">
-                    <div className="font-mono text-[0.58rem] font-black uppercase tracking-[0.18em] text-[var(--gold-deep)]">Result</div>
+                    <div className="font-mono text-[0.58rem] font-black uppercase tracking-[0.18em] text-[var(--gold-deep)]">Hasil</div>
                     <p className="mt-2 text-[0.94rem] leading-[1.7] text-[var(--navy-deep)]">{featuredUpdate.result}</p>
                   </div>
                 ) : null}
@@ -103,7 +107,7 @@ export default function UpdatesPage() {
           <div className="relative z-10 mx-auto max-w-[1240px] px-4 sm:px-8">
             <div className="mb-12 grid gap-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
               <div>
-                <div className="kicker kicker-on-ink">Activity Timeline</div>
+                <div className="kicker kicker-on-ink">Linimasa Aktivitas</div>
                 <h2 className="headline mt-5 text-[clamp(3rem,8vw,6.4rem)] text-[var(--cream)]">Catatan sprint dan lapangan.</h2>
               </div>
               <p className="max-w-[34rem] text-[1rem] leading-[1.85] text-[rgba(248,247,240,0.68)] lg:justify-self-end">
@@ -113,7 +117,7 @@ export default function UpdatesPage() {
 
             <div className="grid gap-5 lg:grid-cols-2">
               {timelineUpdates.map((item, index) => (
-                <article className="luxury-surface overflow-hidden rounded-[2rem] border border-[rgba(255,228,92,0.16)] bg-[rgba(248,247,240,0.06)]" id={item.category.toLowerCase()} key={`${item.date}-${item.title}`}>
+                <article className="luxury-surface overflow-hidden rounded-[2rem] border border-[rgba(255,228,92,0.16)] bg-[rgba(248,247,240,0.06)]" id={index === timelineUpdates.findIndex((entry) => entry.category === item.category) ? `updates-${categorySlug(item.category)}` : undefined} key={`${item.date}-${item.title}`}>
                   <div className="grid min-h-full gap-0 sm:grid-cols-[14rem_1fr]">
                     <div className="luxury-image-frame relative min-h-[14rem] bg-[rgba(5,8,22,0.7)]">
                       <Image alt={item.title} className="luxury-image object-cover" fill sizes="(max-width: 1024px) 100vw, 224px" src={item.image} />
@@ -147,7 +151,7 @@ export default function UpdatesPage() {
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {updateCategories.map((category) => (
                 <article className="luxury-surface rounded-[1.6rem] border border-[var(--rule)] bg-white/70 p-5" key={category.label}>
-                  <div className="font-mono text-[0.62rem] font-black uppercase tracking-[0.18em] text-[var(--gold-deep)]">Category</div>
+                  <div className="font-mono text-[0.62rem] font-black uppercase tracking-[0.18em] text-[var(--gold-deep)]">Kategori</div>
                   <h3 className="font-display mt-4 text-[2rem] font-black uppercase leading-none tracking-[-0.04em] text-[var(--navy-deep)]">{category.label}</h3>
                   <p className="mt-4 text-[0.92rem] leading-[1.7] text-[var(--muted-dark)]">{category.description}</p>
                 </article>

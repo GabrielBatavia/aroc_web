@@ -11,7 +11,7 @@ export type UpdateItem = {
 };
 
 export const updateHero = {
-  eyebrow: "News / Updates",
+  eyebrow: "Berita / Update",
   title: "Log pengembangan, kompetisi, dan milestone AROC_PL.",
   description:
     "Catatan kegiatan tim dari lab menuju arena: pengujian robot, workshop internal, milestone teknis, dan dokumentasi kompetisi robot humanoid.",
