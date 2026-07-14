@@ -19,26 +19,26 @@ type VisionPreset = {
 const VISION_PRESETS: VisionPreset[] = [
   {
     id: "source-default",
-    label: "Source Default",
-    description: "Mirip detector_config: confidence 0.15, input 320, frame_skip 2.",
+    label: "Konfigurasi source",
+    description: "Nilai awal detector_config: confidence 0,15, input 320, dan frame_skip 2.",
     values: { confidenceThreshold: 15, inputSize: 320, frameSkip: 2, minSize: 4 },
   },
   {
     id: "precision-mode",
-    label: "Precision Mode",
-    description: "Input lebih besar dan frame_skip kecil. Lebih yakin, tapi latency naik.",
+    label: "Teliti tetapi lebih berat",
+    description: "Input lebih besar dan frame_skip kecil. Detail naik, tetapi waktu proses juga bertambah.",
     values: { confidenceThreshold: 42, inputSize: 640, frameSkip: 1, minSize: 4 },
   },
   {
     id: "strict-fail",
-    label: "Too Strict",
-    description: "Confidence terlalu tinggi. Detector gagal publish circle yang cukup kuat.",
+    label: "Ambang terlalu tinggi",
+    description: "Confidence terlalu tinggi. Detector tidak meneruskan CircleSet yang cukup kuat.",
     values: { confidenceThreshold: 88, inputSize: 320, frameSkip: 2, minSize: 4 },
   },
   {
     id: "radius-reject",
-    label: "Radius Reject",
-    description: "Detector melihat bola, tapi localizer menolak karena min_radius_px terlalu besar.",
+    label: "Radius ditolak localizer",
+    description: "Detector melihat bola, tetapi localizer menolak karena radius minimum terlalu besar.",
     values: { confidenceThreshold: 15, inputSize: 320, frameSkip: 2, minSize: 48 },
   },
 ];
@@ -98,10 +98,10 @@ export function VisionLockSimulator() {
   const ss = STATUS_STYLE[status];
 
   const controls = [
-    { id: "vis-confidence", label: "confidence_threshold", value: confidenceThreshold, setter: setConfidenceThreshold, min: 5, max: 95, unit: "%" },
-    { id: "vis-input-size", label: "YOLO input_size", value: inputSize, setter: setInputSize, min: 160, max: 640, unit: "px" },
-    { id: "vis-frame-skip", label: "frame_skip", value: frameSkip, setter: setFrameSkip, min: 1, max: 6, unit: "" },
-    { id: "vis-minsize", label: "localizer min_radius_px", value: minSize, setter: setMinSize, min: 4, max: 60, unit: "px" },
+    { id: "vis-confidence", label: "Ambang keyakinan", value: confidenceThreshold, setter: setConfidenceThreshold, min: 5, max: 95, unit: "%" },
+    { id: "vis-input-size", label: "Ukuran input YOLO", value: inputSize, setter: setInputSize, min: 160, max: 640, unit: "px" },
+    { id: "vis-frame-skip", label: "Jumlah frame yang dilewati", value: frameSkip, setter: setFrameSkip, min: 1, max: 6, unit: "" },
+    { id: "vis-minsize", label: "Radius minimum localizer", value: minSize, setter: setMinSize, min: 4, max: 60, unit: "px" },
   ];
 
   const insightMap: Record<VisionStatus, string> = {
@@ -129,13 +129,13 @@ export function VisionLockSimulator() {
 
           <div className="mt-4 grid grid-cols-2 gap-3">
             <div className="rounded-xl border border-[rgba(123,147,232,0.2)] bg-[rgba(3,6,16,0.5)] p-3">
-              <div className="font-mono text-[0.5rem] font-black uppercase tracking-[0.14em] text-[rgba(248,247,240,0.4)]">Model Conf</div>
+              <div className="font-mono text-[0.5rem] font-black uppercase tracking-[0.14em] text-[rgba(248,247,240,0.4)]">Keyakinan model</div>
               <div className="mt-1 font-mono text-[1.1rem] font-black" style={{ color: detected ? "#7b93e8" : "#ffaa28" }}>
                 {Math.round(modelConfidence * 100)}%
               </div>
             </div>
             <div className="rounded-xl border border-[rgba(123,147,232,0.2)] bg-[rgba(3,6,16,0.5)] p-3">
-              <div className="font-mono text-[0.5rem] font-black uppercase tracking-[0.14em] text-[rgba(248,247,240,0.4)]">Localizer</div>
+              <div className="font-mono text-[0.5rem] font-black uppercase tracking-[0.14em] text-[rgba(248,247,240,0.4)]">Status localizer</div>
               <div className="mt-1 font-mono text-[1.1rem] font-black" style={{ color: localizerStatus === "OK" ? "#7b93e8" : "#ff5040" }}>
                 {localizerStatus}
               </div>
@@ -145,7 +145,7 @@ export function VisionLockSimulator() {
 
         <div>
           <div className="mb-2 font-mono text-[0.54rem] font-black uppercase tracking-[0.16em] text-[rgba(248,247,240,0.38)]">
-            Scenario Preset
+            Skenario pembelajaran
           </div>
           <div className="grid gap-2">
             {VISION_PRESETS.map((preset) => (
@@ -196,6 +196,15 @@ export function VisionLockSimulator() {
           {insightMap[status]}
         </div>
 
+        <div className="rounded-[1rem] border border-[rgba(123,147,232,0.16)] bg-[rgba(123,147,232,0.055)] p-4">
+          <div className="font-mono text-[0.5rem] font-black uppercase tracking-[0.14em] text-[#7b93e8]">Cara membaca ilustrasi</div>
+          <ol className="mt-3 grid gap-2 text-[0.76rem] leading-[1.55] text-[rgba(248,247,240,0.66)]">
+            <li><span className="mr-2 font-mono font-black text-[#7b93e8]">1.</span>Garis scan muncul ketika detector belum menemukan hasil yang dapat dipakai.</li>
+            <li><span className="mr-2 font-mono font-black text-[#7b93e8]">2.</span>Kotak biru mengunci bola ketika confidence melewati ambang yang dipilih.</li>
+            <li><span className="mr-2 font-mono font-black text-[#7b93e8]">3.</span>Hasil diteruskan ke localizer hanya jika radiusnya juga valid.</li>
+          </ol>
+        </div>
+
         <div className="grid grid-cols-2 gap-2 rounded-[1rem] border border-[rgba(123,147,232,0.15)] bg-[rgba(3,6,16,0.42)] p-3">
           {[
             { label: "detector", value: publishStatus },
@@ -216,14 +225,14 @@ export function VisionLockSimulator() {
       {/* Visualization */}
       <div className="border-t border-[rgba(123,147,232,0.12)] p-4 sm:p-6 lg:border-l lg:border-t-0">
         <div className="font-mono text-[0.54rem] font-black uppercase tracking-[0.16em] text-[rgba(248,247,240,0.4)] mb-3">
-          YOLO Ball Pipeline
+          Alur detector sampai localizer
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
           {/* Camera frame */}
           <div>
             <div className="mb-2 font-mono text-[0.5rem] font-black uppercase tracking-[0.13em] text-[rgba(248,247,240,0.35)]">
-              Debug Image: /ball_detector_node/image_out
+              Gambar kamera: /ball_detector_node/image_out
             </div>
             <svg
               viewBox="0 0 360 240"
@@ -241,9 +250,10 @@ export function VisionLockSimulator() {
               <circle cx="211" cy="118" fill="rgba(255,255,255,0.3)" r="9" />
               <circle cx="68" cy="49" fill="rgba(255,100,20,0.28)" r="5" />
               <circle cx="306" cy="71" fill="rgba(255,120,30,0.22)" r="6" />
+              {!detected && <line className="vision-search-scan" x1="18" x2="18" y1="18" y2="222" stroke="#7b93e8" strokeWidth="3" />}
               {/* Bounding box */}
               {detected && (
-                <g opacity={boundingBoxOpacity}>
+                <g className="vision-detection-lock" opacity={boundingBoxOpacity}>
                   <rect
                     x="184" y="94" width="76" height="76" rx="4"
                     fill="none" stroke="#7b93e8" strokeWidth="2.5" strokeDasharray="6 3"
@@ -260,7 +270,7 @@ export function VisionLockSimulator() {
           {/* Mask frame */}
           <div>
             <div className="mb-2 font-mono text-[0.5rem] font-black uppercase tracking-[0.13em] text-[rgba(248,247,240,0.35)]">
-              CircleSet + Localizer
+              CircleSet dan localizer
             </div>
             <svg
               viewBox="0 0 360 240"
@@ -301,7 +311,7 @@ export function VisionLockSimulator() {
                 min
               </text>
               {detected && (
-                <>
+                <g className="vision-detection-lock">
                   <line x1="222" y1="132" x2="300" y2="70" stroke="rgba(123,147,232,0.45)" strokeDasharray="4 3" />
                   <rect x="230" y="42" width="112" height="42" rx="7" fill="rgba(3,6,16,0.82)" />
                   <text x="286" y="58" textAnchor="middle" fill="#7b93e8" fontFamily="monospace" fontSize="8" fontWeight="bold">
@@ -310,7 +320,7 @@ export function VisionLockSimulator() {
                   <text x="286" y="72" textAnchor="middle" fill="#7b93e8" fontFamily="monospace" fontSize="8" fontWeight="bold">
                     z=38px
                   </text>
-                </>
+                </g>
               )}
             </svg>
           </div>
@@ -319,9 +329,9 @@ export function VisionLockSimulator() {
         {/* Stats row */}
         <div className="mt-3 grid grid-cols-3 gap-2">
           {[
-            { label: "FPS", value: `${processedFps}` },
-            { label: "Latency", value: `${latencyMs}ms` },
-            { label: "Circle z", value: detected ? "38px" : "--" },
+            { label: "Frame per detik", value: `${processedFps}` },
+            { label: "Waktu proses", value: `${latencyMs}ms` },
+            { label: "Radius bola", value: detected ? "38px" : "--" },
           ].map((m) => (
             <div
               key={m.label}

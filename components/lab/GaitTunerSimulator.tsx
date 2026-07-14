@@ -53,20 +53,20 @@ const LAB_API_URL = process.env.NEXT_PUBLIC_LAB_API_URL?.replace(/\/$/, "");
 const GAIT_PRESETS: GaitPreset[] = [
   {
     id: "match-safe",
-    label: "Match Safe",
-    description: "Parameter mendekati default OP3: cadence aman, foot clearance cukup, balance aktif.",
+    label: "Langkah aman",
+    description: "Nilai awal model pembelajaran: langkah sedang, tinggi kaki cukup, dan bantuan keseimbangan aktif.",
     values: { xMoveMm: 24, periodMs: 600, footHeightMm: 40, balanceGain: 74 },
   },
   {
     id: "fast-approach",
-    label: "Fast Approach",
-    description: "Robot mengejar bola lebih agresif. Lebih cepat, tapi margin stabilitas turun.",
+    label: "Mendekati lebih cepat",
+    description: "Langkah lebih panjang dengan waktu lebih singkat. Robot bergerak cepat, tetapi margin stabilitas berkurang.",
     values: { xMoveMm: 42, periodMs: 470, footHeightMm: 42, balanceGain: 68 },
   },
   {
     id: "fall-risk",
-    label: "Fall Risk",
-    description: "Langkah terlalu besar, period terlalu pendek, dan balance feedback terlalu lemah.",
+    label: "Risiko jatuh",
+    description: "Langkah terlalu besar, waktu siklus terlalu singkat, dan bantuan keseimbangan terlalu lemah.",
     values: { xMoveMm: 56, periodMs: 380, footHeightMm: 68, balanceGain: 44 },
   },
 ];
@@ -192,7 +192,7 @@ export function GaitTunerSimulator() {
         const payload: unknown = await response.json();
 
         if (!response.ok || !isSimulationResult(payload)) {
-          throw new Error("The simulation service returned an invalid response.");
+          throw new Error("Layanan simulasi mengembalikan respons yang tidak sesuai.");
         }
         if (requestId !== requestIdRef.current) return;
 
@@ -206,7 +206,7 @@ export function GaitTunerSimulator() {
       } catch (error) {
         if (controller.signal.aborted || requestId !== requestIdRef.current) return;
         setSimulationState("error");
-        setSimulationError(error instanceof Error ? error.message : "Unable to run the detailed simulation.");
+        setSimulationError(error instanceof Error ? error.message : "Simulasi detail belum dapat dijalankan.");
       }
     }, 300);
 
@@ -227,20 +227,20 @@ export function GaitTunerSimulator() {
   const leanOffset = ((70 - balanceGain) / 70) * 12 + lateralOffsetMm * 0.24;
   const simulationLabel =
     simulationState === "ready"
-      ? "Detailed engine"
+      ? "Simulasi detail"
       : simulationState === "updating"
-        ? "Updating simulation"
+        ? "Memperbarui simulasi"
         : simulationState === "error"
-          ? "Last result retained"
-          : "Local preview";
+          ? "Hasil terakhir dipertahankan"
+          : "Pratinjau lokal";
 
   const controls = [
-    { id: "gait-x-move", label: "x_move_amplitude", value: xMoveMm, setter: setXMoveMm, min: 0, max: 60, unit: "mm" },
-    { id: "gait-period", label: "period_time", value: periodMs, setter: setPeriodMs, min: 350, max: 900, unit: "ms" },
-    { id: "gait-foot-height", label: "z_move_amplitude", value: footHeightMm, setter: setFootHeightMm, min: 10, max: 80, unit: "mm" },
-    { id: "gait-balance", label: "balance feedback", value: balanceGain, setter: setBalanceGain, min: 0, max: 100, unit: "%" },
-    { id: "gait-com-height", label: "center of mass", value: comHeightMm, setter: setComHeightMm, min: 220, max: 360, unit: "mm" },
-    { id: "gait-lateral-offset", label: "lateral offset", value: lateralOffsetMm, setter: setLateralOffsetMm, min: -40, max: 40, unit: "mm" },
+    { id: "gait-x-move", label: "Panjang langkah (x_move_amplitude)", value: xMoveMm, setter: setXMoveMm, min: 0, max: 60, unit: "mm" },
+    { id: "gait-period", label: "Waktu satu siklus (period_time)", value: periodMs, setter: setPeriodMs, min: 350, max: 900, unit: "ms" },
+    { id: "gait-foot-height", label: "Tinggi kaki (z_move_amplitude)", value: footHeightMm, setter: setFootHeightMm, min: 10, max: 80, unit: "mm" },
+    { id: "gait-balance", label: "Bantuan keseimbangan", value: balanceGain, setter: setBalanceGain, min: 0, max: 100, unit: "%" },
+    { id: "gait-com-height", label: "Tinggi pusat massa", value: comHeightMm, setter: setComHeightMm, min: 220, max: 360, unit: "mm" },
+    { id: "gait-lateral-offset", label: "Pergeseran kiri atau kanan", value: lateralOffsetMm, setter: setLateralOffsetMm, min: -40, max: 40, unit: "mm" },
   ];
 
   return (
@@ -256,7 +256,7 @@ export function GaitTunerSimulator() {
             {status}
           </div>
           <div className="mt-4 font-mono text-[0.58rem] font-black uppercase tracking-[0.18em] text-[rgba(248,247,240,0.5)]">
-            Stability Score
+            Skor stabilitas
           </div>
           <div className="mt-1 font-display text-[3.5rem] font-black leading-none tracking-tight transition-all duration-300" style={{ color: statusStyle.text }}>
             {Math.round(stability)}<span className="text-[1.5rem] opacity-60">%</span>
@@ -271,7 +271,7 @@ export function GaitTunerSimulator() {
         </div>
 
         <div>
-          <div className="mb-2 font-mono text-[0.54rem] font-black uppercase tracking-[0.16em] text-[rgba(248,247,240,0.38)]">Scenario Preset</div>
+          <div className="mb-2 font-mono text-[0.54rem] font-black uppercase tracking-[0.16em] text-[rgba(248,247,240,0.38)]">Skenario pembelajaran</div>
           <div className="grid gap-2">
             {GAIT_PRESETS.map((preset) => (
               <button
@@ -316,13 +316,13 @@ export function GaitTunerSimulator() {
         </div>
 
         <div className="rounded-[1rem] border border-[rgba(255,228,92,0.14)] bg-[rgba(248,247,240,0.04)] p-4 text-[0.82rem] leading-[1.7] text-[rgba(248,247,240,0.6)]">
-          Simulator menghitung pengaruh stride, cadence, foot clearance, balance feedback, center of mass, dan lateral offset pada satu siklus gait. Ini estimator edukatif, bukan command ke robot fisik.
+          Simulator menghitung pengaruh panjang langkah, waktu siklus, tinggi kaki, bantuan keseimbangan, pusat massa, dan pergeseran ke samping pada satu siklus gait. Ini adalah estimator pembelajaran, bukan perintah ke robot fisik.
         </div>
 
         {simulationState === "error" && (
           <div className="rounded-[1rem] border border-[rgba(255,80,60,0.24)] bg-[rgba(255,80,60,0.08)] p-4 text-[0.78rem] leading-[1.6] text-[rgba(248,247,240,0.7)]" role="status">
             <p>{simulationError}</p>
-            <button className="mt-3 font-mono text-[0.62rem] font-black uppercase tracking-[0.14em] text-[#ffb3a8] underline underline-offset-4" onClick={() => setRetryNonce((value) => value + 1)} type="button">Retry simulator</button>
+            <button className="mt-3 font-mono text-[0.62rem] font-black uppercase tracking-[0.14em] text-[#ffb3a8] underline underline-offset-4" onClick={() => setRetryNonce((value) => value + 1)} type="button">Coba simulasi lagi</button>
           </div>
         )}
 
@@ -338,51 +338,58 @@ export function GaitTunerSimulator() {
 
       <div className="relative border-t border-[rgba(255,228,92,0.1)] p-4 sm:p-6 lg:border-l lg:border-t-0">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2 font-mono text-[0.54rem] font-black uppercase tracking-[0.16em] text-[rgba(248,247,240,0.4)]">
-          <span>Detailed Gait Simulation</span>
+          <span>Ilustrasi stabilitas gait</span>
           {simulation && <span className="text-[var(--yellow)]">v{simulation.version} / {simulation.metrics.estimatedCadenceHz.toFixed(2)} Hz</span>}
         </div>
 
-        <svg viewBox="0 0 420 200" className="w-full rounded-[1.2rem] border border-[rgba(255,228,92,0.1)] bg-[rgba(3,6,16,0.5)]" aria-label="Humanoid robot gait simulation on soccer field" role="img">
-          <rect fill="#0d2218" width="420" height="200" />
-          <rect fill="#122b1e" x="0" y="160" width="420" height="40" />
-          {[0, 60, 120, 180, 240, 300, 360, 420].map((x) => <line key={x} x1={x} y1="120" x2={x} y2="200" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />)}
-          <line x1="0" y1="160" x2="420" y2="160" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+        <svg viewBox="0 0 420 220" className="w-full rounded-[1.2rem] border border-[rgba(255,228,92,0.1)] bg-[rgba(3,6,16,0.5)]" aria-label="Ilustrasi area tumpuan, pusat massa, dan fase langkah robot humanoid" role="img">
+          <rect fill="#0a1628" height="220" width="420" />
+          <path d="M104 173 165 38h91l61 135Z" fill="rgba(255,228,92,0.065)" stroke={statusStyle.dot} strokeDasharray="6 5" strokeOpacity="0.72" strokeWidth="2" />
+          <text fill="rgba(248,247,240,0.5)" fontFamily="monospace" fontSize="9" x="18" y="22">TAMPAK ATAS · AREA TUMPUAN</text>
+          <text fill="rgba(248,247,240,0.46)" fontFamily="monospace" fontSize="8" x="18" y="207">Kaki yang menumpu membentuk area aman untuk pusat massa.</text>
 
-          {footsteps.map((footstep, index) => <ellipse key={index} cx={footstep.x} cy={footstep.y} rx={6} ry={3.5} fill={index === 0 ? statusStyle.dot : "rgba(255,228,92,0.2)"} opacity={1 - index * 0.12} />)}
-          <line x1="120" y1="42" x2="120" y2="166" stroke={statusStyle.dot} strokeDasharray="3 5" opacity="0.28" />
-          <circle cx={120 + leanOffset * 1.4} cy="102" r="5" fill={statusStyle.dot} opacity="0.85" />
-
-          <g transform={`translate(80, 30) rotate(${leanOffset}, 40, 80)`}>
-            <rect x="30" y="0" width="20" height="22" rx="5" fill="rgba(248,247,240,0.85)" />
-            <rect x="33" y="6" width="14" height="7" rx="2" fill={statusStyle.dot} opacity="0.9" />
-            <rect x="37" y="22" width="6" height="6" rx="1" fill="rgba(248,247,240,0.5)" />
-            <rect x="22" y="28" width="36" height="38" rx="7" fill="rgba(248,247,240,0.8)" />
-            <rect x="30" y="34" width="20" height="10" rx="3" fill={statusStyle.dot} opacity="0.35" />
-            <rect x="8" y="30" width="12" height="30" rx="5" fill="rgba(248,247,240,0.65)" />
-            <rect x="60" y="30" width="12" height="30" rx="5" fill="rgba(248,247,240,0.65)" />
-            <rect x="24" y="66" width="14" height="36" rx="5" fill="rgba(248,247,240,0.75)" transform={`rotate(${-footHeightMm * 0.17}, 31, 66)`} />
-            <rect x="42" y="66" width="14" height="36" rx="5" fill="rgba(248,247,240,0.75)" transform={`rotate(${footHeightMm * 0.17}, 49, 66)`} />
-            <rect x="20" y="98" width="20" height="8" rx="3" fill="rgba(248,247,240,0.6)" />
-            <rect x="40" y="98" width="20" height="8" rx="3" fill="rgba(248,247,240,0.6)" />
+          <g className="gait-swing-foot">
+            <rect fill="rgba(255,228,92,0.14)" height="72" rx="13" stroke={statusStyle.dot} strokeWidth="2.5" width="43" x="117" y="116" />
+            <text fill={statusStyle.dot} fontFamily="monospace" fontSize="8" fontWeight="bold" textAnchor="middle" x="138" y="156">KAKI</text>
+            <text fill={statusStyle.dot} fontFamily="monospace" fontSize="8" fontWeight="bold" textAnchor="middle" x="138" y="168">AYUN</text>
+          </g>
+          <g>
+            <rect fill="rgba(248,247,240,0.12)" height="72" rx="13" stroke="rgba(248,247,240,0.7)" strokeWidth="2.5" width="43" x="260" y="116" />
+            <text fill="#f8f7f0" fontFamily="monospace" fontSize="8" fontWeight="bold" textAnchor="middle" x="281" y="156">KAKI</text>
+            <text fill="#f8f7f0" fontFamily="monospace" fontSize="8" fontWeight="bold" textAnchor="middle" x="281" y="168">TUMPU</text>
           </g>
 
-          <g transform="translate(0, 90)"><path d={waveformPath} fill="none" stroke={statusStyle.dot} strokeWidth="2" strokeDasharray="4 2" opacity="0.6" /></g>
-          <rect x="286" y="12" width="120" height="28" rx="6" fill="rgba(3,6,16,0.85)" />
-          <text x="346" y="30" textAnchor="middle" fill={statusStyle.dot} fontFamily="monospace" fontSize="10" fontWeight="bold">{status}</text>
+          <circle className="gait-com-marker" cx={210 + leanOffset * 1.25} cy="104" fill={statusStyle.dot} r="10" />
+          <circle cx={210 + leanOffset * 1.25} cy="104" fill="none" opacity="0.32" r="18" stroke={statusStyle.dot} strokeWidth="2" />
+          <text fill={statusStyle.dot} fontFamily="monospace" fontSize="9" fontWeight="bold" textAnchor="middle" x="210" y="72">PUSAT MASSA</text>
+
+          <line stroke="rgba(248,247,240,0.16)" strokeWidth="1" x1="40" x2="380" y1="194" y2="194" />
+          {footsteps.map((footstep, index) => <ellipse key={index} cx={64 + index * 45} cy="194" fill={index === 0 ? statusStyle.dot : "rgba(255,228,92,0.22)"} opacity={1 - index * 0.12} rx="7" ry="3.6" />)}
+          <circle className="gait-phase-dot" cx="56" cy="194" fill={statusStyle.dot} r="5" />
+
+          <g transform="translate(0, 106)"><path d={waveformPath} fill="none" opacity="0.56" stroke={statusStyle.dot} strokeDasharray="4 2" strokeWidth="2" /></g>
+          <rect fill="rgba(3,6,16,0.86)" height="29" rx="6" width="132" x="270" y="12" />
+          <text fill={statusStyle.dot} fontFamily="monospace" fontSize="9" fontWeight="bold" textAnchor="middle" x="336" y="30">{status}</text>
         </svg>
+
+        <div className="mt-4 grid gap-2 rounded-[1rem] border border-[rgba(255,228,92,0.12)] bg-[rgba(255,228,92,0.045)] p-4 sm:grid-cols-3">
+          <div><div className="font-mono text-[0.48rem] font-black uppercase tracking-[0.13em] text-[var(--yellow)]">1. Kaki tumpu</div><p className="mt-1 text-[0.72rem] leading-[1.55] text-[rgba(248,247,240,0.62)]">Satu kaki menahan berat ketika kaki lain mulai bergerak.</p></div>
+          <div><div className="font-mono text-[0.48rem] font-black uppercase tracking-[0.13em] text-[var(--yellow)]">2. Pusat massa</div><p className="mt-1 text-[0.72rem] leading-[1.55] text-[rgba(248,247,240,0.62)]">Titik kuning perlu tetap dekat area tumpuan agar langkah tidak goyah.</p></div>
+          <div><div className="font-mono text-[0.48rem] font-black uppercase tracking-[0.13em] text-[var(--yellow)]">3. Fase langkah</div><p className="mt-1 text-[0.72rem] leading-[1.55] text-[rgba(248,247,240,0.62)]">Penanda bawah bergerak melalui satu siklus gait dari hasil simulasi.</p></div>
+        </div>
 
         <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
           {[
-            { label: "min margin", value: simulation ? `${simulation.metrics.minimumMargin.toFixed(3)}m` : "preview" },
-            { label: "mean margin", value: simulation ? `${simulation.metrics.meanMargin.toFixed(3)}m` : "preview" },
+            { label: "margin minimum", value: simulation ? `${simulation.metrics.minimumMargin.toFixed(3)}m` : "pratinjau" },
+            { label: "margin rata-rata", value: simulation ? `${simulation.metrics.meanMargin.toFixed(3)}m` : "pratinjau" },
             { label: "cadence", value: simulation ? `${simulation.metrics.estimatedCadenceHz.toFixed(2)}Hz` : `${(1000 / periodMs).toFixed(2)}Hz` },
             { label: "risk flags", value: simulation ? String(simulation.metrics.riskFactors.length) : "—" },
           ].map((metric) => <div key={metric.label} className="rounded-xl border border-[rgba(255,228,92,0.12)] bg-[rgba(3,6,16,0.5)] p-3 text-center"><div className="font-mono text-[0.5rem] font-black uppercase tracking-[0.14em] text-[rgba(248,247,240,0.4)]">{metric.label}</div><div className="mt-1 font-mono text-[0.82rem] font-black text-[var(--yellow)]">{metric.value}</div></div>)}
         </div>
 
         <div className="mt-4 rounded-[1rem] border border-[rgba(255,228,92,0.12)] bg-[rgba(3,6,16,0.42)] p-4">
-          <div className="font-mono text-[0.5rem] font-black uppercase tracking-[0.14em] text-[rgba(248,247,240,0.38)]">Simulation recommendation</div>
-          <p className="mt-2 text-[0.82rem] leading-[1.65] text-[rgba(248,247,240,0.68)]">{simulation?.summary.recommendation ?? "Connect the Lab API to inspect per-phase stability and parameter recommendations."}</p>
+          <div className="font-mono text-[0.5rem] font-black uppercase tracking-[0.14em] text-[rgba(248,247,240,0.38)]">Penjelasan hasil simulasi</div>
+          <p className="mt-2 text-[0.82rem] leading-[1.65] text-[rgba(248,247,240,0.68)]">{simulation?.summary.recommendation ?? "Hubungkan Lab API untuk melihat stabilitas setiap fase dan saran parameter yang lebih rinci."}</p>
           {simulation && simulation.metrics.riskFactors.length > 0 && <ul className="mt-3 grid gap-1 text-[0.72rem] leading-[1.5] text-[rgba(248,247,240,0.48)]">{simulation.metrics.riskFactors.slice(0, 3).map((risk) => <li key={risk}>• {risk}</li>)}</ul>}
         </div>
       </div>
