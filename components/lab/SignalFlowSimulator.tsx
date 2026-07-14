@@ -190,7 +190,7 @@ export function SignalFlowSimulator() {
       const delayed = status === "KICK_GATE" || status === "TURN_ACTION";
       setPackets((prev) => {
         const moved = prev
-          .map((p) => ({ ...p, x: p.x + 3.4 }))
+          .map((p) => ({ ...p, x: p.x + 20 }))
           .filter((p) => p.x < 420);
         const newPacket: PacketDot = {
           id: ++packetIdRef.current,
@@ -199,9 +199,9 @@ export function SignalFlowSimulator() {
           dropped,
           delayed,
         };
-        return [...moved, newPacket];
+        return [...moved, newPacket].slice(-24);
       });
-    }, 120);
+    }, 240);
 
     return () => clearInterval(interval);
   }, [status]);
@@ -215,7 +215,7 @@ export function SignalFlowSimulator() {
         const next = [
           ...prev,
           { id: ++logIdRef.current, channel: entry.channel, message: entry.msg, level: entry.level },
-        ].slice(-24);
+        ].slice(-12);
         return next;
       });
     }, 520);

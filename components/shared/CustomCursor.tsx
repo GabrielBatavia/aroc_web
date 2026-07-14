@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 
 type CursorMode = "default" | "action" | "media" | "drag";
 
@@ -12,6 +13,7 @@ const cursorLabels: Record<CursorMode, string> = {
 };
 
 export function CustomCursor() {
+  const pathname = usePathname();
   const [mode, setMode] = useState<CursorMode>("default");
   const [isPressed, setIsPressed] = useState(false);
   const [isHidden, setIsHidden] = useState(true);
@@ -24,7 +26,7 @@ export function CustomCursor() {
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-    if (!finePointer.matches || reducedMotion.matches) return;
+    if (pathname === "/lab" || !finePointer.matches || reducedMotion.matches) return;
 
     document.documentElement.classList.add("has-custom-cursor");
 
@@ -99,7 +101,7 @@ export function CustomCursor() {
       window.cancelAnimationFrame(animationFrameId);
       document.documentElement.classList.remove("has-custom-cursor");
     };
-  }, []);
+  }, [pathname]);
 
   return (
     <div
