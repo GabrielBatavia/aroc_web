@@ -27,12 +27,18 @@ export function Navbar({ links }: NavbarProps) {
   useEffect(() => {
     if (!open) return;
 
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") setOpen(false);
     };
 
     window.addEventListener("keydown", closeOnEscape);
-    return () => window.removeEventListener("keydown", closeOnEscape);
+    return () => {
+      window.removeEventListener("keydown", closeOnEscape);
+      document.body.style.overflow = previousOverflow;
+    };
   }, [open]);
 
   const isActive = (link: NavLink) => {
@@ -41,15 +47,15 @@ export function Navbar({ links }: NavbarProps) {
   };
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
+    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-6 sm:pt-4">
       {/* ── Main nav pill ── */}
       <nav
         aria-label="Main navigation"
         className={[
-          "nav-shell mx-auto flex max-w-[1280px] items-center gap-3 rounded-full border px-3 py-2 shadow-[0_24px_64px_-40px_rgba(0,0,0,0.95)] backdrop-blur-2xl transition-all duration-300 sm:px-4",
+          "nav-shell mx-auto flex max-w-[1240px] items-center gap-3 rounded-[1.2rem] border px-3 py-2 shadow-[0_24px_64px_-42px_rgba(0,0,0,0.95)] backdrop-blur-2xl transition-all duration-500 sm:px-4",
           scrolled
-            ? "border-[rgba(255,228,92,0.28)] bg-[rgba(5,8,22,0.92)]"
-            : "border-[rgba(248,247,240,0.12)] bg-[rgba(5,8,22,0.6)]",
+            ? "border-[rgba(255,228,92,0.22)] bg-[rgba(5,8,22,0.9)]"
+            : "border-[rgba(248,247,240,0.1)] bg-[rgba(5,8,22,0.52)]",
         ].join(" ")}
       >
         {/* ── Left: Logo ── */}
@@ -83,6 +89,7 @@ export function Navbar({ links }: NavbarProps) {
               ].join(" ")}
               href={link.href}
               key={`${link.href}-${index}`}
+              aria-current={isActive(link) ? "page" : undefined}
             >
               <span className="inline-block transition-transform duration-200 group-hover:-translate-y-px">
                 {link.label}
@@ -115,7 +122,7 @@ export function Navbar({ links }: NavbarProps) {
 
       {/* ── Mobile dropdown ── */}
       {open && (
-        <div className="nav-mobile-panel mx-auto mt-2 max-w-[1280px] overflow-hidden rounded-[1.6rem] border border-[rgba(255,228,92,0.16)] bg-[rgba(5,8,22,0.96)] shadow-[0_32px_80px_-44px_rgba(0,0,0,0.95)] backdrop-blur-2xl lg:hidden" id="main-mobile-navigation">
+        <div className="nav-mobile-panel mx-auto mt-2 max-w-[1240px] overflow-hidden rounded-[1.2rem] border border-[rgba(255,228,92,0.16)] bg-[rgba(5,8,22,0.96)] shadow-[0_32px_80px_-44px_rgba(0,0,0,0.95)] backdrop-blur-2xl lg:hidden" id="main-mobile-navigation">
           <div className="grid gap-1.5 p-4">
             {links.map((link) => (
               <Link
@@ -127,6 +134,7 @@ export function Navbar({ links }: NavbarProps) {
                 ].join(" ")}
                 href={link.href}
                 key={link.href}
+                aria-current={isActive(link) ? "page" : undefined}
                 onClick={() => setOpen(false)}
               >
                 {link.label}

@@ -11,7 +11,7 @@ export function ArocGeneratedMark({ className, priority = false }: { className?:
         alt="AROC Logo"
         fill
         sizes="(max-width: 768px) 150px, 300px"
-        className="object-contain"
+        className="object-contain mix-blend-multiply"
         priority={priority}
       />
     </div>

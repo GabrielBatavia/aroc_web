@@ -67,7 +67,7 @@ function buildWaveform(xMoveMm: number, footHeightMm: number, periodMs: number, 
   const points: string[] = [];
   for (let x = 0; x <= 360; x += 3) {
     const y = 48 - Math.sin(((x / strideWidth) + phase) * frequency) * amplitude;
-    points.push(`${x},${y}`);
+    points.push(`${x},${y.toFixed(3)}`);
   }
   return `M ${points.join(" L ")}`;
 }
@@ -102,6 +102,8 @@ export function GaitTunerSimulator() {
 
   // Animate waveform
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     let last = 0;
     const tick = (t: number) => {
       if (t - last > 16) {

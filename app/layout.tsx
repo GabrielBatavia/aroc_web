@@ -5,6 +5,7 @@ import "./globals.css";
 import { ScrollAtmosphere } from "@/components/shared/ScrollAtmosphere";
 import { ScrollProgress } from "@/components/shared/ScrollProgress";
 import { CustomCursor } from "@/components/shared/CustomCursor";
+import { PageChoreography } from "@/components/shared/PageChoreography";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -60,6 +61,7 @@ export default function RootLayout({
         <CustomCursor />
         <ScrollAtmosphere />
         <ScrollProgress />
+        <PageChoreography />
         {children}
       </body>
     </html>

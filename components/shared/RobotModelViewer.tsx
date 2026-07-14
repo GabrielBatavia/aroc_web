@@ -126,6 +126,7 @@ export function RobotModelViewer({
         <model-viewer
           ref={viewerRef}
           alt={alt}
+          data-cursor="drag"
           camera-controls
           camera-orbit="18deg 76deg 112%"
           className="absolute inset-0 z-10 h-full w-full cursor-grab opacity-100 transition-opacity duration-700 active:cursor-grabbing"

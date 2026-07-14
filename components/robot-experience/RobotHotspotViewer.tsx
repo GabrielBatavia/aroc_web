@@ -209,7 +209,7 @@ export function RobotHotspotViewer({
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden rounded-[2.6rem] border border-[rgba(255,228,92,0.22)] bg-[linear-gradient(140deg,rgba(10,18,42,0.96),rgba(3,6,16,0.98)_52%,rgba(24,35,76,0.9))] shadow-[0_48px_120px_-76px_rgba(0,0,0,1)]"
+      className="relative overflow-hidden rounded-[1.9rem] border border-[rgba(255,228,92,0.2)] bg-[linear-gradient(140deg,rgba(10,18,42,0.96),rgba(3,6,16,0.98)_52%,rgba(24,35,76,0.9))] shadow-[0_48px_120px_-76px_rgba(0,0,0,1)]"
     >
       <div className="absolute inset-0 opacity-60" aria-hidden="true">
         <div className="absolute left-1/2 top-10 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(255,228,92,0.18),transparent_64%)] blur-3xl" />
@@ -297,6 +297,7 @@ export function RobotHotspotViewer({
             <model-viewer
               ref={viewerRef}
               alt={alt}
+              data-cursor="drag"
               camera-controls
               camera-orbit={activeHotspot.cameraOrbit}
               camera-target={activeHotspot.cameraTarget}

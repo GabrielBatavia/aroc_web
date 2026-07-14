@@ -184,36 +184,48 @@ function statusLabel(status: ComparisonStatus) {
    1. Loader / entry atmosphere
    =================================================================== */
 
+const campaignEntryStorageKey = "aroc-campaign-entry-seen";
+
 function CampaignLoader() {
-  const [phase, setPhase] = useState<"visible" | "fading" | "done">(() => {
-    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return "done";
-    return "visible";
-  });
+  const [phase, setPhase] = useState<"visible" | "revealing" | "done">("visible");
 
   useEffect(() => {
-    if (phase === "done") return;
-    const t1 = setTimeout(() => setPhase("fading"), 200);
-    const t2 = setTimeout(() => setPhase("done"), 900);
+    const shouldSkip =
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      window.sessionStorage.getItem(campaignEntryStorageKey) === "true";
+
+    if (shouldSkip) {
+      const frame = window.requestAnimationFrame(() => setPhase("done"));
+      return () => window.cancelAnimationFrame(frame);
+    }
+
+    const t1 = window.setTimeout(() => setPhase("revealing"), 760);
+    const t2 = window.setTimeout(() => {
+      window.sessionStorage.setItem(campaignEntryStorageKey, "true");
+      setPhase("done");
+    }, 1580);
     return () => { clearTimeout(t1); clearTimeout(t2); };
-  }, [phase]);
+  }, []);
 
   if (phase === "done") return null;
 
   return (
     <div
       aria-hidden="true"
-      className={`fixed inset-0 z-[200] flex items-center justify-center transition-opacity duration-700 ${phase === "fading" ? "pointer-events-none opacity-0" : "opacity-100"}`}
-      style={{ background: "var(--navy-abyss)" }}
+      className={`campaign-entry ${phase === "revealing" ? "is-revealing" : ""}`}
     >
-      <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(circle at 1.5px 1.5px, rgba(255,228,92,0.08) 1px, transparent 0)", backgroundSize: "28px 28px" }} />
-      <div className="relative flex flex-col items-center gap-6">
-        <span className="flex size-20 items-center justify-center rounded-full bg-[var(--yellow)] p-2 shadow-[0_0_0_8px_rgba(255,228,92,0.12),0_0_0_20px_rgba(255,228,92,0.04)]">
-          <ArocGeneratedMark className="size-full" />
+      <div className="campaign-entry__grid" />
+      <div className="campaign-entry__frame">
+        <span className="campaign-entry__mark">
+          <ArocGeneratedMark className="size-full" priority />
         </span>
-        <div className="h-0.5 w-16 overflow-hidden rounded-full bg-[rgba(255,228,92,0.2)]">
-          <div className="h-full w-1/3 rounded-full bg-[var(--yellow)]" style={{ animation: "scan 1.2s ease-in-out infinite" }} />
+        <div className="campaign-entry__copy">
+          <span>AROC_PL / SYSTEM 01</span>
+          <strong>Built to compete.</strong>
         </div>
+        <div className="campaign-entry__progress"><span /></div>
       </div>
+      <span className="campaign-entry__index">POLINEMA · MALANG</span>
     </div>
   );
 }
@@ -242,10 +254,8 @@ function CampaignHero({ hero }: { hero: HeroData }) {
   ];
 
   const hudLabels = [
-    { text: "Vision Terkunci", style: { top: "28%", left: "54%"  } },
-    { text: "Siap Bertanding",   style: { top: "44%", right: "3%"  } },
-    { text: "KRI 2024 ★",   style: { top: "68%", left: "50%"  } },
-    { text: "Otonom",    style: { top: "76%", right: "5%"  } },
+    { text: "Vision Terkunci", style: { top: "31%", left: "55%" } },
+    { text: "KRI 2024", style: { top: "70%", left: "52%" } },
   ];
 
   return (
@@ -293,31 +303,6 @@ function CampaignHero({ hero }: { hero: HeroData }) {
 
       {/* Film grain overlay */}
       <div aria-hidden="true" className="hero-film-grain" />
-
-      {/* Floating particles */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-        {(canMove ? [
-          { left: "15%", top: "30%", size: "3px", driftX: "80px", driftY: "-150px", duration: "7s", delay: "0s", color: "rgba(255,228,92,0.8)" },
-          { left: "70%", top: "50%", size: "2px", driftX: "-60px", driftY: "-100px", duration: "8s", delay: "1.2s", color: "rgba(255,228,92,0.6)" },
-          { left: "45%", top: "70%", size: "4px", driftX: "40px", driftY: "-180px", duration: "9s", delay: "2.5s", color: "rgba(255,228,92,0.7)" },
-          { left: "80%", top: "25%", size: "2px", driftX: "-90px", driftY: "-120px", duration: "6s", delay: "0.8s", color: "rgba(248,247,240,0.5)" },
-        ] : []).map((p, i) => (
-          <div
-            key={i}
-            className="hero-particle"
-            style={{
-              left: p.left,
-              top: p.top,
-              "--size": p.size,
-              "--drift-x": p.driftX,
-              "--drift-y": p.driftY,
-              "--duration": p.duration,
-              "--delay": p.delay,
-              "--color": p.color,
-            } as CSSProperties}
-          />
-        ))}
-      </div>
 
       {/* Breathing glow behind robot area */}
       {canMove ? (
@@ -383,14 +368,6 @@ function CampaignHero({ hero }: { hero: HeroData }) {
         }}
       />
 
-      {/* ── Animated scan line ── */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[2px] overflow-hidden">
-        <div
-          className="h-full bg-gradient-to-r from-transparent via-[rgba(255,228,92,0.6)] to-transparent"
-          style={{ width: "40%", animation: "scan 5s ease-in-out infinite" }}
-        />
-      </div>
-
       {/* ── HUD floating labels — right side (desktop only) ── */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden lg:block">
         {hudLabels.map((l, i) => (
@@ -417,15 +394,6 @@ function CampaignHero({ hero }: { hero: HeroData }) {
             animation: "rotateSlow 28s linear infinite",
           }}
         />
-        <div
-          className="absolute rounded-full border border-[rgba(255,228,92,0.1)]"
-          style={{
-            top: "22%", right: "13%",
-            width: "30%", paddingTop: "30%",
-            animation: "rotateSlow 18s linear infinite reverse",
-          }}
-        />
-
         {/* Small crosshair at ball position */}
         <div
           className="absolute"
@@ -1076,14 +1044,14 @@ function RobotLineupSlider({ robots }: { robots: RobotCard[] }) {
         </div>
 
         {/* Main robot display */}
-        <div className="robot-cinematic-stage luxury-surface soft-glow grid gap-6 overflow-hidden rounded-[2.8rem] border border-[rgba(255,228,92,0.2)] bg-[rgba(10,15,38,0.7)] p-5 sm:p-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+        <div className="robot-cinematic-stage luxury-surface soft-glow grid gap-6 overflow-hidden rounded-[1.9rem] border border-[rgba(255,228,92,0.18)] bg-[rgba(10,15,38,0.72)] p-5 sm:p-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <div
             aria-hidden="true"
             className="pointer-events-none absolute top-10 z-0 h-56 w-56 -translate-x-1/2 rounded-full bg-[rgba(255,228,92,0.16)] blur-3xl transition-[left,opacity] duration-700"
             style={{ left: `${28 + activeIndex * 18}%` }}
           />
           {/* Robot image */}
-          <div className="luxury-image-frame relative min-h-[28rem] overflow-hidden rounded-[2rem] bg-[radial-gradient(ellipse_60%_40%_at_50%_20%,rgba(255,228,92,0.22),transparent_55%)] sm:min-h-[38rem]">
+          <div className="luxury-image-frame relative min-h-[28rem] overflow-hidden rounded-[1.35rem] bg-[radial-gradient(ellipse_60%_40%_at_50%_20%,rgba(255,228,92,0.18),transparent_55%)] sm:min-h-[38rem]" data-cursor="media">
             {robots.map((r, i) => (
               <Image
                 key={r.name}
@@ -1487,7 +1455,7 @@ function CampaignGallery({ gallery }: { gallery: GalleryItem[] }) {
         <div className="grid gap-4 sm:grid-cols-12 sm:grid-rows-[280px_280px_240px]">
           {gallery.map((item, i) => (
             <figure
-              className={`luxury-surface luxury-image-frame group relative min-h-[14rem] cursor-pointer overflow-hidden rounded-[2rem] bg-[var(--navy-deep)] ${spans[i] ?? ""}`}
+              className={`luxury-surface luxury-image-frame group relative min-h-[14rem] cursor-pointer overflow-hidden rounded-[1.35rem] bg-[var(--navy-deep)] ${spans[i] ?? ""}`}
               key={item.src}
               onClick={() => openLightbox(i)}
               onKeyDown={(event) => {
@@ -1598,7 +1566,7 @@ function SponsorFinalCTA() {
       >
         {/* Inner container */}
         <div
-          className="luxury-surface soft-glow relative overflow-hidden rounded-[3rem] border border-[rgba(255,228,92,0.22)] p-8 sm:p-12 lg:p-16"
+          className="luxury-surface soft-glow relative overflow-hidden rounded-[2rem] border border-[rgba(255,228,92,0.2)] p-8 sm:p-12 lg:p-16"
           style={{
             background: "linear-gradient(150deg, rgba(20,28,66,0.95), rgba(5,8,22,0.98))",
             boxShadow: "0 0 0 1px rgba(255,228,92,0.06), 0 60px 120px -60px rgba(0,0,0,0.95)",
@@ -1684,66 +1652,39 @@ export function HomeCampaign({
       <CurvedMarquee />
 
       {/* Marquee (yellow) → Manifesto (cream): short, same warm family */}
-      <div
-        aria-hidden="true"
-        style={{ height: "3rem", background: "linear-gradient(to bottom, var(--yellow), var(--cream))" }}
-      />
+      <div aria-hidden="true" className="section-transition transition-yellow-cream" />
       <EditorialManifesto aboutCards={aboutCards} values={values} />
 
       {/* Manifesto (cream) → Story (dark): fade through white, drop to deep */}
-      <div
-        aria-hidden="true"
-        style={{ height: "6rem", background: "linear-gradient(to bottom, var(--cream), var(--navy-deep))" }}
-      />
+      <div aria-hidden="true" className="section-transition transition-cream-ink" />
       <StickyScrollStory hero={hero} />
 
       {/* Story (dark) → Benefits (cream-soft): rise from deep */}
-      <div
-        aria-hidden="true"
-        style={{ height: "6rem", background: "linear-gradient(to bottom, var(--navy-deep), var(--cream-soft))" }}
-      />
+      <div aria-hidden="true" className="section-transition transition-ink-paper-soft" />
       <BenefitsClaims divisions={divisions} />
 
       {/* Benefits (cream-soft) → Robots (dark) */}
-      <div
-        aria-hidden="true"
-        style={{ height: "6rem", background: "linear-gradient(to bottom, var(--cream-soft), var(--navy-deep))" }}
-      />
+      <div aria-hidden="true" className="section-transition transition-paper-soft-ink" />
       <RobotLineupSlider robots={robots} />
 
       {/* Robots (dark) → Comparison (abyss): same family, very subtle deepening */}
-      <div
-        aria-hidden="true"
-        style={{ height: "3rem", background: "linear-gradient(to bottom, var(--navy-deep), var(--navy-abyss))" }}
-      />
+      <div aria-hidden="true" className="section-transition transition-ink-abyss" />
       <ComparisonTable />
 
       {/* Comparison (abyss) → Proof (dark): same family */}
-      <div
-        aria-hidden="true"
-        style={{ height: "3rem", background: "linear-gradient(to bottom, var(--navy-abyss), var(--navy-deep))" }}
-      />
+      <div aria-hidden="true" className="section-transition transition-abyss-ink" />
       <InsiderProof achievements={achievements} teamLead={teamLead} teamStats={teamStats} teamYears={teamYears} />
 
       {/* Proof (dark) → DivisionGallery (dark): same family, seamless */}
-      <div
-        aria-hidden="true"
-        style={{ height: "3rem", background: "linear-gradient(to bottom, var(--navy-deep), var(--navy-abyss))" }}
-      />
+      <div aria-hidden="true" className="section-transition transition-ink-abyss is-compact" />
       <DivisionGallery />
 
       {/* DivisionGallery (dark) → Gallery (cream) */}
-      <div
-        aria-hidden="true"
-        style={{ height: "6rem", background: "linear-gradient(to bottom, var(--navy-deep), var(--cream))" }}
-      />
+      <div aria-hidden="true" className="section-transition transition-ink-cream" />
       <CampaignGallery gallery={gallery} />
 
       {/* Gallery (cream) → Sponsor (abyss) */}
-      <div
-        aria-hidden="true"
-        style={{ height: "6rem", background: "linear-gradient(to bottom, var(--cream), var(--navy-abyss))" }}
-      />
+      <div aria-hidden="true" className="section-transition transition-cream-abyss" />
       <SponsorFinalCTA />
     </main>
   );

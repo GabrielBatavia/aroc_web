@@ -1,102 +1,115 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+
+type CursorMode = "default" | "action" | "media" | "drag";
+
+const cursorLabels: Record<CursorMode, string> = {
+  default: "AR",
+  action: "↗",
+  media: "VIEW",
+  drag: "DRAG",
+};
 
 export function CustomCursor() {
-  const [isHovering, setIsHovering] = useState(false);
+  const [mode, setMode] = useState<CursorMode>("default");
+  const [isPressed, setIsPressed] = useState(false);
   const [isHidden, setIsHidden] = useState(true);
-
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
-
   const ringPos = useRef({ x: 0, y: 0 });
-  const mousePos = useRef({ x: 0, y: 0 });
+  const pointerPos = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
-    const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
-    const hasHover = window.matchMedia("(hover: hover)").matches;
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-    if (isTouchDevice || !hasHover || prefersReducedMotion) return;
+    if (!finePointer.matches || reducedMotion.matches) return;
 
-    document.documentElement.style.cursor = "none";
+    document.documentElement.classList.add("has-custom-cursor");
 
-    const updateMousePosition = (e: MouseEvent) => {
-      setIsHidden((hidden) => (hidden ? false : hidden));
-      mousePos.current = { x: e.clientX, y: e.clientY };
+    const updatePointer = (event: PointerEvent) => {
+      pointerPos.current = { x: event.clientX, y: event.clientY };
+      setIsHidden(false);
     };
 
-    const handleMouseLeave = () => setIsHidden(true);
-    const handleMouseEnter = () => setIsHidden(false);
+    const updateMode = (event: PointerEvent) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
 
-    const handleMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const isClickable = target.closest(
-        'a, button, input, textarea, select, [role="button"], [role="link"], [tabindex]:not([tabindex="-1"])'
-      );
-      setIsHovering(!!isClickable);
+      const explicitMode = target.closest<HTMLElement>("[data-cursor]")?.dataset.cursor;
+      const nextMode: CursorMode =
+        explicitMode === "drag"
+          ? "drag"
+          : explicitMode === "media" || target.closest("video, figure[role='button'], model-viewer")
+            ? "media"
+            : target.closest(
+                  'a, button, input, textarea, select, summary, [role="button"], [role="link"], [tabindex]:not([tabindex="-1"])',
+                )
+              ? "action"
+              : "default";
+
+      setMode(nextMode);
     };
 
-    window.addEventListener("mousemove", updateMousePosition, { passive: true });
-    window.addEventListener("mouseover", handleMouseOver, { passive: true });
-    document.addEventListener("mouseleave", handleMouseLeave);
-    document.addEventListener("mouseenter", handleMouseEnter);
+    const handlePointerDown = () => setIsPressed(true);
+    const handlePointerUp = () => setIsPressed(false);
+    const handlePointerLeave = () => setIsHidden(true);
+    const handlePointerEnter = () => setIsHidden(false);
 
-    let animationFrameId: number;
-    let isFirstRender = true;
+    window.addEventListener("pointermove", updatePointer, { passive: true });
+    window.addEventListener("pointerover", updateMode, { passive: true });
+    window.addEventListener("pointerdown", handlePointerDown, { passive: true });
+    window.addEventListener("pointerup", handlePointerUp, { passive: true });
+    document.addEventListener("mouseleave", handlePointerLeave);
+    document.addEventListener("mouseenter", handlePointerEnter);
+
+    let animationFrameId = 0;
+    let initialized = false;
 
     const render = () => {
-      ringPos.current.x += (mousePos.current.x - ringPos.current.x) * 0.15;
-      ringPos.current.y += (mousePos.current.y - ringPos.current.y) * 0.15;
-
-      if (isFirstRender && mousePos.current.x !== 0 && mousePos.current.y !== 0) {
-        ringPos.current.x = mousePos.current.x;
-        ringPos.current.y = mousePos.current.y;
-        isFirstRender = false;
+      if (!initialized && pointerPos.current.x !== 0 && pointerPos.current.y !== 0) {
+        ringPos.current = { ...pointerPos.current };
+        initialized = true;
       }
 
+      ringPos.current.x += (pointerPos.current.x - ringPos.current.x) * 0.17;
+      ringPos.current.y += (pointerPos.current.y - ringPos.current.y) * 0.17;
+
       if (dotRef.current) {
-        dotRef.current.style.transform = `translate3d(${mousePos.current.x}px, ${mousePos.current.y}px, 0) translate(-50%, -50%)`;
+        dotRef.current.style.transform = `translate3d(${pointerPos.current.x}px, ${pointerPos.current.y}px, 0) translate(-50%, -50%)`;
       }
 
       if (ringRef.current) {
         ringRef.current.style.transform = `translate3d(${ringPos.current.x}px, ${ringPos.current.y}px, 0) translate(-50%, -50%)`;
       }
 
-      animationFrameId = requestAnimationFrame(render);
+      animationFrameId = window.requestAnimationFrame(render);
     };
 
     render();
 
     return () => {
-      window.removeEventListener("mousemove", updateMousePosition);
-      window.removeEventListener("mouseover", handleMouseOver);
-      document.removeEventListener("mouseleave", handleMouseLeave);
-      document.removeEventListener("mouseenter", handleMouseEnter);
-      cancelAnimationFrame(animationFrameId);
-      document.documentElement.style.cursor = "auto";
+      window.removeEventListener("pointermove", updatePointer);
+      window.removeEventListener("pointerover", updateMode);
+      window.removeEventListener("pointerdown", handlePointerDown);
+      window.removeEventListener("pointerup", handlePointerUp);
+      document.removeEventListener("mouseleave", handlePointerLeave);
+      document.removeEventListener("mouseenter", handlePointerEnter);
+      window.cancelAnimationFrame(animationFrameId);
+      document.documentElement.classList.remove("has-custom-cursor");
     };
   }, []);
 
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-[9999]"
-      style={{ opacity: isHidden ? 0 : 1, transition: "opacity 0.3s ease" }}
+      aria-hidden="true"
+      className={`custom-cursor custom-cursor--${mode} ${isPressed ? "is-pressed" : ""} ${isHidden ? "is-hidden" : ""}`}
     >
-      <div
-        ref={ringRef}
-        className={`absolute top-0 left-0 rounded-full border border-white/50 transition-all duration-300 ease-out will-change-transform ${
-          isHovering
-            ? "h-12 w-12 bg-white/10 backdrop-blur-md border-white/80"
-            : "h-8 w-8"
-        }`}
-      />
-      <div
-        ref={dotRef}
-        className={`absolute top-0 left-0 rounded-full bg-white transition-all duration-300 will-change-transform ${
-          isHovering ? "h-0 w-0 opacity-0" : "h-1.5 w-1.5 opacity-100 shadow-[0_0_8px_rgba(255,255,255,0.8)]"
-        }`}
-      />
+      <div className="custom-cursor__ring" ref={ringRef}>
+        <span>{cursorLabels[mode]}</span>
+      </div>
+      <div className="custom-cursor__dot" ref={dotRef} />
     </div>
   );
 }
