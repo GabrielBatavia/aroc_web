@@ -65,17 +65,17 @@ export const labLearningPaths: Record<SimulatorId, LearningPath> = {
       "Deteksi yang terlihat di layar belum cukup. Hanya hasil dengan ukuran dan keyakinan yang valid yang dapat diteruskan menjadi posisi bola.",
     steps: [
       {
-        title: "Kamera memberi gambar",
+        title: "Akuisisi Gambar dari Kamera",
         body: "Setiap frame berisi lapangan, bola, dan gangguan visual. Detector menerima frame ini sebagai masukan; ia belum mengetahui jarak bola pada tahap ini.",
         source: "Input source: detector memakai input_size 320×320 dan memproses setiap 2 frame pada konfigurasi saat ini.",
       },
       {
-        title: "Detector mencari bola",
+        title: "Deteksi dan Pemrosesan Objek Bola",
         body: "Model memeriksa gambar lalu mengirim pusat dan radius bola ketika confidence melewati ambang. Kotak deteksi pada ilustrasi hanya muncul jika hasil tersebut dipakai.",
         source: "Output source: /ball_detector_node/circle_set berisi posisi tengah dan radius hasil deteksi.",
       },
       {
-        title: "Localizer menghitung jarak dan arah",
+        title: "Kalkulasi Posisi dan Arah (Lokalisasi)",
         body: "Localizer memvalidasi ukuran bola dan mengubah hasil deteksi menjadi range serta bearing. Jika hasil tidak valid, pesan posisi tidak boleh diteruskan.",
         source: "Output source: /ball_polar menyimpan range dalam meter dan bearing dalam radian.",
       },

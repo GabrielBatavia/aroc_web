@@ -150,7 +150,7 @@ export const footerNavigation: NavLink[] = [
 ];
 
 export const heroData: HeroData = {
-  eyebrow: "Development Team Robot Humanoid",
+  eyebrow: "Tim Pengembang Robot Humanoid",
   statusLabel: "Status",
   statusValue: "Siap Bertanding",
   titleLines: {
@@ -161,7 +161,7 @@ export const heroData: HeroData = {
     bottomAccent: "kompetitif.",
   },
   description:
-    "AROC_PL adalah Development Team robot humanoid Politeknik Negeri Malang yang berfokus pada riset, pengembangan, dan kompetisi sepak bola robot tingkat nasional.",
+    "AROC_PL adalah tim pengembang robot humanoid Politeknik Negeri Malang yang berfokus pada riset, pengembangan, dan kompetisi sepak bola robot tingkat nasional.",
   primaryCta: { label: "Lihat Robot", href: "#robots" },
   secondaryCta: { label: "Ajukan Kemitraan", href: "#sponsor" },
   robotImage: "/images/hero-robot.png",
@@ -181,7 +181,7 @@ export const aboutCards: AboutCard[] = [
   {
     title: "Siapa Kami",
     description:
-      "Development Team robot humanoid Politeknik Negeri Malang yang fokus mengembangkan sistem otonom untuk kompetisi sepak bola robot tingkat nasional.",
+      "Tim pengembang robot humanoid Politeknik Negeri Malang yang fokus mengembangkan sistem otonom untuk kompetisi sepak bola robot tingkat nasional.",
     icon: "users",
   },
   {
@@ -202,7 +202,7 @@ export const valueCards: ValueCard[] = [
   {
     title: "Inovasi",
     description:
-      "Selalu berpikir melampaui batas teknologi robotika saat ini.",
+      "Mengembangkan solusi robotika yang adaptif dan terus bertransformasi.",
     icon: "spark",
     tone: "gold",
   },
@@ -222,7 +222,7 @@ export const valueCards: ValueCard[] = [
   {
     title: "Prestasi",
     description:
-      "Kompetisi nasional dan internasional sebagai tolok ukur kami bertumbuh.",
+      "Menjadikan kompetisi nasional dan internasional sebagai tolok ukur perkembangan tim.",
     icon: "trophy",
     tone: "orange",
   },
@@ -239,7 +239,7 @@ export const coreDivisions: DivisionCard[] = [
       {
         title: "Mekanik",
         description:
-          "Struktur chassis, desain frame siap gait, dan integrasi aktuator.",
+          "Struktur sasis, desain kerangka kinetik/gerak, dan integrasi aktuator.",
         icon: "cpu",
       },
       {
@@ -251,7 +251,7 @@ export const coreDivisions: DivisionCard[] = [
       {
         title: "Desain PCB",
         description:
-          "Rangkaian custom, routing sensor, dan antarmuka embedded ringkas.",
+          "Rangkaian khusus (custom), routing sensor, dan antarmuka embedded ringkas.",
         icon: "circuit",
       },
     ],
@@ -260,7 +260,7 @@ export const coreDivisions: DivisionCard[] = [
     title: "Software",
     eyebrow: "Teknologi Kami",
     description:
-      "Otak cerdas yang menangani strategi, komunikasi, sensing, otonomi, dan perilaku adaptif robot di lapangan.",
+      "Sistem perangkat lunak yang mengelola strategi, komunikasi, sensing, otonomi, dan perilaku adaptif robot di lapangan.",
     tone: "cyan",
     items: [
       {
@@ -278,7 +278,7 @@ export const coreDivisions: DivisionCard[] = [
       {
         title: "Vision & AI",
         description:
-          "Pemahaman bola, gawang, dan lapangan melalui kamera cerdas.",
+          "Deteksi bola, gawang, dan navigasi lapangan berbasis visi komputer.",
         icon: "eye",
       },
     ],
@@ -291,7 +291,7 @@ export const robotCards: RobotCard[] = [
     name: "SI PENG",
     role: "Penyerang Utama",
     description:
-      "Unit 01 'Si Peng' dirancang khusus sebagai ujung tombak serangan tim AROC. Beroperasi dengan kecepatan tinggi dan pergerakan agresif untuk mengejar bola liar serta mendobrak lini pertahanan lawan.",
+      "Unit 01 'Si Peng' dirancang khusus sebagai ujung tombak serangan tim AROC. Berakurasi tinggi dalam pergerakan cepat untuk menguasai bola liar dan menembus lini pertahanan lawan.",
     uniqueFact:
       "Dilengkapi algoritma kick-timing presisi tinggi yang dapat mendeteksi celah gawang lawan dan mengeksekusi tendangan keras dalam kurun waktu kurang dari 50 milidetik.",
     teamTask:
@@ -306,7 +306,7 @@ export const robotCards: RobotCard[] = [
     description:
       "Unit 02 'Si Joni' bertugas sebagai benteng pertahanan terakhir. Memiliki stance lebar dan pusat gravitasi rendah untuk memaksimalkan keseimbangan serta jangkauan tepisan di depan gawang.",
     uniqueFact:
-      "Menggunakan penglihatan komputasional wide-angle ganda dan algoritma prediksi lintasan bola untuk merespons tembakan lawan dengan aksi diving block otomatis.",
+      "Menggunakan visi komputer (computer vision) sudut lebar ganda dan algoritma prediksi lintasan bola untuk merespons tembakan lawan dengan aksi diving block otomatis.",
     teamTask:
       "Menjaga gawang dari semua sudut tembakan lawan, menggagalkan peluang gol, dan mengarahkan kembali bola liar ke area aman.",
     image: "/images/robot-sijoni.png",
@@ -454,7 +454,7 @@ export const teamStats = [
   { value: "11+", label: "Personel Aktif", tone: "cyan" },
   { value: "6", label: "Divisi Spesialis", tone: "orange" },
   { value: "3", label: "Angkatan", tone: "blue" },
-  { value: "100%", label: "Komitmen Pengembangan", tone: "gold" },
+  { value: "100%", label: "Riset Berkelanjutan dari tim", tone: "gold" },
 ] satisfies TeamStat[];
 
 export const achievements: Achievement[] = [
@@ -513,7 +513,7 @@ export const galleryItems: GalleryItem[] = [
 
 export const footerData = {
   description:
-    "Advance Robosoccer Polinema. Development Team robot humanoid Politeknik Negeri Malang untuk riset, pengembangan, dan kompetisi.",
+    "Advance Robosoccer Polinema. Tim pengembang robot humanoid Politeknik Negeri Malang untuk riset, pengembangan, dan kompetisi.",
   sponsors: ["POLINEMA", "ROBOTICS"],
   contact: [
     {

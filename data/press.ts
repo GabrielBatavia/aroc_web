@@ -22,9 +22,9 @@ export type BrandColor = {
 
 export const pressHero = {
   eyebrow: "Media & Press Kit",
-  title: "Asset resmi AROC_PL untuk media dan kemitraan.",
+  title: "Aset resmi AROC_PL untuk media dan kemitraan.",
   description:
-    "Logo, dokumentasi robot, arahan brand singkat, dan kontak media untuk publikasi AROC_PL sebagai Development Team robot humanoid Politeknik Negeri Malang.",
+    "Logo, dokumentasi robot, arahan brand singkat, dan kontak media untuk publikasi AROC_PL sebagai tim pengembang robot humanoid Politeknik Negeri Malang.",
   updatedAt: "2026",
 };
 

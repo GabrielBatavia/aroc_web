@@ -88,7 +88,7 @@ export const robotHotspots: RobotHotspot[] = [
     description:
       "OP3 mengganti SBC Intel Atom generasi lama dengan Intel NUC i3 dual-core, RAM DDR4 8GB, dan M.2 SSD 250GB untuk ruang komputasi yang jauh lebih lega.",
     detail:
-      "Kombinasi CPU 64-bit, SSD, dan RAM yang lebih besar membuat developer bisa menjalankan pipeline ROS2, logging, vision, serta eksperimen kontrol tanpa terlalu cepat mentok di resource.",
+      "Kombinasi CPU 64-bit, SSD, dan RAM yang lebih besar membuat developer bisa menjalankan pipeline ROS2, logging, vision, serta eksperimen kontrol tanpa mengalami kendala komputasi atau batas kapasitas memori.",
     whatItIs:
       "Komputer utama robot yang menjalankan ROS2, vision pipeline, behavior, logging, dan tool development.",
     whyItMatters:
@@ -217,7 +217,7 @@ export const robotHotspots: RobotHotspot[] = [
     whatItIs:
       "Platform humanoid mini dengan struktur kaki, frame, sensor, aktuator, dan software stack yang bisa diprogram penuh.",
     whyItMatters:
-      "OP3 bukan mainan display; ia dibuat untuk eksperimen motion, persepsi, kontrol, dan autonomous behavior.",
+      "OP3 dirancang sebagai platform riset aktif untuk eksperimen gerak, persepsi, kontrol, dan autonomous behavior.",
     arenaImpact:
       "Robot dapat menggabungkan walking, ball approach, stability, dan kick sequence dalam skenario humanoid soccer.",
     position: "376.16m 180m -161.23m",

@@ -30,7 +30,7 @@ export const aboutHero = {
   titlePrefix: "Tentang",
   titleAccent: "AROC_PL",
   description:
-    "Development Team robot humanoid Politeknik Negeri Malang yang berfokus pada riset, pengembangan, dan partisipasi di kompetisi robotik bergengsi.",
+    "Tim pengembang robot humanoid Politeknik Negeri Malang yang berfokus pada riset, pengembangan, dan partisipasi di kompetisi robotik bergengsi.",
   stats: [
     { value: "2", label: "Dosen Pembimbing", tone: "cyan" },
     { value: "11", label: "Total Anggota", tone: "orange" },
@@ -41,7 +41,7 @@ export const aboutHero = {
 export const aboutVision = {
   title: "VISI",
   description:
-    "Menjadi Development Team robot humanoid yang unggul di Indonesia, mampu bersaing di tingkat internasional, serta mendorong inovasi teknologi dari Politeknik Negeri Malang.",
+    "Menjadi tim pengembang robot humanoid yang unggul di Indonesia, mampu bersaing di tingkat internasional, serta mendorong inovasi teknologi dari Politeknik Negeri Malang.",
 };
 
 export const aboutMission = {
