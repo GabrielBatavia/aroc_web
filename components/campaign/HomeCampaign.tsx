@@ -109,17 +109,6 @@ const benefitClaims = [
   { title: "Strategi Pertandingan", body: "Perilaku berbasis peran untuk menyerang, bertahan, menjaga area, dan kembali ke posisi.", icon: ShieldIcon },
 ];
 
-type ComparisonStatus = true | false | "partial";
-
-const comparisonRows: { capability: string; aroc: ComparisonStatus; generic: ComparisonStatus }[] = [
-  { capability: "Sistem teruji KRI", aroc: true, generic: false },
-  { capability: "Peran sepak bola humanoid", aroc: true, generic: "partial" },
-  { capability: "Pipeline vision", aroc: true, generic: "partial" },
-  { capability: "Integrasi hardware dan software", aroc: true, generic: false },
-  { capability: "Iterasi dalam tekanan kompetisi", aroc: true, generic: false },
-  { capability: "Materi kemitraan yang terukur", aroc: true, generic: false },
-];
-
 const videoSlots = [
   "Dokumentasi pertandingan",
   "Proses pengembangan di lab",
@@ -132,53 +121,11 @@ const campaignChapters = [
   { id: "story", label: "Story" },
   { id: "technology", label: "Tech" },
   { id: "robots", label: "Robots" },
+  { id: "showcase", label: "Showcase" },
   { id: "team", label: "Proof" },
   { id: "gallery", label: "Gallery" },
   { id: "sponsor", label: "Sponsor" },
 ];
-
-/* ===================================================================
-   Tiny mark components for the comparison table
-   =================================================================== */
-
-function CheckMark() {
-  return (
-    <svg aria-hidden="true" className="mx-auto size-7" fill="none" viewBox="0 0 28 28">
-      <circle cx="14" cy="14" fill="#FFE45C" r="13" />
-      <path d="m9 14 3.5 3.5L19 11" stroke="#070C22" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" />
-    </svg>
-  );
-}
-
-function CrossMark() {
-  return (
-    <svg aria-hidden="true" className="mx-auto size-7" fill="none" viewBox="0 0 28 28">
-      <circle cx="14" cy="14" fill="#D9DDE8" r="13" />
-      <path d="m10.5 10.5 7 7M17.5 10.5l-7 7" stroke="#9AA5BD" strokeLinecap="round" strokeWidth="2.2" />
-    </svg>
-  );
-}
-
-function PartialMark() {
-  return (
-    <svg aria-hidden="true" className="mx-auto size-7" fill="none" viewBox="0 0 28 28">
-      <circle cx="14" cy="14" fill="#D9DDE8" r="13" />
-      <path d="M9 14h10" stroke="#9AA5BD" strokeLinecap="round" strokeWidth="2.2" />
-    </svg>
-  );
-}
-
-function StatusMark({ status }: { status: ComparisonStatus }) {
-  if (status === true) return <CheckMark />;
-  if (status === "partial") return <PartialMark />;
-  return <CrossMark />;
-}
-
-function statusLabel(status: ComparisonStatus) {
-  if (status === true) return "Ya";
-  if (status === "partial") return "Sebagian";
-  return "Tidak";
-}
 
 /* ===================================================================
    1. Loader / entry atmosphere
@@ -1150,89 +1097,95 @@ function RobotLineupSlider({ robots }: { robots: RobotCard[] }) {
 }
 
 /* ===================================================================
-   8. Comparison — dark, dramatic, full-width
+   8. Showcase Pertandingan AROCPL — Video YouTube Embed
    =================================================================== */
 
-function ComparisonTable() {
+function MatchShowcase() {
   const { ref, isVisible } = useScrollReveal();
+  const [hasTriggered, setHasTriggered] = useState(false);
+
+  useEffect(() => {
+    if (isVisible && !hasTriggered) {
+      setHasTriggered(true);
+    }
+  }, [isVisible, hasTriggered]);
+
+  const videoSrc = hasTriggered
+    ? "https://www.youtube.com/embed/Sc45lHtMrSM?start=11280&end=11880&autoplay=1&mute=0&enablejsapi=1&rel=0"
+    : "";
 
   return (
-    <section className="relative overflow-hidden bg-[var(--navy-abyss)]">
-      {/* Dramatic top light */}
+    <section className="relative overflow-hidden bg-[var(--navy-abyss)] py-20 sm:py-28" id="showcase">
+      {/* Dramatic background light glow */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(255,228,92,0.5)] to-transparent"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-0 h-72 w-[60%] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse,rgba(255,228,92,0.12),transparent_70%)] blur-2xl"
+        className="pointer-events-none absolute left-1/2 top-10 h-96 w-[70%] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse,rgba(255,228,92,0.14),transparent_70%)] blur-3xl"
       />
 
       <div
         ref={ref}
-        className={`relative z-10 mx-auto max-w-[1120px] px-4 py-20 sm:px-8 sm:py-28 reveal-base reveal-up ${isVisible ? "revealed" : ""}`}
+        className={`relative z-10 mx-auto max-w-[1240px] px-4 sm:px-8 reveal-base reveal-up ${isVisible ? "revealed" : ""}`}
       >
+        {/* Header */}
         <div className="text-center">
-          <div className="kicker kicker-centered kicker-on-ink">Pembeda AROC_PL</div>
+          <div className="kicker kicker-centered kicker-on-ink">Showcase Pertandingan</div>
           <h2
-            className="headline mx-auto mt-5 text-[var(--cream)]"
-            style={{ fontSize: "clamp(3rem, 8vw, 6.5rem)", maxWidth: "11ch" }}
+            className="headline mx-auto mt-4 text-[var(--cream)]"
+            style={{ fontSize: "clamp(2.8rem, 7vw, 5.5rem)", maxWidth: "20ch" }}
           >
-            Bukan sekadar prototipe.
+            Showcase pertandingan AROCPL
           </h2>
+          <p className="mx-auto mt-4 max-w-[36rem] text-[1rem] leading-[1.8] text-[rgba(248,247,240,0.65)]">
+            Saksikan tayangan langsung aksi robot AROCPL di arena pertandingan resmi (Menit 3:08:00 - 3:18:00).
+          </p>
         </div>
 
-        <div
-          className="mt-14 overflow-hidden rounded-[2.2rem] border border-[rgba(255,228,92,0.2)]"
-          style={{ boxShadow: "0 0 0 1px rgba(255,228,92,0.06), 0 40px 100px -60px rgba(0,0,0,0.9)" }}
-        >
-          {/* Header */}
-          <div className="grid grid-cols-[1fr_0.6fr_0.6fr] bg-[rgba(10,15,40,0.95)]">
-            <div className="p-5 font-mono text-[0.7rem] font-black uppercase tracking-[0.18em] text-[rgba(248,247,240,0.4)]">
-              Kapabilitas
+        {/* Big Video Card */}
+        <div className="mt-12 overflow-hidden rounded-[2.2rem] border border-[rgba(255,228,92,0.22)] bg-[rgba(10,15,38,0.85)] p-4 sm:p-7 shadow-[0_40px_100px_-50px_rgba(0,0,0,0.95)]">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-4 px-2">
+            <div className="flex items-center gap-2.5">
+              <span className="relative flex size-3">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
+                <span className="relative inline-flex size-3 rounded-full bg-red-500" />
+              </span>
+              <span className="font-mono text-[0.68rem] font-black uppercase tracking-[0.2em] text-[var(--yellow)]">
+                Live Match Replay • AROCPL
+              </span>
             </div>
-            <div
-              className="p-5 text-center font-display font-black uppercase leading-none tracking-[-0.03em] text-[var(--navy-deep)]"
-              style={{
-                fontSize: "clamp(1.2rem, 3vw, 1.6rem)",
-                background: "var(--yellow)",
-                boxShadow: "0 4px 24px rgba(255,228,92,0.3)",
-              }}
-            >
-              AROC_PL
-            </div>
-            <div
-              className="p-5 text-center font-display font-black uppercase leading-none tracking-[-0.03em] text-[rgba(248,247,240,0.4)]"
-              style={{ fontSize: "clamp(1.2rem, 3vw, 1.6rem)" }}
-            >
-              Prototipe Umum
+            <div className="font-mono text-[0.64rem] font-bold uppercase tracking-[0.16em] text-[rgba(248,247,240,0.5)]">
+              Timestamp: 3:08:00 - 3:18:00
             </div>
           </div>
 
-          {/* Rows */}
-          {comparisonRows.map((row, i) => (
-            <div
-              className="grid grid-cols-[1fr_0.6fr_0.6fr] border-t border-[rgba(255,228,92,0.08)]"
-              key={row.capability}
-              style={{ background: i % 2 === 0 ? "rgba(255,255,255,0.01)" : "transparent" }}
-            >
-              <div className="p-4 text-[0.92rem] font-semibold text-[rgba(248,247,240,0.7)] sm:p-5">
-                {row.capability}
+          <div className="relative aspect-video w-full overflow-hidden rounded-[1.5rem] border border-[rgba(255,228,92,0.18)] bg-[var(--navy-black)] shadow-2xl">
+            {hasTriggered ? (
+              <iframe
+                src={videoSrc}
+                title="Showcase Pertandingan AROCPL"
+                className="absolute inset-0 h-full w-full border-0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center bg-[rgba(10,15,38,0.9)] text-center p-6">
+                <div className="flex flex-col items-center gap-3">
+                  <div className="size-16 rounded-full border border-[rgba(255,228,92,0.3)] bg-[rgba(255,228,92,0.1)] flex items-center justify-center text-[var(--yellow)]">
+                    <PlayIcon className="size-8 ml-1" />
+                  </div>
+                  <span className="font-mono text-[0.75rem] font-black uppercase tracking-[0.18em] text-[var(--cream)]">
+                    Scroll Ke Sini Untuk Memutar Video
+                  </span>
+                </div>
               </div>
-              <div className="grid place-items-center bg-[rgba(255,228,92,0.06)] p-4 sm:p-5">
-                <StatusMark status={row.aroc} />
-                <span className="sr-only">{statusLabel(row.aroc)}</span>
-              </div>
-              <div className="grid place-items-center p-4 sm:p-5">
-                <StatusMark status={row.generic} />
-                <span className="sr-only">{statusLabel(row.generic)}</span>
-              </div>
-            </div>
-          ))}
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Bottom light */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[rgba(255,228,92,0.2)] to-transparent" />
     </section>
   );
@@ -1681,9 +1634,9 @@ export function HomeCampaign({
       <div aria-hidden="true" className="section-transition transition-paper-soft-ink" />
       <RobotLineupSlider robots={robots} />
 
-      {/* Robots (dark) → Comparison (abyss): same family, very subtle deepening */}
+      {/* Robots (dark) → Showcase (abyss): same family, very subtle deepening */}
       <div aria-hidden="true" className="section-transition transition-ink-abyss" />
-      <ComparisonTable />
+      <MatchShowcase />
 
       {/* Comparison (abyss) → Proof (dark): same family */}
       <div aria-hidden="true" className="section-transition transition-abyss-ink" />
