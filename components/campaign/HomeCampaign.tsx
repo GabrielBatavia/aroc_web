@@ -1044,69 +1044,83 @@ function RobotLineupSlider({ robots }: { robots: RobotCard[] }) {
         </div>
 
         {/* Main robot display */}
-        <div className="robot-cinematic-stage luxury-surface soft-glow grid gap-6 overflow-hidden rounded-[1.9rem] border border-[rgba(255,228,92,0.18)] bg-[rgba(10,15,38,0.72)] p-5 sm:p-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+        <div className="robot-cinematic-stage luxury-surface soft-glow grid gap-8 overflow-hidden rounded-[2.2rem] border border-[rgba(255,228,92,0.22)] bg-[rgba(10,15,38,0.78)] p-6 sm:p-10 lg:grid-cols-[360px_1fr] lg:items-center">
           <div
             aria-hidden="true"
             className="pointer-events-none absolute top-10 z-0 h-56 w-56 -translate-x-1/2 rounded-full bg-[rgba(255,228,92,0.16)] blur-3xl transition-[left,opacity] duration-700"
             style={{ left: `${28 + activeIndex * 18}%` }}
           />
-          {/* Robot image */}
-          <div className="luxury-image-frame relative min-h-[28rem] overflow-hidden rounded-[1.35rem] bg-[radial-gradient(ellipse_60%_40%_at_50%_20%,rgba(255,228,92,0.18),transparent_55%)] sm:min-h-[38rem]" data-cursor="media">
+
+          {/* Robot photo - strict 9:16 aspect ratio */}
+          <div
+            className="luxury-image-frame relative aspect-[9/16] w-full max-w-[360px] mx-auto lg:mx-0 overflow-hidden rounded-[1.6rem] border border-[rgba(255,228,92,0.25)] bg-[radial-gradient(ellipse_60%_40%_at_50%_20%,rgba(255,228,92,0.2),transparent_60%)] shadow-[0_20px_50px_rgba(0,0,0,0.6)]"
+            data-cursor="media"
+          >
             {robots.map((r, i) => (
               <Image
                 key={r.name}
                 alt={`${r.name} robot`}
                 className={`robot-cinematic-image luxury-image absolute inset-0 object-cover transition-all duration-600 ${i === activeIndex ? "is-active scale-100 opacity-100" : "scale-95 opacity-0"}`}
                 fill
-                sizes="(max-width: 1024px) 100vw, 620px"
+                sizes="(max-width: 1024px) 100vw, 360px"
                 src={r.image}
               />
             ))}
-            <div className="absolute left-4 top-4 z-10 rounded-full bg-[var(--yellow)] px-4 py-2 font-mono text-[0.64rem] font-black uppercase tracking-[0.18em] text-[var(--navy-deep)]">
+            <div className="absolute left-4 top-4 z-10 rounded-full bg-[var(--yellow)] px-4 py-1.5 font-mono text-[0.64rem] font-black uppercase tracking-[0.18em] text-[var(--navy-deep)] shadow-md">
+              Unit {active.unitNumber || String(activeIndex + 1).padStart(2, "0")}
+            </div>
+            <div className="absolute right-4 top-4 z-10 rounded-full border border-[rgba(248,247,240,0.2)] bg-[rgba(10,15,38,0.7)] px-3 py-1.5 font-mono text-[0.6rem] font-black uppercase tracking-[0.14em] text-[var(--cream)] backdrop-blur-md">
               {active.role}
             </div>
           </div>
 
-          {/* Active robot info */}
-          <div className="robot-cinematic-info flex flex-col" key={active.name}>
-            <div className="font-mono text-[0.68rem] font-black uppercase tracking-[0.22em] text-[rgba(255,228,92,0.5)]">
-              Unit {String(activeIndex + 1).padStart(2, "0")}
+          {/* Active robot info - beside the photo */}
+          <div className="robot-cinematic-info flex flex-col justify-center" key={active.name}>
+            <div className="flex items-center gap-3">
+              <span className="rounded-md bg-[rgba(255,228,92,0.15)] px-3 py-1 font-mono text-[0.72rem] font-black uppercase tracking-[0.22em] text-[var(--yellow)]">
+                Robot #{active.unitNumber || String(activeIndex + 1).padStart(2, "0")}
+              </span>
+              <span className="font-mono text-[0.7rem] font-semibold text-[rgba(248,247,240,0.5)]">
+                {active.role}
+              </span>
             </div>
+
             <h3
-              className="mt-2 font-display font-black uppercase leading-[0.78] tracking-[-0.06em] text-[var(--cream)]"
-              style={{ fontSize: "clamp(4.5rem, 11vw, 8.5rem)" }}
+              className="mt-3 font-display font-black uppercase leading-[0.82] tracking-[-0.05em] text-[var(--cream)]"
+              style={{ fontSize: "clamp(3.5rem, 8vw, 6rem)" }}
             >
               {active.name}
             </h3>
-            <p className="mt-5 text-[1rem] leading-[1.85] text-[rgba(248,247,240,0.66)]">{active.description}</p>
 
-            {/* Stats bars */}
-            <div className="mt-8 grid gap-4">
-              {active.stats.map((s, statIndex) => (
-                <div key={s.label}>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="font-mono text-[0.6rem] font-black uppercase tracking-[0.16em] text-[rgba(248,247,240,0.5)]">
-                      {s.label}
-                    </span>
-                    <span className="numeral text-[0.95rem] text-[var(--yellow)]">{s.value}</span>
-                  </div>
-                  <div className="h-1.5 rounded-full bg-[rgba(248,247,240,0.08)]">
-                    <div
-                      className="robot-stat-fill h-full rounded-full transition-all duration-700"
-                      style={{
-                        width: `${s.value}%`,
-                        animationDelay: `${statIndex * 0.09}s`,
-                        background: s.value > 85
-                          ? "linear-gradient(90deg, var(--yellow), var(--gold))"
-                          : "linear-gradient(90deg, rgba(255,228,92,0.6), rgba(255,228,92,0.3))",
-                      }}
-                    />
-                  </div>
+            {/* Paragraf singkat penjelasan robot */}
+            <p className="mt-4 text-[1.02rem] leading-[1.8] text-[rgba(248,247,240,0.85)]">
+              {active.description}
+            </p>
+
+            {/* Fakta Unik & Tugas Dalam Tim */}
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              <div className="rounded-2xl border border-[rgba(255,228,92,0.2)] bg-[rgba(255,228,92,0.05)] p-5 backdrop-blur-sm">
+                <div className="flex items-center gap-2 mb-2.5 font-mono text-[0.68rem] font-black uppercase tracking-[0.18em] text-[var(--yellow)]">
+                  <BoltIcon className="size-4 shrink-0 text-[var(--yellow)]" />
+                  <span>Fakta Unik</span>
                 </div>
-              ))}
+                <p className="text-[0.92rem] leading-[1.65] text-[rgba(248,247,240,0.8)]">
+                  {active.uniqueFact}
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-[rgba(248,247,240,0.14)] bg-[rgba(248,247,240,0.04)] p-5 backdrop-blur-sm">
+                <div className="flex items-center gap-2 mb-2.5 font-mono text-[0.68rem] font-black uppercase tracking-[0.18em] text-[rgba(248,247,240,0.7)]">
+                  <ShieldIcon className="size-4 shrink-0 text-[var(--yellow)]" />
+                  <span>Tugas Dalam Tim</span>
+                </div>
+                <p className="text-[0.92rem] leading-[1.65] text-[rgba(248,247,240,0.8)]">
+                  {active.teamTask}
+                </p>
+              </div>
             </div>
 
-            {/* Navigation arrows */}
+            {/* Navigation controls */}
             <div className="mt-8 flex items-center gap-3">
               <button
                 aria-label="Robot sebelumnya"
@@ -1124,8 +1138,8 @@ function RobotLineupSlider({ robots }: { robots: RobotCard[] }) {
               >
                 <ChevronRightIcon className="size-5" />
               </button>
-              <div className="ml-auto font-mono text-[0.58rem] font-black uppercase tracking-[0.2em] text-[rgba(248,247,240,0.3)]">
-                {String(activeIndex + 1).padStart(2, "0")} / {String(robots.length).padStart(2, "0")}
+              <div className="ml-auto font-mono text-[0.62rem] font-black uppercase tracking-[0.2em] text-[rgba(248,247,240,0.4)]">
+                Unit {String(activeIndex + 1).padStart(2, "0")} / {String(robots.length).padStart(2, "0")}
               </div>
             </div>
           </div>

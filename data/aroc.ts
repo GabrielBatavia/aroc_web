@@ -63,12 +63,15 @@ export type RobotStat = {
 };
 
 export type RobotCard = {
+  unitNumber: string;
   name: string;
   role: string;
   description: string;
+  uniqueFact: string;
+  teamTask: string;
   image: string;
   tone: AccentTone;
-  stats: RobotStat[];
+  stats?: RobotStat[];
 };
 
 export type TeamMember = {
@@ -284,46 +287,43 @@ export const coreDivisions: DivisionCard[] = [
 
 export const robotCards: RobotCard[] = [
   {
+    unitNumber: "01",
     name: "SI PENG",
-    role: "Penyerang",
+    role: "Penyerang Utama",
     description:
-      "Cepat, lincah, dan dilengkapi mekanisme tendangan kuat untuk tekanan ofensif.",
+      "Unit 01 'Si Peng' dirancang khusus sebagai ujung tombak serangan tim AROC. Beroperasi dengan kecepatan tinggi dan pergerakan agresif untuk mengejar bola liar serta mendobrak lini pertahanan lawan.",
+    uniqueFact:
+      "Dilengkapi algoritma kick-timing presisi tinggi yang dapat mendeteksi celah gawang lawan dan mengeksekusi tendangan keras dalam kurun waktu kurang dari 50 milidetik.",
+    teamTask:
+      "Mencetak gol, melakukan penekanan cepat (pressing) saat lawan menguasai bola, dan membuka ruang tembak di lini depan.",
     image: "/images/robot-sipeng.png",
     tone: "cyan",
-    stats: [
-      { label: "Kecepatan", value: 92 },
-      { label: "Kekuatan", value: 90 },
-      { label: "Visi", value: 80 },
-      { label: "Stabilitas", value: 75 },
-    ],
   },
   {
+    unitNumber: "02",
     name: "SI JONI",
-    role: "Kiper",
+    role: "Penjaga Gawang",
     description:
-      "Stance lebar dan reaksi cepat — spesialis diving block dan penjagaan area pertahanan.",
+      "Unit 02 'Si Joni' bertugas sebagai benteng pertahanan terakhir. Memiliki stance lebar dan pusat gravitasi rendah untuk memaksimalkan keseimbangan serta jangkauan tepisan di depan gawang.",
+    uniqueFact:
+      "Menggunakan penglihatan komputasional wide-angle ganda dan algoritma prediksi lintasan bola untuk merespons tembakan lawan dengan aksi diving block otomatis.",
+    teamTask:
+      "Menjaga gawang dari semua sudut tembakan lawan, menggagalkan peluang gol, dan mengarahkan kembali bola liar ke area aman.",
     image: "/images/robot-sijoni.png",
     tone: "gold",
-    stats: [
-      { label: "Kecepatan", value: 70 },
-      { label: "Kekuatan", value: 85 },
-      { label: "Visi", value: 95 },
-      { label: "Stabilitas", value: 90 },
-    ],
   },
   {
+    unitNumber: "03",
     name: "SI KANCIL",
-    role: "Bek",
+    role: "Gelandang / Bek",
     description:
-      "Dibangun untuk stabilitas dan pemulihan cepat — unggul di positioning, intersep, dan penguasaan bola.",
+      "Unit 03 'Si Kancil' merupakan penyeimbang ritme permainan tim. Unggul dalam mobilitas gerak, koordinasi posisi, dan daya tahan kontak fisik di area tengah lapangan.",
+    uniqueFact:
+      "Menggunakan sistem spatial awareness berbasis multi-sensor yang membuatnya mampu mempertahankan keseimbangan penuh saat terjadi duel fisik dengan robot lawan.",
+    teamTask:
+      "Memutus alur umpan lawan melalui intersep presisi, menguasai bola di lini tengah, dan mendistribusikan umpan matang ke Si Peng.",
     image: "/images/robot-sikancil.png",
     tone: "emerald",
-    stats: [
-      { label: "Kecepatan", value: 75 },
-      { label: "Kekuatan", value: 80 },
-      { label: "Visi", value: 85 },
-      { label: "Stabilitas", value: 95 },
-    ],
   },
 ];
 
