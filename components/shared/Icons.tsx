@@ -265,3 +265,96 @@ export function PhoneIcon(props: IconProps) {
     </IconBase>
   );
 }
+
+export function YoutubeIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4C5.8 5 12 5 12 5s6.2 0 8.1.6a2 2 0 0 1 1.4 1.4 24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4c-1.9.6-8.1.6-8.1.6s-6.2 0-8.1-.6A2 2 0 0 1 2.5 17Z" />
+      <path d="m10 15 5-3-5-3v6Z" />
+    </IconBase>
+  );
+}
+
+export function TiktokIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+    </IconBase>
+  );
+}
+
+export function ShareIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <circle cx="18" cy="5" r="3" />
+      <circle cx="6" cy="12" r="3" />
+      <circle cx="18" cy="19" r="3" />
+      <path d="m8.59 13.51 6.83 3.98" />
+      <path d="m15.41 6.51-6.82 3.98" />
+    </IconBase>
+  );
+}
+
+export function CopyIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+      <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+    </IconBase>
+  );
+}
+
+export function CheckIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M20 6 9 17l-5-5" />
+    </IconBase>
+  );
+}
+
+export function QrCodeIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <rect width="5" height="5" x="3" y="3" rx="1" />
+      <rect width="5" height="5" x="16" y="3" rx="1" />
+      <rect width="5" height="5" x="3" y="16" rx="1" />
+      <path d="M21 16h-3a2 2 0 0 0-2 2v3" />
+      <path d="M21 21v.01" />
+      <path d="M12 7v3a2 2 0 0 1-2 2H7" />
+      <path d="M3 12h.01" />
+      <path d="M12 3h.01" />
+      <path d="M12 16v.01" />
+      <path d="M16 12h1a2 2 0 0 1 2 2v1" />
+    </IconBase>
+  );
+}
+
+export function GlobeIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+      <path d="M2 12h20" />
+    </IconBase>
+  );
+}
+
+export function ExternalLinkIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M15 3h6v6" />
+      <path d="M10 14 21 3" />
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+    </IconBase>
+  );
+}
+
+export function BriefcaseIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <rect width="20" height="14" x="2" y="7" rx="2" ry="2" />
+      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+    </IconBase>
+  );
+}
+

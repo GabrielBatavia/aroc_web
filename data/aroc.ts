@@ -132,6 +132,7 @@ export const navLinks: NavLink[] = [
   { label: "Lab", href: "/lab", matchPath: "/lab" },
   { label: "Updates", href: "/updates", matchPath: "/updates" },
   { label: "Press Kit", href: "/press", matchPath: "/press" },
+  { label: "Link Bio", href: "/links", matchPath: "/links" },
 ];
 
 export const campaignNavLinks: NavLink[] = navLinks;
@@ -142,6 +143,7 @@ export const footerNavigation: NavLink[] = [
   { label: "AROC Lab", href: "/lab", matchPath: "/lab" },
   { label: "Media & Press Kit", href: "/press", matchPath: "/press" },
   { label: "News & Updates", href: "/updates", matchPath: "/updates" },
+  { label: "Link in Bio", href: "/links", matchPath: "/links" },
   { label: "Tim Kami", href: "/#team" },
   { label: "Armada Robot", href: "/#robots" },
   { label: "Prestasi", href: "/#achievements" },
@@ -524,14 +526,14 @@ export const footerData = {
     },
     {
       label: "Instagram",
-      value: "@aroc_pl",
-      href: "https://instagram.com/aroc_pl",
+      value: "@arocpolinema",
+      href: "https://www.instagram.com/arocpolinema",
       icon: "instagram",
     },
     {
       label: "LinkedIn",
       value: "AROC PL Polinema",
-      href: "https://www.linkedin.com/company/aroc-pl-polinema",
+      href: "https://id.linkedin.com/in/aroc-pl-advance-robot-soccer-polinema-9756b83b5",
       icon: "linkedin",
     },
     {
