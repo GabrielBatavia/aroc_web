@@ -180,25 +180,25 @@ export function BioLinkPage() {
         </div>
       )}
 
-      {/* Main Content Container - Optimized responsive sizing (max-w-xl sm:max-w-2xl lg:max-w-3xl) */}
-      <div className="relative z-10 mx-auto w-full max-w-xl sm:max-w-2xl lg:max-w-3xl px-4 py-8 sm:px-6 sm:py-12 lg:py-16 flex flex-col items-center">
+      {/* Main Content Container - Maximize mobile screen width with minimal side padding (px-2.5 on mobile) */}
+      <div className="relative z-10 mx-auto w-full max-w-xl sm:max-w-2xl lg:max-w-3xl px-2.5 py-6 sm:px-6 sm:py-12 lg:py-16 flex flex-col items-center">
         
         {/* Navigation Bar Actions */}
-        <header className="w-full flex items-center justify-between mb-8 sm:mb-12">
+        <header className="w-full flex items-center justify-between mb-6 sm:mb-12 px-1">
           <Link
             href="/"
-            className="group flex items-center gap-2.5 rounded-full border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.05)] px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-bold tracking-wider text-[var(--cream)] transition-all duration-300 hover:border-[rgba(255,228,92,0.4)] hover:bg-[rgba(255,228,92,0.12)] hover:text-[var(--yellow)] hover:shadow-[0_0_20px_rgba(255,228,92,0.1)]"
+            className="group flex items-center gap-2.5 rounded-full border border-[rgba(255,255,255,0.14)] bg-[rgba(255,255,255,0.06)] px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-bold tracking-wider text-[var(--cream)] transition-all duration-300 hover:border-[rgba(255,228,92,0.4)] hover:bg-[rgba(255,228,92,0.12)] hover:text-[var(--yellow)] hover:shadow-[0_0_20px_rgba(255,228,92,0.1)]"
           >
             <span className="transition-transform duration-300 group-hover:-translate-x-1">&larr;</span>
             <span>Web Utama</span>
           </Link>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5 sm:gap-3">
             <button
               onClick={() => setShowQr(true)}
               aria-label="Tampilkan QR Code"
               title="Tampilkan QR Code"
-              className="flex size-10 sm:size-11 items-center justify-center rounded-full border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.05)] text-[var(--cream)] transition-all duration-300 hover:border-[rgba(255,228,92,0.4)] hover:bg-[rgba(255,228,92,0.12)] hover:text-[var(--yellow)] hover:scale-105"
+              className="flex size-10 sm:size-11 items-center justify-center rounded-full border border-[rgba(255,255,255,0.14)] bg-[rgba(255,255,255,0.06)] text-[var(--cream)] transition-all duration-300 hover:border-[rgba(255,228,92,0.4)] hover:bg-[rgba(255,228,92,0.12)] hover:text-[var(--yellow)] hover:scale-105"
               type="button"
             >
               <QrCodeIcon className="size-5" />
@@ -208,7 +208,7 @@ export function BioLinkPage() {
               onClick={handleShare}
               aria-label="Bagikan Link"
               title="Bagikan Link Bio"
-              className="flex size-10 sm:size-11 items-center justify-center rounded-full border border-[rgba(255,228,92,0.4)] bg-[rgba(255,228,92,0.1)] text-[var(--yellow)] transition-all duration-300 hover:scale-105 hover:bg-[var(--yellow)] hover:text-[var(--navy-deep)] shadow-[0_0_20px_rgba(255,228,92,0.2)]"
+              className="flex size-10 sm:size-11 items-center justify-center rounded-full border border-[rgba(255,228,92,0.4)] bg-[rgba(255,228,92,0.12)] text-[var(--yellow)] transition-all duration-300 hover:scale-105 hover:bg-[var(--yellow)] hover:text-[var(--navy-deep)] shadow-[0_0_20px_rgba(255,228,92,0.2)]"
               type="button"
             >
               {copied ? <CheckIcon className="size-5" /> : <ShareIcon className="size-5" />}
@@ -216,61 +216,61 @@ export function BioLinkPage() {
           </div>
         </header>
 
-        {/* Profile Card Header */}
-        <section className="w-full text-center flex flex-col items-center mb-8 sm:mb-12">
-          <div className="relative mb-6 group">
+        {/* Profile Card Header (+20% size on mobile) */}
+        <section className="w-full text-center flex flex-col items-center mb-7 sm:mb-12">
+          <div className="relative mb-5 sm:mb-6 group">
             {/* Glowing ring animation */}
-            <div className="absolute -inset-1.5 rounded-full bg-gradient-to-r from-[var(--yellow)] via-blue-500 to-[var(--yellow-warm)] opacity-75 blur-lg group-hover:opacity-100 transition duration-500 animate-pulse" />
+            <div className="absolute -inset-1.5 rounded-full bg-gradient-to-r from-[var(--yellow)] via-blue-500 to-[var(--yellow-warm)] opacity-80 blur-lg group-hover:opacity-100 transition duration-500 animate-pulse" />
 
-            <div className="relative size-28 sm:size-36 lg:size-40 rounded-full border-3 border-[var(--yellow)] bg-[var(--navy-deep)] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.8)] p-1.5 sm:p-2">
+            <div className="relative size-32 sm:size-36 lg:size-44 rounded-full border-3 sm:border-4 border-[var(--yellow)] bg-[var(--navy-deep)] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.85)] p-1.5 sm:p-2">
               <Image
                 src="/images/logoAROC.jpg"
                 alt="AROC POLINEMA Logo"
-                width={160}
-                height={160}
+                width={176}
+                height={176}
                 className="size-full object-cover rounded-full transition-transform duration-500 group-hover:scale-105"
                 priority
               />
             </div>
             
             {/* Verified badge */}
-            <div className="absolute bottom-1 right-1 rounded-full bg-[var(--yellow)] text-[var(--navy-black)] p-2 shadow-xl border-2 border-[var(--navy-deep)]">
+            <div className="absolute bottom-1 right-1 rounded-full bg-[var(--yellow)] text-[var(--navy-black)] p-2 sm:p-2.5 shadow-xl border-2 border-[var(--navy-deep)]">
               <ShieldIcon className="size-5 sm:size-6" />
             </div>
           </div>
 
-          <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-black uppercase tracking-wider text-[var(--cream)] mb-2 flex items-center justify-center gap-2">
+          <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-black uppercase tracking-wider text-[var(--cream)] mb-1.5 flex items-center justify-center gap-2">
             AROC POLINEMA
           </h1>
 
-          <p className="font-sans text-xs sm:text-sm lg:text-base font-bold text-[var(--yellow)] uppercase tracking-[0.2em] mb-3">
+          <p className="font-sans text-xs sm:text-sm lg:text-base font-bold text-[var(--yellow)] uppercase tracking-[0.2em] mb-2.5">
             Advance Robosoccer Polinema
           </p>
 
-          <p className="font-sans text-xs sm:text-sm lg:text-base text-[var(--silver)] leading-relaxed max-w-sm sm:max-w-md lg:max-w-lg mb-5">
+          <p className="font-sans text-sm sm:text-base text-[var(--silver)] leading-relaxed max-w-xs sm:max-w-md lg:max-w-lg mb-5">
             Humanoid Robosoccer Team from Politeknik Negeri Malang (POLINEMA)
           </p>
 
           {/* Achievement Badges */}
-          <div className="flex flex-wrap justify-center gap-2.5 sm:gap-3">
-            <span className="inline-flex items-center gap-2 rounded-full border border-[rgba(255,228,92,0.3)] bg-[rgba(255,228,92,0.08)] px-4 py-1.5 text-xs sm:text-sm font-bold tracking-wider text-[var(--yellow)] shadow-[0_4px_15px_rgba(255,228,92,0.08)]">
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[rgba(255,228,92,0.35)] bg-[rgba(255,228,92,0.1)] px-4 py-1.5 text-xs sm:text-sm font-bold tracking-wider text-[var(--yellow)] shadow-[0_4px_15px_rgba(255,228,92,0.1)]">
               <TrophyIcon className="size-4" /> Juara KRI Humanoid 2024
             </span>
-            <span className="inline-flex items-center gap-2 rounded-full border border-[rgba(248,247,240,0.15)] bg-[rgba(248,247,240,0.05)] px-4 py-1.5 text-xs sm:text-sm font-semibold text-[var(--cream)]">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[rgba(248,247,240,0.18)] bg-[rgba(248,247,240,0.06)] px-4 py-1.5 text-xs sm:text-sm font-semibold text-[var(--cream)]">
               <CpuIcon className="size-4 text-cyan-400" /> KRSBI-Humanoid
             </span>
           </div>
         </section>
 
         {/* Quick Search Bar */}
-        <div className="w-full mb-8">
+        <div className="w-full mb-7 sm:mb-8">
           <div className="relative">
             <input
               type="text"
               placeholder="Cari link atau informasi..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-2xl border border-[rgba(255,255,255,0.12)] bg-[rgba(12,23,48,0.7)] px-5 py-3.5 sm:py-4 text-xs sm:text-sm lg:text-base text-[var(--cream)] placeholder-[var(--muted)] focus:border-[var(--yellow)] focus:bg-[rgba(12,23,48,0.95)] focus:outline-none focus:ring-2 focus:ring-[rgba(255,228,92,0.3)] transition-all backdrop-blur-md shadow-inner"
+              className="w-full rounded-2xl border border-[rgba(255,255,255,0.14)] bg-[rgba(12,23,48,0.8)] px-5 py-3.5 sm:py-4 text-sm sm:text-base text-[var(--cream)] placeholder-[var(--muted)] focus:border-[var(--yellow)] focus:bg-[rgba(12,23,48,0.98)] focus:outline-none focus:ring-2 focus:ring-[rgba(255,228,92,0.35)] transition-all backdrop-blur-md shadow-inner"
             />
             {searchQuery && (
               <button
@@ -278,7 +278,7 @@ export function BioLinkPage() {
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--muted)] hover:text-white p-1"
                 type="button"
               >
-                <CloseIcon className="size-4 sm:size-5" />
+                <CloseIcon className="size-4.5 sm:size-5" />
               </button>
             )}
           </div>
@@ -286,12 +286,12 @@ export function BioLinkPage() {
 
         {/* FEATURED: Company Profile Video Card */}
         {(!searchQuery || "company profile video youtube".includes(searchQuery.toLowerCase())) && (
-          <section className="w-full mb-8">
-            <div className="group relative overflow-hidden rounded-3xl border border-[rgba(255,228,92,0.35)] bg-gradient-to-br from-[rgba(17,29,64,0.95)] via-[rgba(7,16,31,0.95)] to-[rgba(3,6,16,0.98)] p-5 sm:p-7 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.8)] backdrop-blur-2xl transition-all duration-300 hover:border-[var(--yellow)] hover:shadow-[0_25px_60px_-10px_rgba(255,228,92,0.22)]">
-              <div className="flex items-center justify-between mb-4">
+          <section className="w-full mb-7 sm:mb-8">
+            <div className="group relative overflow-hidden rounded-3xl border border-[rgba(255,228,92,0.35)] bg-gradient-to-br from-[rgba(17,29,64,0.95)] via-[rgba(7,16,31,0.95)] to-[rgba(3,6,16,0.98)] p-4 sm:p-7 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.8)] backdrop-blur-2xl transition-all duration-300 hover:border-[var(--yellow)] hover:shadow-[0_25px_60px_-10px_rgba(255,228,92,0.22)]">
+              <div className="flex items-center justify-between mb-3.5">
                 <div className="flex items-center gap-2.5">
-                  <span className="flex size-8 sm:size-9 items-center justify-center rounded-xl bg-red-600/20 text-red-500 border border-red-500/30">
-                    <YoutubeIcon className="size-4.5 sm:size-5" />
+                  <span className="flex size-8.5 sm:size-9 items-center justify-center rounded-xl bg-red-600/20 text-red-500 border border-red-500/30">
+                    <YoutubeIcon className="size-5" />
                   </span>
                   <span className="text-xs sm:text-sm font-bold uppercase tracking-widest text-[var(--yellow)]">
                     Featured Profile Video
@@ -316,7 +316,7 @@ export function BioLinkPage() {
                   className="absolute inset-0 flex flex-col items-center justify-center gap-3 group/play"
                   type="button"
                 >
-                  <span className="flex size-14 sm:size-18 items-center justify-center rounded-full bg-[var(--yellow)] text-[var(--navy-deep)] shadow-[0_0_30px_rgba(255,228,92,0.4)] transition-transform duration-300 group-hover/play:scale-110">
+                  <span className="flex size-15 sm:size-18 items-center justify-center rounded-full bg-[var(--yellow)] text-[var(--navy-deep)] shadow-[0_0_30px_rgba(255,228,92,0.4)] transition-transform duration-300 group-hover/play:scale-110">
                     <PlayIcon className="size-7 sm:size-9 ml-1" />
                   </span>
                   <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-white drop-shadow-md">
@@ -349,17 +349,17 @@ export function BioLinkPage() {
 
         {/* SECTION 1: CONTACT INFORMATION */}
         {(!searchQuery || "contact team leader sponsorship media partner email phone".includes(searchQuery.toLowerCase())) && (
-          <section className="w-full mb-8">
-            <h2 className="font-display text-xs sm:text-sm font-black uppercase tracking-[0.22em] text-[var(--muted)] mb-4 px-1 flex items-center gap-2">
+          <section className="w-full mb-7 sm:mb-8">
+            <h2 className="font-display text-xs sm:text-sm font-black uppercase tracking-[0.22em] text-[var(--muted)] mb-3.5 px-1 flex items-center gap-2">
               <UsersIcon className="size-4 text-[var(--yellow)]" /> Contact Information
             </h2>
 
             <div className="grid gap-3.5">
               {/* Team Leader Contact */}
-              <div className="group rounded-2xl sm:rounded-3xl border border-[rgba(255,255,255,0.1)] bg-[rgba(12,23,48,0.7)] p-5 sm:p-6 backdrop-blur-md transition-all duration-300 hover:border-[rgba(255,228,92,0.4)] hover:bg-[rgba(17,29,64,0.95)] hover:shadow-[0_12px_30px_-5px_rgba(0,0,0,0.6)]">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-4">
-                    <div className="flex size-12 sm:size-14 shrink-0 items-center justify-center rounded-2xl bg-[rgba(255,228,92,0.1)] text-[var(--yellow)] border border-[rgba(255,228,92,0.25)] group-hover:scale-105 transition">
+              <div className="group rounded-2xl sm:rounded-3xl border border-[rgba(255,255,255,0.12)] bg-[rgba(12,23,48,0.75)] p-4.5 sm:p-6 backdrop-blur-md transition-all duration-300 hover:border-[rgba(255,228,92,0.4)] hover:bg-[rgba(17,29,64,0.95)] hover:shadow-[0_12px_30px_-5px_rgba(0,0,0,0.6)]">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3.5 sm:gap-4">
+                    <div className="flex size-12 sm:size-14 shrink-0 items-center justify-center rounded-2xl bg-[rgba(255,228,92,0.12)] text-[var(--yellow)] border border-[rgba(255,228,92,0.25)] group-hover:scale-105 transition">
                       <UsersIcon className="size-6 sm:size-7" />
                     </div>
                     <div>
@@ -373,7 +373,7 @@ export function BioLinkPage() {
                   </div>
                   <button
                     onClick={() => setActiveContactModal("leader")}
-                    className="flex shrink-0 items-center gap-2 rounded-xl sm:rounded-2xl border border-[rgba(255,228,92,0.4)] bg-[rgba(255,228,92,0.1)] px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-bold text-[var(--yellow)] transition hover:bg-[var(--yellow)] hover:text-[var(--navy-deep)] hover:shadow-[0_0_20px_rgba(255,228,92,0.2)]"
+                    className="flex shrink-0 items-center gap-2 rounded-xl sm:rounded-2xl border border-[rgba(255,228,92,0.4)] bg-[rgba(255,228,92,0.12)] px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-bold text-[var(--yellow)] transition hover:bg-[var(--yellow)] hover:text-[var(--navy-deep)] hover:shadow-[0_0_20px_rgba(255,228,92,0.2)]"
                     type="button"
                   >
                     Hubungi <PhoneIcon className="size-4" />
@@ -382,24 +382,24 @@ export function BioLinkPage() {
               </div>
 
               {/* Sponsorship & Media Partner */}
-              <div className="group rounded-2xl sm:rounded-3xl border border-[rgba(255,255,255,0.1)] bg-[rgba(12,23,48,0.7)] p-5 sm:p-6 backdrop-blur-md transition-all duration-300 hover:border-[rgba(255,228,92,0.4)] hover:bg-[rgba(17,29,64,0.95)] hover:shadow-[0_12px_30px_-5px_rgba(0,0,0,0.6)]">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-4">
+              <div className="group rounded-2xl sm:rounded-3xl border border-[rgba(255,255,255,0.12)] bg-[rgba(12,23,48,0.75)] p-4.5 sm:p-6 backdrop-blur-md transition-all duration-300 hover:border-[rgba(255,228,92,0.4)] hover:bg-[rgba(17,29,64,0.95)] hover:shadow-[0_12px_30px_-5px_rgba(0,0,0,0.6)]">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3.5 sm:gap-4">
                     <div className="flex size-12 sm:size-14 shrink-0 items-center justify-center rounded-2xl bg-amber-500/15 text-amber-400 border border-amber-500/30 group-hover:scale-105 transition">
                       <TrophyIcon className="size-6 sm:size-7" />
                     </div>
                     <div>
                       <h3 className="font-display text-base sm:text-lg font-bold text-white tracking-wide group-hover:text-[var(--yellow)] transition-colors">
-                        Sponsorship & Media Partner
+                        Sponsorship & Media
                       </h3>
                       <p className="text-xs sm:text-sm text-[var(--muted)]">
-                        Contact &middot; Proposal & Kemitraan
+                        Contact &middot; Kemitraan
                       </p>
                     </div>
                   </div>
                   <button
                     onClick={() => setActiveContactModal("sponsor")}
-                    className="flex shrink-0 items-center gap-2 rounded-xl sm:rounded-2xl border border-[rgba(255,228,92,0.4)] bg-[rgba(255,228,92,0.1)] px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-bold text-[var(--yellow)] transition hover:bg-[var(--yellow)] hover:text-[var(--navy-deep)] hover:shadow-[0_0_20px_rgba(255,228,92,0.2)]"
+                    className="flex shrink-0 items-center gap-2 rounded-xl sm:rounded-2xl border border-[rgba(255,228,92,0.4)] bg-[rgba(255,228,92,0.12)] px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-bold text-[var(--yellow)] transition hover:bg-[var(--yellow)] hover:text-[var(--navy-deep)] hover:shadow-[0_0_20px_rgba(255,228,92,0.2)]"
                     type="button"
                   >
                     Hubungi <MailIcon className="size-4" />
@@ -411,8 +411,8 @@ export function BioLinkPage() {
         )}
 
         {/* SECTION 2: SOCIAL MEDIAS & OFFICIAL LINKS */}
-        <section className="w-full mb-8">
-          <h2 className="font-display text-xs sm:text-sm font-black uppercase tracking-[0.22em] text-[var(--muted)] mb-4 px-1 flex items-center gap-2">
+        <section className="w-full mb-7 sm:mb-8">
+          <h2 className="font-display text-xs sm:text-sm font-black uppercase tracking-[0.22em] text-[var(--muted)] mb-3.5 px-1 flex items-center gap-2">
             <GlobeIcon className="size-4 text-[var(--yellow)]" /> Social Medias & Platforms
           </h2>
 
@@ -423,9 +423,9 @@ export function BioLinkPage() {
                 <Link
                   key={social.id}
                   href={social.url}
-                  className="group relative flex items-center justify-between rounded-2xl sm:rounded-3xl border border-[rgba(255,255,255,0.1)] bg-[rgba(12,23,48,0.7)] p-5 sm:p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-[var(--yellow)] hover:bg-[rgba(17,29,64,0.95)] hover:shadow-[0_15px_35px_-5px_rgba(255,228,92,0.18)]"
+                  className="group relative flex items-center justify-between rounded-2xl sm:rounded-3xl border border-[rgba(255,255,255,0.12)] bg-[rgba(12,23,48,0.75)] p-4.5 sm:p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-[var(--yellow)] hover:bg-[rgba(17,29,64,0.95)] hover:shadow-[0_15px_35px_-5px_rgba(255,228,92,0.18)]"
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3.5 sm:gap-4">
                     <div className="flex size-12 sm:size-14 shrink-0 items-center justify-center rounded-2xl bg-[var(--yellow)] text-[var(--navy-deep)] font-bold shadow-lg transition duration-300 group-hover:scale-110">
                       <IconComponent className="size-6 sm:size-7" />
                     </div>
@@ -449,10 +449,10 @@ export function BioLinkPage() {
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative flex items-center justify-between rounded-2xl sm:rounded-3xl border border-[rgba(255,255,255,0.1)] bg-[rgba(12,23,48,0.7)] p-5 sm:p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-[rgba(255,228,92,0.4)] hover:bg-[rgba(17,29,64,0.95)] hover:shadow-[0_15px_35px_-5px_rgba(0,0,0,0.6)]"
+                  className="group relative flex items-center justify-between rounded-2xl sm:rounded-3xl border border-[rgba(255,255,255,0.12)] bg-[rgba(12,23,48,0.75)] p-4.5 sm:p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-[rgba(255,228,92,0.4)] hover:bg-[rgba(17,29,64,0.95)] hover:shadow-[0_15px_35px_-5px_rgba(0,0,0,0.6)]"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="flex size-12 sm:size-14 shrink-0 items-center justify-center rounded-2xl bg-[rgba(248,247,240,0.06)] text-[var(--cream)] border border-[rgba(255,255,255,0.12)] transition duration-300 group-hover:border-[var(--yellow)] group-hover:text-[var(--yellow)] group-hover:scale-110">
+                  <div className="flex items-center gap-3.5 sm:gap-4">
+                    <div className="flex size-12 sm:size-14 shrink-0 items-center justify-center rounded-2xl bg-[rgba(248,247,240,0.08)] text-[var(--cream)] border border-[rgba(255,255,255,0.14)] transition duration-300 group-hover:border-[var(--yellow)] group-hover:text-[var(--yellow)] group-hover:scale-110">
                       <IconComponent className="size-6 sm:size-7" />
                     </div>
                     <div>
@@ -460,11 +460,11 @@ export function BioLinkPage() {
                         <h3 className="font-display text-base sm:text-lg font-bold text-white tracking-wide group-hover:text-[var(--yellow)] transition-colors">
                           {social.title}
                         </h3>
-                        <span className="rounded-full bg-[rgba(248,247,240,0.06)] px-2.5 py-0.5 text-xs font-semibold text-[var(--muted)] border border-[rgba(255,255,255,0.1)]">
+                        <span className="rounded-full bg-[rgba(248,247,240,0.08)] px-2.5 py-0.5 text-xs font-semibold text-[var(--muted)] border border-[rgba(255,255,255,0.12)]">
                           {social.badge}
                         </span>
                       </div>
-                      <p className="text-xs sm:text-sm text-[var(--muted)] truncate max-w-[200px] sm:max-w-[320px]">
+                      <p className="text-xs sm:text-sm text-[var(--muted)] truncate max-w-[190px] sm:max-w-[320px]">
                         {social.subtitle}
                       </p>
                     </div>
@@ -478,8 +478,8 @@ export function BioLinkPage() {
 
         {/* SECTION 3: QUICK ACCESS & EXPLORE */}
         {filteredQuickAccess.length > 0 && (
-          <section className="w-full mb-10">
-            <h2 className="font-display text-xs sm:text-sm font-black uppercase tracking-[0.22em] text-[var(--muted)] mb-4 px-1 flex items-center gap-2">
+          <section className="w-full mb-9 sm:mb-10">
+            <h2 className="font-display text-xs sm:text-sm font-black uppercase tracking-[0.22em] text-[var(--muted)] mb-3.5 px-1 flex items-center gap-2">
               <CpuIcon className="size-4 text-[var(--yellow)]" /> Portal & Web Features
             </h2>
 
@@ -490,10 +490,10 @@ export function BioLinkPage() {
                   <Link
                     key={item.id}
                     href={item.url}
-                    className="group relative flex items-center justify-between rounded-2xl sm:rounded-3xl border border-[rgba(255,228,92,0.2)] bg-gradient-to-r from-[rgba(12,23,48,0.85)] to-[rgba(7,16,31,0.85)] p-5 sm:p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-[var(--yellow)] hover:bg-[rgba(17,29,64,0.95)] hover:shadow-[0_15px_35px_-5px_rgba(255,228,92,0.15)]"
+                    className="group relative flex items-center justify-between rounded-2xl sm:rounded-3xl border border-[rgba(255,228,92,0.22)] bg-gradient-to-r from-[rgba(12,23,48,0.85)] to-[rgba(7,16,31,0.85)] p-4.5 sm:p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-[var(--yellow)] hover:bg-[rgba(17,29,64,0.95)] hover:shadow-[0_15px_35px_-5px_rgba(255,228,92,0.15)]"
                   >
-                    <div className="flex items-center gap-4">
-                      <div className="flex size-12 sm:size-14 shrink-0 items-center justify-center rounded-2xl bg-[rgba(255,228,92,0.12)] text-[var(--yellow)] border border-[rgba(255,228,92,0.25)] group-hover:scale-110 transition duration-300">
+                    <div className="flex items-center gap-3.5 sm:gap-4">
+                      <div className="flex size-12 sm:size-14 shrink-0 items-center justify-center rounded-2xl bg-[rgba(255,228,92,0.14)] text-[var(--yellow)] border border-[rgba(255,228,92,0.28)] group-hover:scale-110 transition duration-300">
                         <IconComponent className="size-6 sm:size-7" />
                       </div>
                       <div>
