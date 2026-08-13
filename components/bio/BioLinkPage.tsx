@@ -254,10 +254,7 @@ export function BioLinkPage() {
           {/* Achievement Badges */}
           <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
             <span className="inline-flex items-center gap-2 rounded-full border border-[rgba(255,228,92,0.35)] bg-[rgba(255,228,92,0.1)] px-4 py-1.5 text-xs sm:text-sm font-bold tracking-wider text-[var(--yellow)] shadow-[0_4px_15px_rgba(255,228,92,0.1)]">
-              <TrophyIcon className="size-4" /> Juara KRI Humanoid 2024
-            </span>
-            <span className="inline-flex items-center gap-2 rounded-full border border-[rgba(248,247,240,0.18)] bg-[rgba(248,247,240,0.06)] px-4 py-1.5 text-xs sm:text-sm font-semibold text-[var(--cream)]">
-              <CpuIcon className="size-4 text-cyan-400" /> KRSBI-Humanoid
+              <CpuIcon className="size-4 text-cyan-400" /> KRSBI-Humanoid League
             </span>
           </div>
         </section>
@@ -522,7 +519,7 @@ export function BioLinkPage() {
             Advance Robosoccer Polinema
           </p>
           <p className="text-xs sm:text-sm text-[var(--muted)] mb-4">
-            Politeknik Negeri Malang &middot; Juara KRI Humanoid 2024
+            Politeknik Negeri Malang
           </p>
           
           <div className="flex items-center justify-center gap-4">
