@@ -670,11 +670,15 @@ export function BioLinkPage() {
               Pindai QR ini untuk membuka link bio AROC POLINEMA di HP
             </p>
 
-            <div className="mx-auto size-56 sm:size-64 rounded-2xl bg-white p-4 shadow-inner flex items-center justify-center border-4 border-[var(--yellow)] mb-5">
-              {/* SVG QR Code representation */}
-              <svg viewBox="0 0 100 100" className="size-full">
-                <path fill="#07101f" d="M0 0h30v30H0zM40 0h20v10H40zM70 0h30v30H70zM10 10h10v10H10zM80 10h10v10H80zM0 40h10v20H0zM20 40h30v10H20zM60 40h10v30H60zM80 40h20v10H80zM30 60h20v10H30zM0 70h30v30H0zM10 80h10v10H10zM50 70h20v10H50zM80 70h20v30H80zM40 90h30v10H40z" />
-              </svg>
+            <div className="mx-auto size-56 sm:size-64 rounded-2xl bg-white p-3 shadow-inner flex items-center justify-center border-4 border-[var(--yellow)] mb-5 overflow-hidden">
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(
+                  typeof window !== "undefined" ? window.location.href : "https://arocpl.com/links"
+                )}&color=07101f&margin=0`}
+                alt="QR Code AROC POLINEMA Bio Link"
+                className="size-full object-contain"
+                loading="eager"
+              />
             </div>
 
             <p className="font-mono text-xs sm:text-sm text-[var(--yellow)] font-bold mb-5">
