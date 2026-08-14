@@ -1393,7 +1393,8 @@ function CampaignGallery({ gallery }: { gallery: GalleryItem[] }) {
     "sm:col-span-7 sm:row-span-2",
     "sm:col-span-5",
     "sm:col-span-5",
-    "sm:col-span-12",
+    "sm:col-span-6",
+    "sm:col-span-6",
   ];
 
   return (

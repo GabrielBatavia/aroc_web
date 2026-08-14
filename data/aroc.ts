@@ -298,7 +298,7 @@ export const robotCards: RobotCard[] = [
       "Dilengkapi algoritma kick-timing presisi tinggi yang dapat mendeteksi celah gawang lawan dan mengeksekusi tendangan keras dalam kurun waktu kurang dari 50 milidetik.",
     teamTask:
       "Mencetak gol, melakukan penekanan cepat (pressing) saat lawan menguasai bola, dan membuka ruang tembak di lini depan.",
-    image: "/images/robot-sipeng.png",
+    image: "/galery/robot.jpg",
     tone: "cyan",
   },
   {
@@ -311,7 +311,7 @@ export const robotCards: RobotCard[] = [
       "Menggunakan visi komputer (computer vision) sudut lebar ganda dan algoritma prediksi lintasan bola untuk merespons tembakan lawan dengan aksi diving block otomatis.",
     teamTask:
       "Menjaga gawang dari semua sudut tembakan lawan, menggagalkan peluang gol, dan mengarahkan kembali bola liar ke area aman.",
-    image: "/images/robot-sijoni.png",
+    image: "/galery/robot.jpg",
     tone: "gold",
   },
   {
@@ -324,7 +324,7 @@ export const robotCards: RobotCard[] = [
       "Menggunakan sistem spatial awareness berbasis multi-sensor yang membuatnya mampu mempertahankan keseimbangan penuh saat terjadi duel fisik dengan robot lawan.",
     teamTask:
       "Memutus alur umpan lawan melalui intersep presisi, menguasai bola di lini tengah, dan mendistribusikan umpan matang ke Si Peng.",
-    image: "/images/robot-sikancil.png",
+    image: "/galery/robot.jpg",
     tone: "emerald",
   },
 ];
@@ -492,23 +492,28 @@ export const achievements: Achievement[] = [
 
 export const galleryItems: GalleryItem[] = [
   {
-    src: "/images/gallery-1.png",
-    alt: "Prototipe robot dengan wiring terlihat saat sesi pengujian.",
+    src: "/galery/IMG_20250505_223428.jpg",
+    alt: "Perakitan hardware dan perapihan routing kabel pada sasis robot humanoid.",
     layout: "large-left",
   },
   {
-    src: "/images/gallery-2.png",
-    alt: "Anggota tim berkolaborasi mengerjakan software dan elektronika.",
+    src: "/galery/IMG_20250505_231450.jpg",
+    alt: "Pengujian regulasi daya dan papan PCB mikrokontroler di workstation lab.",
     layout: "small-top",
   },
   {
-    src: "/images/gallery-3.png",
-    alt: "Close-up papan PCB dan komponen embedded robotik.",
+    src: "/galery/IMG_20250506_213054~2.jpg",
+    alt: "Kalibrasi sensor vision dan sinkronisasi komunikasi servo robot.",
     layout: "small-top-right",
   },
   {
-    src: "/images/gallery-4.png",
-    alt: "Sesi diskusi AROC_PL di sekitar workstation lab.",
+    src: "/galery/IMG_20250509_232117~2.jpg",
+    alt: "Pemeriksaan detail komponen mekanik dan struktur sasis presisi.",
+    layout: "wide-bottom",
+  },
+  {
+    src: "/galery/IMG_20250510_120450.jpg",
+    alt: "Diskusi & evaluasi performa pergerakan tim AROC_PL di lab.",
     layout: "wide-bottom",
   },
 ];
