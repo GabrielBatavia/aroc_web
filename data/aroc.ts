@@ -146,7 +146,6 @@ export const footerNavigation: NavLink[] = [
   { label: "Link in Bio", href: "/links", matchPath: "/links" },
   { label: "Tim Kami", href: "/#team" },
   { label: "Armada Robot", href: "/#robots" },
-  { label: "Prestasi", href: "/#achievements" },
   { label: "Galeri", href: "/#gallery" },
   { label: "Kemitraan", href: "/#sponsor" },
 ];
@@ -459,36 +458,7 @@ export const teamStats = [
   { value: "100%", label: "Riset Berkelanjutan dari tim", tone: "gold" },
 ] satisfies TeamStat[];
 
-export const achievements: Achievement[] = [
-  {
-    year: "2024",
-    title: "Juara KRI Humanoid League",
-    subtitle: "Kontes Robot Indonesia",
-    tone: "gold",
-    icon: "trophy",
-  },
-  {
-    year: "2023",
-    title: "Desain & Arsitektur Terbaik",
-    subtitle: "KRSBI Nasional",
-    tone: "cyan",
-    icon: "spark",
-  },
-  {
-    year: "2022",
-    title: "Juara 1 Regional IV",
-    subtitle: "Regional Robotics Contest",
-    tone: "orange",
-    icon: "medal",
-  },
-  {
-    year: "2020",
-    title: "Top 2 Nasional",
-    subtitle: "KRSBI 2020",
-    tone: "blue",
-    icon: "trophy",
-  },
-];
+export const achievements: Achievement[] = [];
 
 export const galleryItems: GalleryItem[] = [
   {

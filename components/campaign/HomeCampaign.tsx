@@ -197,14 +197,14 @@ function CampaignHero({ hero }: { hero: HeroData }) {
   }, []);
 
   const heroFacts = [
-    { value: "2024", label: "Juara KRI" },
+    { value: "2024", label: "Riset Tim" },
     { value: "11+", label: "Personel" },
     { value: "3", label: "Unit Robot" },
   ];
 
   const hudLabels = [
     { text: "Vision Terkunci", style: { top: "31%", left: "55%" } },
-    { text: "KRI 2024", style: { top: "70%", left: "52%" } },
+    { text: "Sistem Terkalibrasi", style: { top: "70%", left: "52%" } },
   ];
 
   return (
@@ -363,12 +363,8 @@ function CampaignHero({ hero }: { hero: HeroData }) {
 
         {/* Top bar */}
         <div className="mx-auto w-full max-w-[1320px] px-4 sm:px-8">
-          <div className="flex items-center justify-between">
-            <div className="champ-badge hero-sequence" style={{ "--sequence-delay": "0.1s" } as CSSProperties}>
-              <TrophyIcon className="size-4" />
-              <span>KRI Humanoid Champion 2024</span>
-            </div>
-            <div className="hero-sequence hidden items-center gap-2 sm:flex" style={{ "--sequence-delay": "0.24s" } as CSSProperties}>
+          <div className="flex items-center justify-end">
+            <div className="hero-sequence flex items-center gap-2" style={{ "--sequence-delay": "0.24s" } as CSSProperties}>
               <span className="inline-block h-2 w-2 animate-ping rounded-full bg-[var(--yellow)] opacity-75" />
               <span className="font-mono text-[0.6rem] font-black uppercase tracking-[0.22em] text-[rgba(248,247,240,0.55)]">
                 Sistem Aktif
@@ -474,7 +470,7 @@ function CampaignHero({ hero }: { hero: HeroData }) {
    =================================================================== */
 
 function CurvedMarquee() {
-  const words = ["AROC_PL", "Humanoid Soccer", "Juara KRI 2024", "Polinema", "Robot Humanoid", "Development Team"];
+  const words = ["AROC_PL", "Humanoid Soccer", "Riset Humanoid", "Polinema", "Robot Humanoid", "Development Team"];
   return (
     <section
       aria-label="Marquee"
@@ -1311,26 +1307,28 @@ function InsiderProof({ achievements, teamLead, teamStats, teamYears }: { achiev
         </div>
 
         {/* Achievements strip */}
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-4" id="achievements">
-          {achievements.map((a) => (
-            <article
-              className="group rounded-[1.6rem] border border-[rgba(248,247,240,0.1)] bg-[rgba(248,247,240,0.04)] p-5 transition hover:border-[rgba(255,228,92,0.28)] hover:bg-[rgba(255,228,92,0.04)]"
-              key={`${a.year}-${a.title}`}
-            >
-              <StarIcon className="size-5 text-[var(--yellow)]" />
-              <div className="numeral mt-4 text-[2.6rem] leading-none text-[var(--yellow)]">{a.year}</div>
-              <h3
-                className="mt-3 font-display font-black uppercase leading-none tracking-[-0.03em] text-[var(--cream)]"
-                style={{ fontSize: "1.4rem" }}
+        {achievements.length > 0 && (
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-4" id="achievements">
+            {achievements.map((a) => (
+              <article
+                className="group rounded-[1.6rem] border border-[rgba(248,247,240,0.1)] bg-[rgba(248,247,240,0.04)] p-5 transition hover:border-[rgba(255,228,92,0.28)] hover:bg-[rgba(255,228,92,0.04)]"
+                key={`${a.year}-${a.title}`}
               >
-                {a.title}
-              </h3>
-              <p className="mt-2 font-mono text-[0.58rem] font-black uppercase tracking-[0.14em] text-[rgba(248,247,240,0.4)]">
-                {a.subtitle}
-              </p>
-            </article>
-          ))}
-        </div>
+                <StarIcon className="size-5 text-[var(--yellow)]" />
+                <div className="numeral mt-4 text-[2.6rem] leading-none text-[var(--yellow)]">{a.year}</div>
+                <h3
+                  className="mt-3 font-display font-black uppercase leading-none tracking-[-0.03em] text-[var(--cream)]"
+                  style={{ fontSize: "1.4rem" }}
+                >
+                  {a.title}
+                </h3>
+                <p className="mt-2 font-mono text-[0.58rem] font-black uppercase tracking-[0.14em] text-[rgba(248,247,240,0.4)]">
+                  {a.subtitle}
+                </p>
+              </article>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* YouTube Modal Lightbox */}
