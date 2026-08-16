@@ -1113,7 +1113,7 @@ function MatchShowcase() {
   }, [isVisible, hasTriggered]);
 
   const videoSrc = hasTriggered
-    ? `https://www.youtube.com/embed/${mainShowcaseVideo.id}?autoplay=1&mute=0&enablejsapi=1&rel=0`
+    ? `https://www.youtube.com/embed/${mainShowcaseVideo.id}?start=${mainShowcaseVideo.start}&end=${mainShowcaseVideo.end}&autoplay=1&mute=0&enablejsapi=1&rel=0`
     : "";
 
   return (
@@ -1142,7 +1142,7 @@ function MatchShowcase() {
             Showcase pertandingan AROCPL
           </h2>
           <p className="mx-auto mt-4 max-w-[36rem] text-[1rem] leading-[1.8] text-[rgba(248,247,240,0.65)]">
-            Saksikan tayangan langsung aksi robot AROCPL di arena pertandingan resmi.
+            {mainShowcaseVideo.subtitleText}
           </p>
         </div>
 
@@ -1159,7 +1159,7 @@ function MatchShowcase() {
               </span>
             </div>
             <div className="font-mono text-[0.64rem] font-bold uppercase tracking-[0.16em] text-[rgba(248,247,240,0.5)]">
-              Video Utama
+              {mainShowcaseVideo.timestampText}
             </div>
           </div>
 
@@ -1266,21 +1266,23 @@ function InsiderProof({ achievements, teamLead, teamStats, teamYears }: { achiev
             </div>
           </div>
 
-          {/* 3 YouTube Video Cards */}
+          {/* 4 YouTube Video Cards */}
           {teamYouTubeVideos.map((video, i) => (
             <article
               className="group relative overflow-hidden rounded-[2rem] border border-[rgba(248,247,240,0.12)] bg-[rgba(10,15,38,0.85)] cursor-pointer transition-all duration-500 hover:-translate-y-1.5 hover:border-[rgba(255,228,92,0.45)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
               key={video.id}
               onClick={() => setActiveYouTubeModal(video)}
-              style={{ minHeight: i === 0 ? "18rem" : i === 1 ? "20rem" : "16rem" }}
+              style={{ minHeight: i < 2 ? "17rem" : "15rem" }}
             >
-              {/* YouTube HQ Thumbnail */}
-              <Image
-                src={`https://img.youtube.com/vi/${video.id}/hqdefault.jpg`}
+              {/* YouTube Thumbnail with fallback */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={`https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`}
                 alt={video.title}
-                fill
-                sizes="(max-width: 1024px) 100vw, 400px"
-                className="object-cover opacity-60 transition-all duration-700 group-hover:scale-105 group-hover:opacity-85"
+                className="absolute inset-0 h-full w-full object-cover opacity-60 transition-all duration-700 group-hover:scale-105 group-hover:opacity-85"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = `https://i.ytimg.com/vi/${video.id}/mqdefault.jpg`;
+                }}
               />
               <div className="absolute inset-0 bg-[linear-gradient(160deg,rgba(5,8,22,0.3),rgba(5,8,22,0.92))]" />
               <div className="relative z-10 flex h-full flex-col justify-between p-5">
@@ -1295,11 +1297,11 @@ function InsiderProof({ achievements, teamLead, teamStats, teamYears }: { achiev
                 <div>
                   <h3
                     className="font-display font-black uppercase leading-[0.88] tracking-[-0.03em] text-[var(--cream)] transition duration-300 group-hover:text-[var(--yellow)]"
-                    style={{ fontSize: "clamp(1.25rem, 2.5vw, 1.75rem)" }}
+                    style={{ fontSize: "clamp(1.2rem, 2.2vw, 1.65rem)" }}
                   >
                     {video.title}
                   </h3>
-                  <p className="mt-2 text-[0.85rem] leading-[1.6] text-[rgba(248,247,240,0.65)]">
+                  <p className="mt-2 text-[0.83rem] leading-[1.55] text-[rgba(248,247,240,0.65)]">
                     {video.description}
                   </p>
                 </div>

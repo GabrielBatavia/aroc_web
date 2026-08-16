@@ -526,14 +526,22 @@ export type YouTubeVideo = {
   isShort?: boolean;
 };
 
-export const mainShowcaseVideo: YouTubeVideo = {
-  id: "-O_nOOdpuic",
-  title: "Showcase Pertandingan Utama AROC_PL",
-  category: "Video Utama",
-  description: "Tayangan utama aksi dan performa robot humanoid AROC_PL di arena pertandingan.",
+export const mainShowcaseVideo = {
+  id: "Sc45lHtMrSM",
+  start: 11280,
+  end: 11880,
+  title: "Showcase Pertandingan AROCPL",
+  timestampText: "Timestamp: 3:08:00 - 3:18:00",
+  subtitleText: "Saksikan tayangan langsung aksi robot AROCPL di arena pertandingan resmi (Menit 3:08:00 - 3:18:00).",
 };
 
 export const teamYouTubeVideos: YouTubeVideo[] = [
+  {
+    id: "-O_nOOdpuic",
+    title: "Dokumentasi Utama AROC_PL",
+    category: "Video Utama",
+    description: "Dokumentasi utama aksi, pergerakan, dan riset robot humanoid AROC_PL.",
+  },
   {
     id: "eRfAFL_OvOo",
     title: "Uji Pergerakan & Keseimbangan Robot",

@@ -152,12 +152,14 @@ export function Gallery({ items }: GalleryProps) {
                   document.body.appendChild(modal);
                 }}
               >
-                <Image
-                  src={`https://img.youtube.com/vi/${vid.id}/hqdefault.jpg`}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`https://i.ytimg.com/vi/${vid.id}/hqdefault.jpg`}
                   alt={vid.title}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 600px"
-                  className="object-cover opacity-50 transition duration-700 group-hover:scale-105 group-hover:opacity-80"
+                  className="absolute inset-0 h-full w-full object-cover opacity-50 transition duration-700 group-hover:scale-105 group-hover:opacity-80"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = `https://i.ytimg.com/vi/${vid.id}/mqdefault.jpg`;
+                  }}
                 />
                 <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(5,8,22,0.5),rgba(5,8,22,0.92))]" />
                 <div className="relative z-10 flex h-full min-h-[13rem] flex-col justify-between">
