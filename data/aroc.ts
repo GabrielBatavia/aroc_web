@@ -518,6 +518,43 @@ export const galleryItems: GalleryItem[] = [
   },
 ];
 
+export type YouTubeVideo = {
+  id: string;
+  title: string;
+  category: string;
+  description: string;
+  isShort?: boolean;
+};
+
+export const mainShowcaseVideo: YouTubeVideo = {
+  id: "-O_nOOdpuic",
+  title: "Showcase Pertandingan Utama AROC_PL",
+  category: "Video Utama",
+  description: "Tayangan utama aksi dan performa robot humanoid AROC_PL di arena pertandingan.",
+};
+
+export const teamYouTubeVideos: YouTubeVideo[] = [
+  {
+    id: "eRfAFL_OvOo",
+    title: "Uji Pergerakan & Keseimbangan Robot",
+    category: "Riset Lab",
+    description: "Dokumentasi pengujian kontrol gerak dan respon keseimbangan robot humanoid AROC_PL.",
+  },
+  {
+    id: "6qvNbp4ouNE",
+    title: "Simulasi Match & Computer Vision",
+    category: "Simulasi Lapangan",
+    description: "Pengujian visi komputer dan strategi pergerakan di area simulasi pertandingan.",
+  },
+  {
+    id: "vxv9uolF68w",
+    title: "Highlight Aksi Robot Humanoid",
+    category: "Short Video",
+    description: "Cuplikan singkat akselerasi gerak dan respon fleksibilitas humanoid AROC_PL.",
+    isShort: true,
+  },
+];
+
 export const footerData = {
   description:
     "Advance Robosoccer Polinema. Tim pengembang robot humanoid Politeknik Negeri Malang untuk riset, pengembangan, dan kompetisi.",

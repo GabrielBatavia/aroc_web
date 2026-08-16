@@ -41,7 +41,9 @@ import type {
   TeamStat,
   TeamYear,
   ValueCard,
+  YouTubeVideo,
 } from "@/data/aroc";
+import { mainShowcaseVideo, teamYouTubeVideos } from "@/data/aroc";
 
 /* ===================================================================
    Types
@@ -1111,7 +1113,7 @@ function MatchShowcase() {
   }, [isVisible, hasTriggered]);
 
   const videoSrc = hasTriggered
-    ? "https://www.youtube.com/embed/Sc45lHtMrSM?start=11280&end=11880&autoplay=1&mute=0&enablejsapi=1&rel=0"
+    ? `https://www.youtube.com/embed/${mainShowcaseVideo.id}?autoplay=1&mute=0&enablejsapi=1&rel=0`
     : "";
 
   return (
@@ -1140,7 +1142,7 @@ function MatchShowcase() {
             Showcase pertandingan AROCPL
           </h2>
           <p className="mx-auto mt-4 max-w-[36rem] text-[1rem] leading-[1.8] text-[rgba(248,247,240,0.65)]">
-            Saksikan tayangan langsung aksi robot AROCPL di arena pertandingan resmi (Menit 3:08:00 - 3:18:00).
+            Saksikan tayangan langsung aksi robot AROCPL di arena pertandingan resmi.
           </p>
         </div>
 
@@ -1157,7 +1159,7 @@ function MatchShowcase() {
               </span>
             </div>
             <div className="font-mono text-[0.64rem] font-bold uppercase tracking-[0.16em] text-[rgba(248,247,240,0.5)]">
-              Timestamp: 3:08:00 - 3:18:00
+              Video Utama
             </div>
           </div>
 
@@ -1197,6 +1199,7 @@ function MatchShowcase() {
 
 function InsiderProof({ achievements, teamLead, teamStats, teamYears }: { achievements: Achievement[]; teamLead: TeamLead; teamStats: TeamStat[]; teamYears: TeamYear[] }) {
   const { ref, isVisible } = useScrollReveal();
+  const [activeYouTubeModal, setActiveYouTubeModal] = useState<YouTubeVideo | null>(null);
 
   return (
     <section className="relative bg-[var(--navy-deep)]" id="team">
@@ -1227,22 +1230,24 @@ function InsiderProof({ achievements, teamLead, teamStats, teamYears }: { achiev
           </p>
         </div>
 
-        {/* Staggered layout: large quote + 3 video cards different sizes */}
-        <div className="grid gap-5 lg:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr] lg:grid-rows-[auto_auto]">
+        {/* Staggered layout: Captain quote + YouTube Video Cards */}
+        <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr_0.9fr] lg:grid-rows-[auto_auto]">
 
           {/* Captain quote — spans full height on desktop */}
-          <div className="card-ink rounded-[2rem] p-6 sm:p-8 lg:row-span-2">
-            <div className="font-mono text-[0.7rem] font-black uppercase tracking-[0.2em] text-[var(--yellow)]">
-              Pernyataan Ketua Tim
-            </div>
-            <blockquote
-              className="mt-6 font-display font-black uppercase leading-[0.88] tracking-[-0.05em] text-[var(--cream)]"
-              style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}
-            >
-              {teamLead.intro}
-            </blockquote>
-            <div className="mt-8 font-mono text-[0.68rem] font-black uppercase tracking-[0.18em] text-[rgba(248,247,240,0.45)]">
-              {teamLead.name} / {teamLead.role}
+          <div className="card-ink rounded-[2rem] p-6 sm:p-8 lg:row-span-2 flex flex-col justify-between">
+            <div>
+              <div className="font-mono text-[0.7rem] font-black uppercase tracking-[0.2em] text-[var(--yellow)]">
+                Pernyataan Ketua Tim
+              </div>
+              <blockquote
+                className="mt-6 font-display font-black uppercase leading-[0.88] tracking-[-0.05em] text-[var(--cream)]"
+                style={{ fontSize: "clamp(2rem, 4.5vw, 3.6rem)" }}
+              >
+                {teamLead.intro}
+              </blockquote>
+              <div className="mt-6 font-mono text-[0.68rem] font-black uppercase tracking-[0.18em] text-[rgba(248,247,240,0.45)]">
+                {teamLead.name} / {teamLead.role}
+              </div>
             </div>
 
             {/* Team stats mini-grid */}
@@ -1261,35 +1266,42 @@ function InsiderProof({ achievements, teamLead, teamStats, teamYears }: { achiev
             </div>
           </div>
 
-          {/* 3 video placeholders — varying height */}
-          {videoSlots.map((slot, i) => (
+          {/* 3 YouTube Video Cards */}
+          {teamYouTubeVideos.map((video, i) => (
             <article
-              className="group relative overflow-hidden rounded-[2rem] border border-[rgba(248,247,240,0.1)] bg-[rgba(248,247,240,0.04)] transition hover:-translate-y-1"
-              key={slot}
-              style={{ minHeight: i === 0 ? "18rem" : i === 1 ? "22rem" : "14rem" }}
+              className="group relative overflow-hidden rounded-[2rem] border border-[rgba(248,247,240,0.12)] bg-[rgba(10,15,38,0.85)] cursor-pointer transition-all duration-500 hover:-translate-y-1.5 hover:border-[rgba(255,228,92,0.45)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
+              key={video.id}
+              onClick={() => setActiveYouTubeModal(video)}
+              style={{ minHeight: i === 0 ? "18rem" : i === 1 ? "20rem" : "16rem" }}
             >
-              <div className="absolute inset-0 bg-[linear-gradient(160deg,rgba(255,228,92,0.08),transparent_50%,rgba(5,8,22,0.8))]" />
-              <div
-                aria-hidden="true"
-                className="absolute inset-0 opacity-10"
-                style={{
-                  backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(248,247,240,0.06) 3px, rgba(248,247,240,0.06) 4px)",
-                }}
+              {/* YouTube HQ Thumbnail */}
+              <Image
+                src={`https://img.youtube.com/vi/${video.id}/hqdefault.jpg`}
+                alt={video.title}
+                fill
+                sizes="(max-width: 1024px) 100vw, 400px"
+                className="object-cover opacity-60 transition-all duration-700 group-hover:scale-105 group-hover:opacity-85"
               />
+              <div className="absolute inset-0 bg-[linear-gradient(160deg,rgba(5,8,22,0.3),rgba(5,8,22,0.92))]" />
               <div className="relative z-10 flex h-full flex-col justify-between p-5">
-                <div className="flex size-11 items-center justify-center rounded-full bg-[var(--yellow)] text-[var(--navy-deep)] shadow-[0_0_0_6px_rgba(255,228,92,0.1)]">
-                  <PlayIcon className="size-4" />
+                <div className="flex items-center justify-between">
+                  <div className="flex size-11 items-center justify-center rounded-full bg-[var(--yellow)] text-[var(--navy-deep)] shadow-[0_0_0_6px_rgba(255,228,92,0.15)] transition duration-300 group-hover:scale-110">
+                    <PlayIcon className="size-5" />
+                  </div>
+                  <span className="rounded-full border border-[rgba(255,228,92,0.3)] bg-[rgba(5,8,22,0.7)] px-3 py-1 font-mono text-[0.58rem] font-black uppercase tracking-[0.16em] text-[var(--yellow)] backdrop-blur-md">
+                    {video.category}
+                  </span>
                 </div>
                 <div>
-                  <div className="font-mono text-[0.58rem] font-black uppercase tracking-[0.18em] text-[var(--yellow)]">
-                    Video 0{i + 1}
-                  </div>
                   <h3
-                    className="mt-2 font-display font-black uppercase leading-[0.88] tracking-[-0.03em] text-[var(--cream)]"
-                    style={{ fontSize: "clamp(1.4rem, 3vw, 2rem)" }}
+                    className="font-display font-black uppercase leading-[0.88] tracking-[-0.03em] text-[var(--cream)] transition duration-300 group-hover:text-[var(--yellow)]"
+                    style={{ fontSize: "clamp(1.25rem, 2.5vw, 1.75rem)" }}
                   >
-                    {slot}
+                    {video.title}
                   </h3>
+                  <p className="mt-2 text-[0.85rem] leading-[1.6] text-[rgba(248,247,240,0.65)]">
+                    {video.description}
+                  </p>
                 </div>
               </div>
             </article>
@@ -1318,6 +1330,52 @@ function InsiderProof({ achievements, teamLead, teamStats, teamYears }: { achiev
           ))}
         </div>
       </div>
+
+      {/* YouTube Modal Lightbox */}
+      {activeYouTubeModal && (
+        <div
+          className="lightbox-overlay flex items-center justify-center p-4 z-[110]"
+          onClick={() => setActiveYouTubeModal(null)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="relative w-full max-w-4xl overflow-hidden rounded-[2rem] border border-[rgba(255,228,92,0.3)] bg-[rgba(5,8,22,0.96)] p-5 shadow-2xl backdrop-blur-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <span className="font-mono text-[0.62rem] font-black uppercase tracking-[0.2em] text-[var(--yellow)]">
+                  {activeYouTubeModal.category}
+                </span>
+                <h3 className="font-display text-xl font-black uppercase text-[var(--cream)] mt-1">
+                  {activeYouTubeModal.title}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setActiveYouTubeModal(null)}
+                aria-label="Tutup video"
+                className="luxury-chip flex size-11 items-center justify-center rounded-full border border-[rgba(248,247,240,0.2)] bg-[rgba(248,247,240,0.1)] text-[var(--cream)] hover:bg-[var(--yellow)] hover:text-[var(--navy-deep)] transition"
+              >
+                <CloseIcon className="size-5" />
+              </button>
+            </div>
+            <div className="relative aspect-video w-full overflow-hidden rounded-[1.4rem] bg-black shadow-inner">
+              <iframe
+                src={`https://www.youtube.com/embed/${activeYouTubeModal.id}?autoplay=1&rel=0`}
+                title={activeYouTubeModal.title}
+                className="absolute inset-0 h-full w-full border-0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
+            </div>
+            <p className="mt-4 text-sm leading-[1.6] text-[rgba(248,247,240,0.75)]">
+              {activeYouTubeModal.description}
+            </p>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

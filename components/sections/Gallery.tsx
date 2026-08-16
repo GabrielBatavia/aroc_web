@@ -7,6 +7,7 @@ import { DoodleArrow } from "@/components/shared/BrandAssets";
 import { ChevronLeftIcon, ChevronRightIcon, CloseIcon, PlayIcon } from "@/components/shared/Icons";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import type { GalleryItem } from "@/data/aroc";
+import { teamYouTubeVideos } from "@/data/aroc";
 
 type GalleryProps = {
   items: GalleryItem[];
@@ -125,21 +126,55 @@ export function Gallery({ items }: GalleryProps) {
             ))}
           </div>
 
-          <div className="mt-5 grid gap-5 lg:grid-cols-2">
-            {videoSlots.map((slot, index) => (
-              <div className={`relative min-h-[16rem] overflow-hidden rounded-[1.6rem] border border-dashed border-[rgba(7,12,34,0.24)] bg-[rgba(255,255,255,0.5)] p-6 reveal-base reveal-up ${isVisible ? `revealed reveal-delay-${index + 5}` : ""}`} key={slot}>
-                <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,228,92,0.28),transparent_45%)]" />
+          <div className="mt-8 grid gap-5 lg:grid-cols-2">
+            {teamYouTubeVideos.slice(0, 2).map((vid, index) => (
+              <div
+                className={`group relative min-h-[16rem] cursor-pointer overflow-hidden rounded-[1.6rem] border border-[rgba(7,12,34,0.18)] bg-[var(--navy-deep)] p-6 shadow-lg transition duration-500 hover:-translate-y-1 hover:border-[var(--gold-deep)] reveal-base reveal-up ${isVisible ? `revealed reveal-delay-${index + 5}` : ""}`}
+                key={vid.id}
+                onClick={() => {
+                  const modal = document.createElement("div");
+                  modal.className = "lightbox-overlay flex items-center justify-center p-4 z-[110]";
+                  modal.onclick = () => document.body.removeChild(modal);
+                  modal.innerHTML = `
+                    <div class="relative w-full max-w-4xl overflow-hidden rounded-[2rem] border border-[rgba(255,228,92,0.3)] bg-[rgba(5,8,22,0.96)] p-5 shadow-2xl backdrop-blur-2xl" onclick="event.stopPropagation()">
+                      <div class="flex items-center justify-between mb-4">
+                        <div>
+                          <span class="font-mono text-[0.62rem] font-black uppercase tracking-[0.2em] text-[var(--yellow)]">${vid.category}</span>
+                          <h3 class="font-display text-xl font-black uppercase text-[var(--cream)] mt-1">${vid.title}</h3>
+                        </div>
+                      </div>
+                      <div class="relative aspect-video w-full overflow-hidden rounded-[1.4rem] bg-black">
+                        <iframe src="https://www.youtube.com/embed/${vid.id}?autoplay=1&rel=0" title="${vid.title}" class="absolute inset-0 h-full w-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                      </div>
+                      <p class="mt-4 text-sm text-[rgba(248,247,240,0.75)]">${vid.description}</p>
+                    </div>
+                  `;
+                  document.body.appendChild(modal);
+                }}
+              >
+                <Image
+                  src={`https://img.youtube.com/vi/${vid.id}/hqdefault.jpg`}
+                  alt={vid.title}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 600px"
+                  className="object-cover opacity-50 transition duration-700 group-hover:scale-105 group-hover:opacity-80"
+                />
+                <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(5,8,22,0.5),rgba(5,8,22,0.92))]" />
                 <div className="relative z-10 flex h-full min-h-[13rem] flex-col justify-between">
-                  <div className="flex size-14 items-center justify-center rounded-full bg-[var(--navy-deep)] text-[var(--yellow)]">
-                    <PlayIcon className="size-6" />
+                  <div className="flex items-center justify-between">
+                    <div className="flex size-14 items-center justify-center rounded-full bg-[var(--yellow)] text-[var(--navy-deep)] shadow-lg transition group-hover:scale-110">
+                      <PlayIcon className="size-6" />
+                    </div>
+                    <span className="rounded-full border border-[rgba(255,228,92,0.3)] bg-[rgba(5,8,22,0.7)] px-3 py-1 font-mono text-[0.6rem] font-black uppercase tracking-[0.16em] text-[var(--yellow)]">
+                      {vid.category}
+                    </span>
                   </div>
                   <div>
-                    <div className="font-mono text-[0.7rem] font-black uppercase tracking-[0.2em] text-[var(--gold-deep)]">Video slot kosong</div>
-                    <h3 className="font-display mt-3 text-[2.6rem] font-black uppercase leading-[0.88] tracking-[-0.04em] text-[var(--navy-deep)]">
-                      {slot}
+                    <h3 className="font-display mt-3 text-[2.2rem] font-black uppercase leading-[0.88] tracking-[-0.04em] text-[var(--cream)] group-hover:text-[var(--yellow)] transition">
+                      {vid.title}
                     </h3>
-                    <p className="mt-3 text-[0.95rem] leading-[1.7] text-[var(--muted-dark)]">
-                      Placeholder siap diganti dengan short video saat asset sudah tersedia.
+                    <p className="mt-2 text-[0.92rem] leading-[1.65] text-[rgba(248,247,240,0.7)]">
+                      {vid.description}
                     </p>
                   </div>
                 </div>
