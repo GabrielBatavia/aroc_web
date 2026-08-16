@@ -27,10 +27,46 @@ import {
   CodeIcon,
 } from "@/components/shared/Icons";
 
+const featuredVideos = [
+  {
+    id: "-O_nOOdpuic",
+    title: "Dokumentasi Utama AROC_PL",
+    category: "Video Utama",
+    badge: "Utama",
+    description: "Dokumentasi utama pergerakan, riset, dan aksi robot humanoid AROC_PL.",
+    url: "https://youtu.be/-O_nOOdpuic",
+  },
+  {
+    id: "eRfAFL_OvOo",
+    title: "Uji Pergerakan & Keseimbangan Robot",
+    category: "Riset Lab",
+    badge: "Riset",
+    description: "Dokumentasi pengujian kontrol gerak & respon keseimbangan robot humanoid.",
+    url: "https://youtu.be/eRfAFL_OvOo",
+  },
+  {
+    id: "6qvNbp4ouNE",
+    title: "Simulasi Match & Computer Vision",
+    category: "Simulasi Lapangan",
+    badge: "Simulasi",
+    description: "Pengujian persepsi kamera & strategi pergerakan di arena pertandingan.",
+    url: "https://youtu.be/6qvNbp4ouNE",
+  },
+  {
+    id: "vxv9uolF68w",
+    title: "Highlight Aksi Robot Humanoid",
+    category: "Short Video",
+    badge: "Shorts",
+    description: "Cuplikan singkat akselerasi gerak dan respon fleksibilitas robot humanoid.",
+    url: "https://youtube.com/shorts/vxv9uolF68w",
+  },
+];
+
 export function BioLinkPage() {
   const [copied, setCopied] = useState(false);
   const [showQr, setShowQr] = useState(false);
   const [videoModalOpen, setVideoModalOpen] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState(featuredVideos[0]);
   const [activeContactModal, setActiveContactModal] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -107,7 +143,7 @@ export function BioLinkPage() {
       id: "youtube",
       title: "YouTube Channel",
       subtitle: "AROC POLINEMA Official",
-      url: "https://youtu.be/ZE8318wfMqY?si=mQyxtvL-DqmnmTDk",
+      url: "https://youtu.be/-O_nOOdpuic",
       icon: YoutubeIcon,
       badge: "Channel",
       tone: "red",
@@ -281,17 +317,17 @@ export function BioLinkPage() {
           </div>
         </div>
 
-        {/* FEATURED: Company Profile Video Card */}
-        {(!searchQuery || "company profile video youtube".includes(searchQuery.toLowerCase())) && (
+        {/* FEATURED: YouTube Videos & Highlights Section */}
+        {(!searchQuery || "featured video youtube dokumentasi riset simulasi highlight".includes(searchQuery.toLowerCase())) && (
           <section className="w-full mb-7 sm:mb-8">
-            <div className="group relative overflow-hidden rounded-3xl border border-[rgba(255,228,92,0.35)] bg-gradient-to-br from-[rgba(17,29,64,0.95)] via-[rgba(7,16,31,0.95)] to-[rgba(3,6,16,0.98)] p-4 sm:p-7 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.8)] backdrop-blur-2xl transition-all duration-300 hover:border-[var(--yellow)] hover:shadow-[0_25px_60px_-10px_rgba(255,228,92,0.22)]">
+            <div className="group relative overflow-hidden rounded-3xl border border-[rgba(255,228,92,0.35)] bg-gradient-to-br from-[rgba(17,29,64,0.95)] via-[rgba(7,16,31,0.95)] to-[rgba(3,6,16,0.98)] p-4 sm:p-7 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.8)] backdrop-blur-2xl transition-all duration-300 hover:border-[var(--yellow)]">
               <div className="flex items-center justify-between mb-3.5">
                 <div className="flex items-center gap-2.5">
                   <span className="flex size-8.5 sm:size-9 items-center justify-center rounded-xl bg-red-600/20 text-red-500 border border-red-500/30">
                     <YoutubeIcon className="size-5" />
                   </span>
                   <span className="text-xs sm:text-sm font-bold uppercase tracking-widest text-[var(--yellow)]">
-                    Featured Profile Video
+                    Featured Videos & Highlights
                   </span>
                 </div>
                 <span className="rounded-full bg-red-500/15 px-3 py-1 text-xs font-bold text-red-400 border border-red-500/30">
@@ -299,12 +335,16 @@ export function BioLinkPage() {
                 </span>
               </div>
 
+              {/* Main Active Video Card Preview */}
               <div className="relative mb-4 aspect-video w-full rounded-2xl overflow-hidden bg-black/60 border border-white/10 group-hover:border-[rgba(255,228,92,0.3)] transition-all duration-300">
-                <Image
-                  src="/images/gallery-1.png"
-                  alt="Company Profile AROC"
-                  fill
-                  className="object-cover opacity-80 group-hover:scale-105 transition duration-700"
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`https://i.ytimg.com/vi/${selectedVideo.id}/hqdefault.jpg`}
+                  alt={selectedVideo.title}
+                  className="size-full object-cover opacity-80 group-hover:scale-105 transition duration-700"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = `https://i.ytimg.com/vi/${selectedVideo.id}/mqdefault.jpg`;
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[var(--navy-black)] via-black/40 to-transparent" />
                 
@@ -316,29 +356,74 @@ export function BioLinkPage() {
                   <span className="flex size-15 sm:size-18 items-center justify-center rounded-full bg-[var(--yellow)] text-[var(--navy-deep)] shadow-[0_0_30px_rgba(255,228,92,0.4)] transition-transform duration-300 group-hover/play:scale-110">
                     <PlayIcon className="size-7 sm:size-9 ml-1" />
                   </span>
-                  <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-white drop-shadow-md">
-                    Putar Video Profile AROC
+                  <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-white drop-shadow-md px-4 text-center">
+                    Putar Video: {selectedVideo.title}
                   </span>
                 </button>
               </div>
 
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                 <div>
+                  <span className="font-mono text-[0.62rem] font-bold uppercase tracking-widest text-[var(--yellow)]">
+                    {selectedVideo.category}
+                  </span>
                   <h2 className="font-display text-lg sm:text-xl font-bold text-white tracking-wide">
-                    Company Profile AROC
+                    {selectedVideo.title}
                   </h2>
                   <p className="text-xs sm:text-sm text-[var(--muted)]">
-                    YouTube &middot; AROC POLINEMA Official Channel
+                    {selectedVideo.description}
                   </p>
                 </div>
                 <a
-                  href="https://youtu.be/ZE8318wfMqY?si=mQyxtvL-DqmnmTDk"
+                  href={selectedVideo.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[var(--yellow)] hover:underline self-start sm:self-center mt-1 sm:mt-0"
+                  className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[var(--yellow)] hover:underline self-start sm:self-center shrink-0 mt-1 sm:mt-0"
                 >
                   Buka di YouTube <ExternalLinkIcon className="size-4" />
                 </a>
+              </div>
+
+              {/* Interactive Video Selector Grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-3.5 border-t border-white/10">
+                {featuredVideos.map((video) => (
+                  <button
+                    key={video.id}
+                    type="button"
+                    onClick={() => {
+                      setSelectedVideo(video);
+                      setVideoModalOpen(true);
+                    }}
+                    className={`group/item relative overflow-hidden rounded-xl border p-2 text-left transition-all duration-300 ${
+                      selectedVideo.id === video.id
+                        ? "border-[var(--yellow)] bg-[rgba(255,228,92,0.14)] shadow-[0_0_15px_rgba(255,228,92,0.2)]"
+                        : "border-white/10 bg-black/40 hover:border-white/30 hover:bg-black/60"
+                    }`}
+                  >
+                    <div className="relative aspect-video w-full rounded-lg overflow-hidden mb-2 bg-black">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={`https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`}
+                        alt={video.title}
+                        className="size-full object-cover opacity-75 group-hover/item:opacity-95 transition"
+                        onError={(e) => {
+                          (e.currentTarget as HTMLImageElement).src = `https://i.ytimg.com/vi/${video.id}/mqdefault.jpg`;
+                        }}
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover/item:bg-black/10 transition">
+                        <span className="flex size-7 items-center justify-center rounded-full bg-[var(--yellow)] text-[var(--navy-deep)] shadow">
+                          <PlayIcon className="size-3.5 ml-0.5" />
+                        </span>
+                      </div>
+                    </div>
+                    <span className="block font-sans text-[0.62rem] font-bold uppercase tracking-wider text-[var(--yellow)] truncate">
+                      {video.badge}
+                    </span>
+                    <span className="block font-display text-xs font-bold text-white truncate group-hover/item:text-[var(--yellow)] transition">
+                      {video.title}
+                    </span>
+                  </button>
+                ))}
               </div>
             </div>
           </section>
@@ -545,12 +630,17 @@ export function BioLinkPage() {
       {videoModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-lg animate-in fade-in duration-200">
           <div className="relative w-full max-w-3xl rounded-3xl border border-[rgba(255,228,92,0.35)] bg-[var(--navy-deep)] p-5 sm:p-7 shadow-2xl overflow-hidden">
-            <div className="flex items-center justify-between mb-4 border-b border-[rgba(255,255,255,0.12)] pb-4">
+            <div className="flex items-center justify-between mb-4 border-b border-[rgba(255,228,92,0.18)] pb-4">
               <div className="flex items-center gap-3">
                 <YoutubeIcon className="size-6 text-red-500" />
-                <h3 className="font-display text-base sm:text-xl font-bold text-white uppercase tracking-wider">
-                  Company Profile Video &mdash; AROC POLINEMA
-                </h3>
+                <div>
+                  <span className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[var(--yellow)]">
+                    {selectedVideo.category}
+                  </span>
+                  <h3 className="font-display text-base sm:text-xl font-bold text-white uppercase tracking-wider">
+                    {selectedVideo.title}
+                  </h3>
+                </div>
               </div>
               <button
                 onClick={() => setVideoModalOpen(false)}
@@ -563,23 +653,23 @@ export function BioLinkPage() {
 
             <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-black shadow-inner">
               <iframe
-                src="https://www.youtube-nocookie.com/embed/ZE8318wfMqY?autoplay=1"
-                title="AROC POLINEMA Company Profile"
+                src={`https://www.youtube.com/embed/${selectedVideo.id}?autoplay=1&rel=0`}
+                title={selectedVideo.title}
                 className="size-full border-0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               />
             </div>
 
-            <div className="mt-4 flex items-center justify-between">
+            <div className="mt-4 flex items-center justify-between gap-4">
               <p className="text-xs sm:text-sm text-[var(--muted)]">
-                Video profil resmi Tim Robot Humanoid Politeknik Negeri Malang
+                {selectedVideo.description}
               </p>
               <a
-                href="https://youtu.be/ZE8318wfMqY?si=mQyxtvL-DqmnmTDk"
+                href={selectedVideo.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs sm:text-sm font-bold text-[var(--yellow)] hover:underline flex items-center gap-1.5"
+                className="text-xs sm:text-sm font-bold text-[var(--yellow)] hover:underline flex items-center gap-1.5 shrink-0"
               >
                 Buka di YouTube <ExternalLinkIcon className="size-4" />
               </a>
