@@ -32,7 +32,7 @@ export function AboutHero({ eyebrow, titlePrefix, titleAccent, description, stat
 
           <div className="relative mx-auto w-full max-w-[28rem]">
             <DoodleArrow className="absolute -left-10 top-0 w-36 rotate-[-12deg] text-[var(--yellow)]" />
-            <div className="breathing-mark flex aspect-square items-center justify-center rounded-full bg-[var(--yellow)] p-10 shadow-[0_0_0_1rem_rgba(255,228,92,0.08),0_40px_100px_-60px_rgba(255,228,92,0.9)]">
+            <div className="breathing-mark flex aspect-square items-center justify-center overflow-hidden rounded-full border-4 border-[var(--yellow)] bg-[var(--navy-deep)] shadow-[0_0_0_1rem_rgba(255,228,92,0.08),0_40px_100px_-60px_rgba(255,228,92,0.9)]">
               <ArocGeneratedMark className="h-full w-full" />
             </div>
           </div>

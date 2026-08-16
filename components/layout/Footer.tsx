@@ -51,7 +51,7 @@ export function Footer({ description, sponsors, navigation, contact }: FooterPro
         <div className="grid gap-12 py-14 lg:grid-cols-[1.15fr_0.75fr_1fr]">
           <div>
             <Link aria-label="AROC_PL beranda" className="inline-flex items-center gap-3" href="/">
-              <span className="flex size-14 items-center justify-center rounded-full bg-[var(--yellow)] p-1.5 shadow-[0_0_0_5px_rgba(255,228,92,0.12)]">
+              <span className="flex size-14 items-center justify-center overflow-hidden rounded-full border-2 border-[var(--yellow)] bg-[var(--navy-deep)] shadow-[0_0_20px_rgba(255,228,92,0.25)]">
                 <ArocGeneratedMark className="size-full" />
               </span>
               <span>

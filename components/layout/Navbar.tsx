@@ -64,8 +64,8 @@ export function Navbar({ links }: NavbarProps) {
           className="group flex shrink-0 items-center gap-2.5"
           href="/"
         >
-          <span className="nav-brand-mark relative flex size-10 shrink-0 items-center justify-center rounded-full bg-[var(--yellow)] p-1 shadow-[0_0_0_3px_rgba(255,228,92,0.14)] sm:size-11">
-            <ArocGeneratedMark className="size-full" />
+          <span className="nav-brand-mark relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-[var(--yellow)] bg-[var(--navy-deep)] shadow-[0_0_15px_rgba(255,228,92,0.25)] sm:size-11">
+            <ArocGeneratedMark className="size-full" priority />
           </span>
           <span className="hidden leading-none sm:block">
             <span className="block font-display text-[1.1rem] font-black uppercase tracking-[0.1em] text-[var(--cream)]">

@@ -57,8 +57,8 @@ export function SponsorCta() {
             </div>
 
             <div className="relative">
-              <div className="mx-auto flex aspect-square max-w-[24rem] items-center justify-center rounded-full bg-[var(--yellow)] p-8 text-[var(--navy-deep)] shadow-[0_0_0_1rem_rgba(255,228,92,0.08),0_40px_100px_-62px_rgba(255,228,92,0.9)]">
-                <ArocGeneratedMark className="h-full w-full max-w-[16rem]" />
+              <div className="mx-auto flex aspect-square max-w-[24rem] items-center justify-center overflow-hidden rounded-full border-4 border-[var(--yellow)] bg-[var(--navy-deep)] shadow-[0_0_0_1rem_rgba(255,228,92,0.08),0_40px_100px_-62px_rgba(255,228,92,0.9)]">
+                <ArocGeneratedMark className="h-full w-full" />
               </div>
               <div className="mt-7 grid gap-4">
                 {sponsorPerks.map((perk, index) => (

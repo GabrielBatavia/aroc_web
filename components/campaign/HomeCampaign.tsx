@@ -1605,8 +1605,8 @@ function SponsorFinalCTA() {
 
           <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
             {/* Logo mark */}
-            <div className="breathing-mark mx-auto flex aspect-square w-full max-w-[18rem] items-center justify-center rounded-full bg-[var(--yellow)] p-8 shadow-[0_0_0_1.5rem_rgba(255,228,92,0.07),0_0_0_3rem_rgba(255,228,92,0.03)]">
-              <ArocGeneratedMark className="h-full w-full max-w-[12rem]" />
+            <div className="breathing-mark mx-auto flex aspect-square w-full max-w-[18rem] items-center justify-center overflow-hidden rounded-full border-4 border-[var(--yellow)] bg-[var(--navy-deep)] shadow-[0_0_0_1.5rem_rgba(255,228,92,0.07),0_0_0_3rem_rgba(255,228,92,0.03)]">
+              <ArocGeneratedMark className="h-full w-full" />
             </div>
 
             {/* Copy */}

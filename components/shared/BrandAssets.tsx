@@ -5,13 +5,13 @@ type SvgProps = SVGProps<SVGSVGElement>;
 
 export function ArocGeneratedMark({ className, priority = false }: { className?: string; priority?: boolean }) {
   return (
-    <div className={`relative ${className || ""}`}>
+    <div className={`relative overflow-hidden rounded-full ${className || ""}`}>
       <Image
         src="/images/logoAROC.jpg"
-        alt="AROC Logo"
+        alt="AROC POLINEMA Logo"
         fill
         sizes="(max-width: 768px) 150px, 300px"
-        className="object-contain mix-blend-multiply"
+        className="object-cover rounded-full"
         priority={priority}
       />
     </div>
