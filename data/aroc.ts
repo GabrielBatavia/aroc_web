@@ -329,8 +329,8 @@ export const robotCards: RobotCard[] = [
 ];
 
 export const teamLead: TeamLead = {
-  name: "Ahmad Fauzi",
-  role: "Ketua Tim / Hardware Lead",
+  name: "Fasha",
+  role: "Ketua Tim / Team Leader",
   image: "/images/team-lead.png",
   badge: "Kapten",
   intro:

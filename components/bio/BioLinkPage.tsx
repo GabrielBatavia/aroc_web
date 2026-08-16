@@ -438,28 +438,29 @@ export function BioLinkPage() {
 
             <div className="grid gap-3.5">
               {/* Team Leader Contact */}
-              <div className="group rounded-2xl sm:rounded-3xl border border-[rgba(255,255,255,0.12)] bg-[rgba(12,23,48,0.75)] p-4.5 sm:p-6 backdrop-blur-md transition-all duration-300 hover:border-[rgba(255,228,92,0.4)] hover:bg-[rgba(17,29,64,0.95)] hover:shadow-[0_12px_30px_-5px_rgba(0,0,0,0.6)]">
+              <div className="group rounded-2xl sm:rounded-3xl border border-[rgba(255,225,92,0.25)] bg-[rgba(12,23,48,0.8)] p-4.5 sm:p-6 backdrop-blur-md transition-all duration-300 hover:border-[var(--yellow)] hover:bg-[rgba(17,29,64,0.95)] hover:shadow-[0_12px_30px_-5px_rgba(255,228,92,0.15)]">
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3.5 sm:gap-4">
-                    <div className="flex size-12 sm:size-14 shrink-0 items-center justify-center rounded-2xl bg-[rgba(255,228,92,0.12)] text-[var(--yellow)] border border-[rgba(255,228,92,0.25)] group-hover:scale-105 transition">
+                    <div className="flex size-12 sm:size-14 shrink-0 items-center justify-center rounded-2xl bg-[rgba(255,228,92,0.14)] text-[var(--yellow)] border border-[rgba(255,228,92,0.3)] group-hover:scale-105 transition">
                       <UsersIcon className="size-6 sm:size-7" />
                     </div>
                     <div>
                       <h3 className="font-display text-base sm:text-lg font-bold text-white tracking-wide group-hover:text-[var(--yellow)] transition-colors">
-                        Team Leader
+                        Fasha &mdash; Team Leader
                       </h3>
-                      <p className="text-xs sm:text-sm text-[var(--muted)]">
-                        Contact &middot; General Inquiry
+                      <p className="text-xs sm:text-sm text-[var(--yellow)] font-mono font-bold mt-0.5">
+                        WA: +62 822-2895-7745
                       </p>
                     </div>
                   </div>
-                  <button
-                    onClick={() => setActiveContactModal("leader")}
-                    className="flex shrink-0 items-center gap-2 rounded-xl sm:rounded-2xl border border-[rgba(255,228,92,0.4)] bg-[rgba(255,228,92,0.12)] px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-bold text-[var(--yellow)] transition hover:bg-[var(--yellow)] hover:text-[var(--navy-deep)] hover:shadow-[0_0_20px_rgba(255,228,92,0.2)]"
-                    type="button"
+                  <a
+                    href="https://wa.me/6282228957745"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex shrink-0 items-center gap-2 rounded-xl sm:rounded-2xl border border-emerald-500/40 bg-emerald-500/15 px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-bold text-emerald-400 transition hover:bg-emerald-500 hover:text-white hover:shadow-[0_0_20px_rgba(16,185,129,0.3)]"
                   >
-                    Hubungi <PhoneIcon className="size-4" />
-                  </button>
+                    WhatsApp <PhoneIcon className="size-4" />
+                  </a>
                 </div>
               </div>
 
@@ -683,9 +684,14 @@ export function BioLinkPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-lg animate-in fade-in duration-200">
           <div className="relative w-full max-w-md rounded-3xl border border-[rgba(255,228,92,0.35)] bg-[var(--navy-deep)] p-6 sm:p-8 shadow-2xl">
             <div className="flex items-center justify-between mb-5 border-b border-[rgba(255,255,255,0.12)] pb-4">
-              <h3 className="font-display text-lg sm:text-xl font-bold text-white uppercase tracking-wider">
-                {activeContactModal === "leader" ? "Contact Team Leader" : "Sponsorship & Media Partner"}
-              </h3>
+              <div>
+                <span className="font-mono text-[0.62rem] font-bold uppercase tracking-wider text-[var(--yellow)]">
+                  Kontak Resmi
+                </span>
+                <h3 className="font-display text-lg sm:text-xl font-bold text-white uppercase tracking-wider mt-0.5">
+                  {activeContactModal === "leader" ? "Contact Team Leader (Fasha)" : "Sponsorship & Media Partner"}
+                </h3>
+              </div>
               <button
                 onClick={() => setActiveContactModal(null)}
                 className="flex size-8 items-center justify-center rounded-full bg-white/10 text-white hover:bg-red-500 transition"
@@ -696,6 +702,22 @@ export function BioLinkPage() {
             </div>
 
             <div className="space-y-3.5 mb-6">
+              {activeContactModal === "leader" && (
+                <div className="rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-4">
+                  <span className="block text-xs font-bold text-emerald-400 uppercase tracking-wider mb-1">
+                    WhatsApp / Telepon (Fasha - Team Leader)
+                  </span>
+                  <a
+                    href="https://wa.me/6282228957745"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-base sm:text-lg font-bold text-white hover:text-emerald-400 transition flex items-center gap-2"
+                  >
+                    +62 822-2895-7745 <ExternalLinkIcon className="size-4 text-emerald-400" />
+                  </a>
+                </div>
+              )}
+
               <div className="rounded-2xl border border-[rgba(255,255,255,0.1)] bg-[rgba(255,255,255,0.05)] p-4">
                 <span className="block text-xs font-bold text-[var(--yellow)] uppercase tracking-wider mb-1">
                   Email Resmi
@@ -730,12 +752,23 @@ export function BioLinkPage() {
             </div>
 
             <div className="flex gap-3">
-              <a
-                href="mailto:hello@arocpl.com"
-                className="flex-1 flex items-center justify-center gap-2 rounded-2xl bg-[var(--yellow)] px-5 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider text-[var(--navy-deep)] shadow-lg hover:bg-yellow-300 transition"
-              >
-                Kirim Email <MailIcon className="size-4.5" />
-              </a>
+              {activeContactModal === "leader" ? (
+                <a
+                  href="https://wa.me/6282228957745"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 flex items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-400 px-5 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-lg transition"
+                >
+                  Chat WhatsApp Fasha <PhoneIcon className="size-4.5" />
+                </a>
+              ) : (
+                <a
+                  href="mailto:hello@arocpl.com"
+                  className="flex-1 flex items-center justify-center gap-2 rounded-2xl bg-[var(--yellow)] px-5 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider text-[var(--navy-deep)] shadow-lg hover:bg-yellow-300 transition"
+                >
+                  Kirim Email <MailIcon className="size-4.5" />
+                </a>
+              )}
             </div>
           </div>
         </div>
