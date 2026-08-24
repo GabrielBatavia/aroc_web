@@ -42,7 +42,9 @@ export function Mentors({ mentors }: MentorsProps) {
                   <h3 className="font-display mt-3 text-[2.2rem] font-black uppercase leading-[0.9] tracking-[-0.04em] text-[var(--navy-deep)]">
                     {mentor.name}
                   </h3>
-                  <p className="mt-2 text-[0.84rem] text-[var(--muted-dark)]">NIDN {mentor.nidn}</p>
+                  {mentor.nidn && mentor.nidn !== "-" && (
+                    <p className="mt-2 text-[0.84rem] text-[var(--muted-dark)]">NIDN {mentor.nidn}</p>
+                  )}
                   <p className="mt-4 text-[0.98rem] leading-[1.75] text-[var(--navy-deep)]">{mentor.specialization}</p>
 
                   <div className="mt-6 flex flex-wrap gap-2">

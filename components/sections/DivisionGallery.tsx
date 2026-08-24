@@ -40,7 +40,7 @@ const DIVISIONS: Division[] = [
       {
         name: "Fasha Rafi Islamey",
         role: "Ketua Tim",
-        image: "/images/KRSBI-H/1. Ketua Tim/Fasha Rafi Islamey_Ketua Tim.JPG",
+        image: "/images/ANGGOTA 26/Fasha.jpg",
       },
     ],
   },
@@ -55,14 +55,12 @@ const DIVISIONS: Division[] = [
       {
         name: "Hannunah Qiblatin",
         role: "Divisi Manager",
-        image:
-          "/images/KRSBI-H/2. Divisi Manager/Hannunah Qiblatin_Divisi Manager.JPG",
+        image: "/images/ANGGOTA 26/hannun.JPG",
       },
       {
         name: "Naomi Phoan Alodia Edgina",
         role: "Divisi Manager",
-        image:
-          "/images/KRSBI-H/2. Divisi Manager/Naomi Phoan Alodia Edgina_Divisi Manager.JPG",
+        image: "/images/ANGGOTA 26/nayoumie.JPG",
       },
     ],
   },
@@ -77,26 +75,22 @@ const DIVISIONS: Division[] = [
       {
         name: "Aprillo Firos Nugroho",
         role: "Image Processing",
-        image:
-          "/images/KRSBI-H/3. Divisi Image Processing/Aprillo Firos Nugroho_ Divisi Image Processing.jpeg",
+        image: "/images/ANGGOTA 26/firos.JPG",
       },
       {
         name: "Gabriel Batavia Xaverius",
         role: "Image Processing",
-        image:
-          "/images/KRSBI-H/3. Divisi Image Processing/Gabriel Batavia Xaverius_Divisi Image Processing.JPG",
+        image: "/images/ANGGOTA 26/Gabriel.jpg",
       },
       {
         name: "Muh. Fatih Assayuti",
         role: "Image Processing",
-        image:
-          "/images/KRSBI-H/3. Divisi Image Processing/Muh. Fatih Assayuti_Divisi Image Processing.JPG",
+        image: "/images/ANGGOTA 26/fatih.JPG",
       },
       {
         name: "Noor Ishmata Choirun Eilmi",
         role: "Image Processing",
-        image:
-          "/images/KRSBI-H/3. Divisi Image Processing/Noor Ishmata Choirun Eilmi_Divisi image processing.jpg",
+        image: "/images/ANGGOTA 26/ilmi.JPG",
       },
     ],
   },
@@ -111,31 +105,27 @@ const DIVISIONS: Division[] = [
       {
         name: "Alfarel Putra Ridho",
         role: "Communication",
-        image:
-          "/images/KRSBI-H/4.  Divisi Communication/Alfarel Putra Ridho _ Divisi Communication.JPG",
+        image: "/images/ANGGOTA 26/farel.JPG",
       },
       {
         name: "Fiqi Raihan Hubbi M.",
         role: "Communication",
-        image:
-          "/images/KRSBI-H/4.  Divisi Communication/Fiqi Raihan Hubbi M._Divisi Communication.JPG",
+        image: "/images/ANGGOTA 26/reihan.JPG",
       },
       {
         name: "Muhammad Afifi",
         role: "Communication",
-        image:
-          "/images/KRSBI-H/4.  Divisi Communication/Muhammad Afifi_Divisi Communication.JPG",
+        image: "/images/ANGGOTA 26/WhatsApp Image 2026-08-05 at 14.04.27.jpeg",
       },
       {
         name: "Rio Zefa Artasena",
         role: "Communication",
-        image:
-          "/images/KRSBI-H/4.  Divisi Communication/Rio Zefa Artasena_Divisi Communication.JPG",
+        image: "/images/ANGGOTA 26/rio.JPG",
       },
     ],
   },
   {
-    id: "maneuvering",
+    id: "manuevering",
     label: "Divisi Maneuvering",
     shortLabel: "Motion",
     color: "#c8ccd8",
@@ -145,56 +135,47 @@ const DIVISIONS: Division[] = [
       {
         name: "Adetin Dewi Cantika",
         role: "Maneuvering",
-        image:
-          "/images/KRSBI-H/5. Divisi Maneuvering/Adetin Dewi Cantika_Divisi Maneuvering.jpeg",
+        image: "/images/ANGGOTA 26/WhatsApp Image 2026-08-18 at 15.20.18.jpeg",
       },
       {
         name: "Ahmad Habibullah",
         role: "Maneuvering",
-        image:
-          "/images/KRSBI-H/5. Divisi Maneuvering/Ahmad Habibullah_Divisi Maneuvering.JPG",
+        image: "/images/ANGGOTA 26/habib.JPG",
       },
       {
         name: "Bayu Kurniawan",
         role: "Maneuvering",
-        image:
-          "/images/KRSBI-H/5. Divisi Maneuvering/Bayu Kurniawan_Divisi Maneuvering.jpg",
+        image: "/images/ANGGOTA 26/tgt.JPG",
       },
       {
         name: "Gavra Ahmad Zidan",
         role: "Maneuvering",
-        image:
-          "/images/KRSBI-H/5. Divisi Maneuvering/Gavra Ahmad Zidan_Divisi Maneuvering.jpeg",
+        image: "/images/ANGGOTA 26/gavra.JPG",
       },
       {
         name: "M. Lufyn Aulia Rahman",
         role: "Maneuvering",
-        image:
-          "/images/KRSBI-H/5. Divisi Maneuvering/M. Lufyn Aulia Rahman_Divisi Maneuvering.JPG",
+        image: "/images/ANGGOTA 26/ufyyn.JPG",
       },
       {
         name: "M. Rizal Al Akbar",
         role: "Maneuvering",
-        image:
-          "/images/KRSBI-H/5. Divisi Maneuvering/M. Rizal Al Akbar_Divisi Maneuvering.JPG",
+        image: "/images/ANGGOTA 26/ijal.JPG",
       },
       {
         name: "M. Ryan Hidayat",
         role: "Maneuvering",
-        image:
-          "/images/KRSBI-H/5. Divisi Maneuvering/M. Ryan Hidayat_Divisi Maneuvering.JPG",
+        image: "/images/ANGGOTA 26/riyan.JPG",
       },
       {
         name: "M. Wisnu Hardiantoro",
         role: "Maneuvering",
-        image:
-          "/images/KRSBI-H/5. Divisi Maneuvering/M. Wisnu Hardiantoro_Divisi Maneuvering.JPG",
+        image: "/images/ANGGOTA 26/tgt1.JPG",
       },
       {
         name: "Rendy Eko Pastyo",
         role: "Maneuvering",
-        image:
-          "/images/KRSBI-H/5. Divisi Maneuvering/Rendy Eko Pastyo_Divisi Maneuvering.JPG",
+        image: "/images/ANGGOTA 26/rendy.JPG",
       },
     ],
   },

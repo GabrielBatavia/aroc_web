@@ -33,8 +33,8 @@ export const aboutHero = {
     "Tim pengembang robot humanoid Politeknik Negeri Malang yang berfokus pada riset, pengembangan, dan partisipasi di kompetisi robotik bergengsi.",
   stats: [
     { value: "2", label: "Dosen Pembimbing", tone: "cyan" },
-    { value: "11", label: "Total Anggota", tone: "orange" },
-    { value: "3", label: "Angkatan", tone: "emerald" },
+    { value: "20", label: "Total Anggota", tone: "orange" },
+    { value: "5", label: "Divisi", tone: "emerald" },
   ] satisfies AboutHeroStat[],
 };
 
@@ -84,23 +84,23 @@ export const aboutValues = [
 
 export const aboutMentors = [
   {
-    name: "Dr. Ir. Budi Santoso, M.T.",
+    name: "Muhammad Syirajuddin S., S.T., M.T.",
     role: "Dosen Pembimbing Utama",
-    nidn: "0012345678",
-    specialization: "Robotika & Kecerdasan Buatan",
-    email: "budi.santoso@polinema.ac.id",
-    instagram: "@budi_santoso",
-    image: "/images/mentor-budi.png",
+    nidn: "-",
+    specialization: "Lecturer in Telecommunication Engineering",
+    email: "syirajuddin@polinema.ac.id",
+    instagram: "@aroc_polinema",
+    image: "/images/ANGGOTA 26/Dosen_Syirajuddin.jpg",
     badge: "DOSPEM",
   },
   {
-    name: "Siti Rahayu, S.T., M.T.",
+    name: "Galuh Prawestri Citra Handani, S.T., M.T.",
     role: "Dosen Pembimbing Teknis",
-    nidn: "0087654321",
-    specialization: "Sistem Kontrol & Embedded Systems",
-    email: "siti.rahayu@polinema.ac.id",
-    instagram: "@siti_rahayu",
-    image: "/images/mentor-siti.png",
+    nidn: "-",
+    specialization: "Lecturer in Electrical Engineering",
+    email: "galuh.prawestri@polinema.ac.id",
+    instagram: "@aroc_polinema",
+    image: "/images/ANGGOTA 26/Dosen_Galuh.jpg",
     badge: "DOSPEM",
   },
 ] satisfies AboutMentor[];
