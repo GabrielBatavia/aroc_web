@@ -115,7 +115,8 @@ const DIVISIONS: Division[] = [
       {
         name: "Muhammad Afifi",
         role: "Communication",
-        image: "/images/ANGGOTA 26/WhatsApp Image 2026-08-05 at 14.04.27.jpeg",
+        image:
+          "/images/KRSBI-H/4.  Divisi Communication/Muhammad Afifi_Divisi Communication.JPG",
       },
       {
         name: "Rio Zefa Artasena",
@@ -135,7 +136,8 @@ const DIVISIONS: Division[] = [
       {
         name: "Adetin Dewi Cantika",
         role: "Maneuvering",
-        image: "/images/ANGGOTA 26/WhatsApp Image 2026-08-18 at 15.20.18.jpeg",
+        image:
+          "/images/KRSBI-H/5. Divisi Maneuvering/Adetin Dewi Cantika_Divisi Maneuvering.jpeg",
       },
       {
         name: "Ahmad Habibullah",
@@ -145,7 +147,8 @@ const DIVISIONS: Division[] = [
       {
         name: "Bayu Kurniawan",
         role: "Maneuvering",
-        image: "/images/ANGGOTA 26/tgt.JPG",
+        image:
+          "/images/KRSBI-H/5. Divisi Maneuvering/Bayu Kurniawan_Divisi Maneuvering.jpg",
       },
       {
         name: "Gavra Ahmad Zidan",
@@ -170,7 +173,8 @@ const DIVISIONS: Division[] = [
       {
         name: "M. Wisnu Hardiantoro",
         role: "Maneuvering",
-        image: "/images/ANGGOTA 26/tgt1.JPG",
+        image:
+          "/images/KRSBI-H/5. Divisi Maneuvering/M. Wisnu Hardiantoro_Divisi Maneuvering.JPG",
       },
       {
         name: "Rendy Eko Pastyo",

@@ -425,7 +425,8 @@ export const teamYears: TeamYear[] = [
         nim: "2241760010",
         handle: "@muhafifi",
         phone: "081234567899",
-        image: "/images/ANGGOTA 26/WhatsApp Image 2026-08-05 at 14.04.27.jpeg",
+        image:
+          "/images/KRSBI-H/4.  Divisi Communication/Muhammad Afifi_Divisi Communication.JPG",
       },
       {
         name: "Rio Zefa Artasena",
@@ -441,7 +442,8 @@ export const teamYears: TeamYear[] = [
         nim: "2241760012",
         handle: "@adetindewi",
         phone: "081234567901",
-        image: "/images/ANGGOTA 26/WhatsApp Image 2026-08-18 at 15.20.18.jpeg",
+        image:
+          "/images/KRSBI-H/5. Divisi Maneuvering/Adetin Dewi Cantika_Divisi Maneuvering.jpeg",
       },
       {
         name: "Ahmad Habibullah",
@@ -457,7 +459,8 @@ export const teamYears: TeamYear[] = [
         nim: "2241760014",
         handle: "@bayukurniawan",
         phone: "081234567903",
-        image: "/images/ANGGOTA 26/tgt.JPG",
+        image:
+          "/images/KRSBI-H/5. Divisi Maneuvering/Bayu Kurniawan_Divisi Maneuvering.jpg",
       },
       {
         name: "Gavra Ahmad Zidan",
@@ -497,7 +500,8 @@ export const teamYears: TeamYear[] = [
         nim: "2241760019",
         handle: "@wisnuhardi",
         phone: "081234567908",
-        image: "/images/ANGGOTA 26/tgt1.JPG",
+        image:
+          "/images/KRSBI-H/5. Divisi Maneuvering/M. Wisnu Hardiantoro_Divisi Maneuvering.JPG",
       },
       {
         name: "Rendy Eko Pastyo",
