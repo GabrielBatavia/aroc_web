@@ -10,6 +10,7 @@ import {
   footerNavigation,
   galleryItems,
   heroData,
+  matchDocumentationItems,
   robotCards,
   teamLead,
   teamStats,
@@ -26,6 +27,7 @@ export default function Home() {
         achievements={achievements}
         divisions={coreDivisions}
         gallery={galleryItems}
+        matchDocumentation={matchDocumentationItems}
         hero={heroData}
         robots={robotCards}
         teamLead={teamLead}

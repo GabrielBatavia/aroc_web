@@ -552,6 +552,100 @@ export const galleryItems: GalleryItem[] = [
   },
 ];
 
+export type MatchDocumentationItem = {
+  src: string;
+  alt: string;
+  caption: string;
+  tag: string;
+};
+
+export const matchDocumentationItems: MatchDocumentationItem[] = [
+  {
+    src: "/dokumentasi/IMG_8118.JPG",
+    alt: "Aksi robot humanoid AROC_PL di arena pertandingan resmi.",
+    caption: "Aksi robot humanoid di arena pertandingan",
+    tag: "Match Day",
+  },
+  {
+    src: "/dokumentasi/IMG_8288.JPG",
+    alt: "Pengecekan teknis aktuator, motor driver, dan sistem daya pra-pertandingan.",
+    caption: "Inspeksi teknis pra-pertandingan",
+    tag: "Preparation",
+  },
+  {
+    src: "/dokumentasi/IMG_8305.JPG",
+    alt: "Kalibrasi lapangan dan pengujian kestabilan langkah robot.",
+    caption: "Kalibrasi lapangan & orientasi gerak",
+    tag: "Calibration",
+  },
+  {
+    src: "/dokumentasi/IMG_8329.JPG",
+    alt: "Monitoring telemetri dan koordinasi strategi tim di area teknis.",
+    caption: "Monitoring telemetri & strategi",
+    tag: "Strategy",
+  },
+  {
+    src: "/dokumentasi/IMG_8346.JPG",
+    alt: "Manuver kontrol bola dan penetrasi oleh robot penyerang.",
+    caption: "Manuver kontrol bola dan penetrasi",
+    tag: "Offense",
+  },
+  {
+    src: "/dokumentasi/IMG_8349.JPG",
+    alt: "Visi komputer sudut lebar untuk penguncian posisi bola dan orientasi lapangan.",
+    caption: "Vision tracking & positioning dinamis",
+    tag: "Vision AI",
+  },
+  {
+    src: "/dokumentasi/IMG_8350.JPG",
+    alt: "Dinamika duel perebutan bola dan evaluasi respons di area penalti.",
+    caption: "Duel perebutan bola di area krusial",
+    tag: "Match Action",
+  },
+  {
+    src: "/dokumentasi/IMG_8352.JPG",
+    alt: "Eksekusi tendangan presisi ke arah sudut gawang lawan.",
+    caption: "Eksekusi tendangan presisi ke gawang",
+    tag: "Shooting",
+  },
+  {
+    src: "/dokumentasi/IMG_8354.JPG",
+    alt: "Keseimbangan dinamis dan respons recovery cepat pasca-manuver intensif.",
+    caption: "Keseimbangan dinamis pasca-manuver",
+    tag: "Dynamics",
+  },
+  {
+    src: "/dokumentasi/IMG_8357.JPG",
+    alt: "Aksi antisipasi dan stance pertahanan solid di depan gawang.",
+    caption: "Stance pertahanan solid di depan gawang",
+    tag: "Defense",
+  },
+  {
+    src: "/dokumentasi/IMG_8358.JPG",
+    alt: "Briefing dan evaluasi parameter teknis robot antar babak pertandingan.",
+    caption: "Evaluasi parameter taktis antar sesi",
+    tag: "Team Brief",
+  },
+  {
+    src: "/dokumentasi/IMG_8495.JPG",
+    alt: "Pemeriksaan detail modul sensorik dan sasis robot di paddock kompetisi.",
+    caption: "Pemeriksaan modul sensorik di paddock",
+    tag: "Hardware",
+  },
+  {
+    src: "/dokumentasi/IMG_8506.JPG",
+    alt: "Kekompakan dan kerja sama seluruh kru AROC_PL di arena kompetisi.",
+    caption: "Kekompakan tim AROC_PL di arena",
+    tag: "Team Spirit",
+  },
+  {
+    src: "/dokumentasi/IMG_8510.JPG",
+    alt: "Dokumentasi kebersamaan tim dan robot humanoid AROC_PL pasca pertandingan.",
+    caption: "Dokumentasi kebersamaan tim AROC_PL",
+    tag: "Pride & Unity",
+  },
+];
+
 export type YouTubeVideo = {
   id: string;
   title: string;

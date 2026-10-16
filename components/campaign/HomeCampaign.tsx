@@ -36,6 +36,7 @@ import type {
   DivisionCard,
   GalleryItem,
   HeroData,
+  MatchDocumentationItem,
   RobotCard,
   TeamLead,
   TeamStat,
@@ -43,7 +44,7 @@ import type {
   ValueCard,
   YouTubeVideo,
 } from "@/data/aroc";
-import { mainShowcaseVideo, teamYouTubeVideos } from "@/data/aroc";
+import { mainShowcaseVideo, matchDocumentationItems, teamYouTubeVideos } from "@/data/aroc";
 
 /* ===================================================================
    Types
@@ -57,6 +58,7 @@ type HomeCampaignProps = {
   divisions: DivisionCard[];
   robots: RobotCard[];
   gallery: GalleryItem[];
+  matchDocumentation?: MatchDocumentationItem[];
   teamLead: TeamLead;
   teamStats: TeamStat[];
   teamYears: TeamYear[];
@@ -1100,17 +1102,7 @@ function RobotLineupSlider({ robots }: { robots: RobotCard[] }) {
 
 function MatchShowcase() {
   const { ref, isVisible } = useScrollReveal();
-  const [hasTriggered, setHasTriggered] = useState(false);
-
-  useEffect(() => {
-    if (isVisible && !hasTriggered) {
-      setHasTriggered(true);
-    }
-  }, [isVisible, hasTriggered]);
-
-  const videoSrc = hasTriggered
-    ? `https://www.youtube.com/embed/${mainShowcaseVideo.id}?start=${mainShowcaseVideo.start}&end=${mainShowcaseVideo.end}&autoplay=1&mute=0&enablejsapi=1&rel=0`
-    : "";
+  const [isPlaying, setIsPlaying] = useState(false);
 
   return (
     <section className="relative overflow-hidden bg-[var(--navy-abyss)] py-20 sm:py-28" id="showcase">
@@ -1151,7 +1143,7 @@ function MatchShowcase() {
                 <span className="relative inline-flex size-3 rounded-full bg-red-500" />
               </span>
               <span className="font-mono text-[0.68rem] font-black uppercase tracking-[0.2em] text-[var(--yellow)]">
-                Live Match Replay • AROCPL
+                Match Replay • AROCPL
               </span>
             </div>
             <div className="font-mono text-[0.64rem] font-bold uppercase tracking-[0.16em] text-[rgba(248,247,240,0.5)]">
@@ -1160,25 +1152,39 @@ function MatchShowcase() {
           </div>
 
           <div className="relative aspect-video w-full overflow-hidden rounded-[1.5rem] border border-[rgba(255,228,92,0.18)] bg-[var(--navy-black)] shadow-2xl">
-            {hasTriggered ? (
+            {isPlaying ? (
               <iframe
-                src={videoSrc}
+                src={`https://www.youtube.com/embed/${mainShowcaseVideo.id}?start=${mainShowcaseVideo.start}&end=${mainShowcaseVideo.end}&autoplay=1&mute=0&enablejsapi=1&rel=0`}
                 title="Showcase Pertandingan AROCPL"
                 className="absolute inset-0 h-full w-full border-0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center bg-[rgba(10,15,38,0.9)] text-center p-6">
-                <div className="flex flex-col items-center gap-3">
-                  <div className="size-16 rounded-full border border-[rgba(255,228,92,0.3)] bg-[rgba(255,228,92,0.1)] flex items-center justify-center text-[var(--yellow)]">
-                    <PlayIcon className="size-8 ml-1" />
+              <button
+                type="button"
+                onClick={() => setIsPlaying(true)}
+                className="group relative flex h-full w-full items-center justify-center overflow-hidden cursor-pointer focus:outline-none"
+                aria-label="Putar video showcase pertandingan"
+              >
+                <img
+                  src={`https://i.ytimg.com/vi/${mainShowcaseVideo.id}/hqdefault.jpg`}
+                  alt="Thumbnail Showcase Pertandingan AROCPL"
+                  className="absolute inset-0 h-full w-full object-cover opacity-50 transition-transform duration-500 group-hover:scale-105 group-hover:opacity-65"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[rgba(10,15,38,0.92)] via-[rgba(10,15,38,0.45)] to-[rgba(10,15,38,0.6)]" />
+                <div className="relative z-10 flex flex-col items-center gap-3">
+                  <div className="size-16 sm:size-20 rounded-full border border-[rgba(255,228,92,0.4)] bg-[rgba(255,228,92,0.15)] backdrop-blur-sm flex items-center justify-center text-[var(--yellow)] shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:bg-[rgba(255,228,92,0.25)]">
+                    <PlayIcon className="size-8 sm:size-10 ml-1 fill-current" />
                   </div>
-                  <span className="font-mono text-[0.75rem] font-black uppercase tracking-[0.18em] text-[var(--cream)]">
-                    Scroll Ke Sini Untuk Memutar Video
+                  <span className="font-mono text-[0.8rem] sm:text-[0.9rem] font-bold uppercase tracking-[0.18em] text-[var(--cream)] group-hover:text-[var(--yellow)] transition-colors">
+                    Klik Untuk Memutar Video
+                  </span>
+                  <span className="text-[0.75rem] text-[rgba(248,247,240,0.6)]">
+                    {mainShowcaseVideo.timestampText}
                   </span>
                 </div>
-              </div>
+              </button>
             )}
           </div>
         </div>
@@ -1381,10 +1387,345 @@ function InsiderProof({ achievements, teamLead, teamStats, teamYears }: { achiev
 }
 
 /* ===================================================================
-   10. Gallery — editorial grid
+   10. Match Documentation Slider & Lab Gallery
    =================================================================== */
 
-function CampaignGallery({ gallery }: { gallery: GalleryItem[] }) {
+function MatchDocumentationSlider({ items }: { items: MatchDocumentationItem[] }) {
+  const { ref, isVisible } = useScrollReveal();
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeftState, setScrollLeftState] = useState(0);
+  const hasDraggedRef = useRef(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [activeFrameIndex, setActiveFrameIndex] = useState(0);
+
+  // Lightbox state for match documentation
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const lightboxRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  const activeItem = lightboxIndex === null ? null : items[lightboxIndex];
+
+  const updateScrollState = useCallback(() => {
+    if (!sliderRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current;
+    const maxScroll = scrollWidth - clientWidth;
+    setScrollProgress(maxScroll > 0 ? (scrollLeft / maxScroll) * 100 : 0);
+    setCanScrollLeft(scrollLeft > 15);
+    setCanScrollRight(scrollLeft < maxScroll - 15);
+
+    const card = sliderRef.current.firstElementChild as HTMLElement | null;
+    if (card) {
+      const cardWidth = card.offsetWidth + 20;
+      const approxIndex = Math.min(Math.max(0, Math.round(scrollLeft / cardWidth)), items.length - 1);
+      setActiveFrameIndex(approxIndex);
+    }
+  }, [items.length]);
+
+  useEffect(() => {
+    const el = sliderRef.current;
+    if (!el) return;
+    updateScrollState();
+    el.addEventListener("scroll", updateScrollState, { passive: true });
+    window.addEventListener("resize", updateScrollState);
+    return () => {
+      el.removeEventListener("scroll", updateScrollState);
+      window.removeEventListener("resize", updateScrollState);
+    };
+  }, [updateScrollState]);
+
+  const scrollByDirection = (direction: -1 | 1) => {
+    if (!sliderRef.current) return;
+    const card = sliderRef.current.firstElementChild as HTMLElement | null;
+    const scrollAmount = card ? (card.offsetWidth + 20) * 1.25 : 460;
+    sliderRef.current.scrollBy({
+      left: direction * scrollAmount,
+      behavior: "smooth",
+    });
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!sliderRef.current) return;
+    setIsDragging(true);
+    hasDraggedRef.current = false;
+    setStartX(e.pageX - sliderRef.current.offsetLeft);
+    setScrollLeftState(sliderRef.current.scrollLeft);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !sliderRef.current) return;
+    const x = e.pageX - sliderRef.current.offsetLeft;
+    const walk = (x - startX) * 1.4;
+    if (Math.abs(walk) > 8) {
+      hasDraggedRef.current = true;
+    }
+    sliderRef.current.scrollLeft = scrollLeftState - walk;
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+  };
+
+  const openLightbox = useCallback((index: number) => {
+    if (hasDraggedRef.current) return;
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+    setLightboxIndex(index);
+  }, []);
+
+  const closeLightbox = useCallback(() => {
+    setLightboxIndex(null);
+    window.requestAnimationFrame(() => previousFocusRef.current?.focus());
+  }, []);
+
+  const goLightbox = useCallback((direction: number) => {
+    setLightboxIndex((current) => {
+      if (current === null || items.length === 0) return current;
+      return (current + direction + items.length) % items.length;
+    });
+  }, [items.length]);
+
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+    const handler = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeLightbox();
+      if (event.key === "ArrowLeft") goLightbox(-1);
+      if (event.key === "ArrowRight") goLightbox(1);
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [lightboxIndex, closeLightbox, goLightbox]);
+
+  useEffect(() => {
+    if (lightboxIndex !== null) closeButtonRef.current?.focus();
+    document.body.style.overflow = lightboxIndex === null ? "" : "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [lightboxIndex]);
+
+  return (
+    <div
+      ref={ref}
+      className={`mt-20 sm:mt-28 border-t border-[rgba(17,26,61,0.12)] pt-16 sm:pt-20 reveal-base reveal-up ${isVisible ? "revealed" : ""}`}
+      id="match-gallery"
+    >
+      {/* Header with Title and Controls */}
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between mb-10">
+        <div>
+          <div className="kicker">Dokumentasi Pertandingan</div>
+          <h3
+            className="headline mt-4 text-[var(--navy-deep)]"
+            style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}
+          >
+            Dokumentasi pertandingan<br />terbaru.
+          </h3>
+          <p className="mt-3 max-w-[34rem] text-[1rem] leading-[1.85] text-[var(--muted-dark)]">
+            Aksi robot humanoid AROC_PL di arena kompetisi: dinamika match day, persiapan teknis di paddock, dan evaluasi performa di lapangan.
+          </p>
+        </div>
+
+        {/* Navigation Controls */}
+        <div className="flex items-center gap-3 self-start sm:self-end">
+          <span className="font-mono text-[0.72rem] font-bold tracking-wider text-[var(--muted-dark)] mr-1">
+            Frame <span className="font-black text-[var(--navy-deep)]">{String(activeFrameIndex + 1).padStart(2, "0")}</span> / {String(items.length).padStart(2, "0")}
+          </span>
+
+          <button
+            type="button"
+            onClick={() => scrollByDirection(-1)}
+            disabled={!canScrollLeft}
+            aria-label="Geser galeri ke kiri"
+            className="flex size-11 items-center justify-center rounded-full border border-[rgba(17,26,61,0.22)] bg-[rgba(17,26,61,0.06)] text-[var(--navy-deep)] transition hover:bg-[var(--navy-deep)] hover:text-[var(--yellow)] disabled:opacity-25 disabled:pointer-events-none shadow-sm cursor-pointer"
+          >
+            <ChevronLeftIcon className="size-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollByDirection(1)}
+            disabled={!canScrollRight}
+            aria-label="Geser galeri ke kanan"
+            className="flex size-11 items-center justify-center rounded-full border border-[rgba(17,26,61,0.22)] bg-[rgba(17,26,61,0.06)] text-[var(--navy-deep)] transition hover:bg-[var(--navy-deep)] hover:text-[var(--yellow)] disabled:opacity-25 disabled:pointer-events-none shadow-sm cursor-pointer"
+          >
+            <ChevronRightIcon className="size-5" />
+          </button>
+        </div>
+      </div>
+
+      {/* Horizontal Scroll Gallery */}
+      <div
+        ref={sliderRef}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseLeave}
+        className={`flex gap-5 overflow-x-auto pb-4 pt-1 select-none scrollbar-none snap-x snap-mandatory ${
+          isDragging ? "cursor-grabbing scroll-auto" : "cursor-grab scroll-smooth"
+        }`}
+        style={{
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+        }}
+      >
+        {items.map((item, index) => (
+          <article
+            key={item.src}
+            onClick={() => openLightbox(index)}
+            className="group relative flex-shrink-0 w-[85vw] sm:w-[420px] lg:w-[480px] aspect-[3/2] overflow-hidden rounded-[1.8rem] bg-[var(--navy-deep)] border border-[rgba(17,26,61,0.15)] shadow-[0_16px_36px_-15px_rgba(5,8,22,0.35)] transition-all duration-400 hover:-translate-y-1.5 hover:shadow-[0_24px_50px_-15px_rgba(5,8,22,0.5)] hover:border-[var(--yellow)]/60 cursor-pointer snap-start"
+          >
+            {/* Image */}
+            <Image
+              src={item.src}
+              alt={item.alt}
+              fill
+              sizes="(max-width: 640px) 85vw, (max-width: 1024px) 420px, 480px"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105 pointer-events-none"
+            />
+
+            {/* Gradient Overlays */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[rgba(3,6,16,0.92)] via-[rgba(3,6,16,0.25)] to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[rgba(3,6,16,0.55)] via-transparent to-transparent" />
+
+            {/* Top Badges */}
+            <div className="absolute inset-x-0 top-0 flex items-center justify-between p-5 pointer-events-none">
+              <span className="rounded-full bg-[var(--yellow)] px-3 py-1 font-mono text-[0.6rem] font-black uppercase tracking-[0.16em] text-[var(--navy-deep)] shadow-md">
+                {item.tag}
+              </span>
+              <span className="rounded-full border border-[rgba(248,247,240,0.25)] bg-[rgba(5,8,22,0.65)] px-3 py-1 font-mono text-[0.58rem] font-bold text-[var(--cream)] backdrop-blur-md">
+                Frame {String(index + 1).padStart(2, "0")}
+              </span>
+            </div>
+
+            {/* Bottom Caption */}
+            <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6 text-[var(--cream)] pointer-events-none">
+              <h4 className="font-display text-lg sm:text-xl font-black uppercase tracking-tight text-[var(--cream)] group-hover:text-[var(--yellow)] transition-colors duration-300">
+                {item.caption}
+              </h4>
+              <p className="mt-1.5 text-[0.84rem] leading-[1.55] text-[rgba(248,247,240,0.72)] line-clamp-2">
+                {item.alt}
+              </p>
+            </div>
+
+            {/* Subtle Zoom Hint on Hover */}
+            <div className="absolute right-5 bottom-5 opacity-0 transition-opacity duration-300 group-hover:opacity-100 flex size-9 items-center justify-center rounded-full bg-[var(--yellow)] text-[var(--navy-deep)] shadow-lg pointer-events-none">
+              <svg className="size-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6" />
+              </svg>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      {/* Progress Track & Hint */}
+      <div className="mt-5 flex flex-col sm:flex-row items-center justify-between gap-3 px-1">
+        <div className="h-1.5 w-full sm:max-w-xs bg-[rgba(17,26,61,0.12)] rounded-full overflow-hidden">
+          <div
+            className="h-full bg-[var(--navy-deep)] transition-[width] duration-150 rounded-full"
+            style={{ width: `${Math.max(8, scrollProgress)}%` }}
+          />
+        </div>
+        <p className="font-mono text-[0.68rem] tracking-wider text-[var(--muted-dark)] flex items-center gap-2">
+          <span>Geser atau klik tombol panah untuk menjelajahi {items.length} foto pertandingan</span>
+          <ArrowRightIcon className="size-3.5" />
+        </p>
+      </div>
+
+      {/* Lightbox for Match Documentation */}
+      {activeItem ? (
+        <div
+          aria-label="Pratinjau dokumentasi pertandingan"
+          aria-modal="true"
+          className="lightbox-overlay"
+          onClick={closeLightbox}
+          ref={lightboxRef}
+          role="dialog"
+        >
+          <button
+            ref={closeButtonRef}
+            aria-label="Tutup pratinjau"
+            className="luxury-chip absolute right-4 top-4 z-[103] flex size-12 items-center justify-center rounded-full border border-[rgba(248,247,240,0.2)] bg-[rgba(5,8,22,0.7)] text-[var(--cream)] backdrop-blur-sm transition hover:border-[rgba(255,228,92,0.45)] hover:bg-[rgba(5,8,22,0.9)] hover:text-[var(--yellow)]"
+            onClick={closeLightbox}
+            type="button"
+          >
+            <CloseIcon className="size-6" />
+          </button>
+          <button
+            aria-label="Gambar sebelumnya"
+            className="lightbox-control lightbox-control-left"
+            onClick={(event) => {
+              event.stopPropagation();
+              goLightbox(-1);
+            }}
+            type="button"
+          >
+            <ChevronLeftIcon className="size-5" />
+          </button>
+          <button
+            aria-label="Gambar berikutnya"
+            className="lightbox-control lightbox-control-right"
+            onClick={(event) => {
+              event.stopPropagation();
+              goLightbox(1);
+            }}
+            type="button"
+          >
+            <ChevronRightIcon className="size-5" />
+          </button>
+          <div className="lightbox-filmstrip" onClick={(event) => event.stopPropagation()}>
+            {items.map((item, index) => (
+              <button
+                aria-label={`Buka frame ${index + 1}`}
+                className={`lightbox-thumb ${index === lightboxIndex ? "is-active" : ""}`}
+                key={item.src}
+                onClick={() => setLightboxIndex(index)}
+                type="button"
+              >
+                <Image alt="" className="object-cover" fill sizes="64px" src={item.src} />
+              </button>
+            ))}
+          </div>
+          <div className="lightbox-stage" onClick={(event) => event.stopPropagation()}>
+            <Image
+              alt={activeItem.alt}
+              className="max-h-[82vh] max-w-[90vw] object-contain"
+              height={1080}
+              key={activeItem.src}
+              src={activeItem.src}
+              width={1920}
+              style={{ width: "auto", height: "auto" }}
+            />
+          </div>
+          <div className="lightbox-caption-panel">
+            <div className="flex items-center gap-3">
+              <span className="rounded-full bg-[var(--yellow)] px-2.5 py-0.5 font-mono text-[0.55rem] font-black uppercase text-[var(--navy-deep)]">
+                {activeItem.tag}
+              </span>
+              <span className="font-mono text-[0.58rem] font-black uppercase tracking-[0.2em] text-[var(--yellow)]">
+                Frame {String((lightboxIndex ?? 0) + 1).padStart(2, "0")} / {String(items.length).padStart(2, "0")}
+              </span>
+            </div>
+            <h4 className="mt-2 font-display text-base font-bold text-[var(--cream)]">{activeItem.caption}</h4>
+            <p className="mt-1 text-sm leading-[1.6] text-[rgba(248,247,240,0.8)]">{activeItem.alt}</p>
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function CampaignGallery({
+  gallery,
+  matchDocumentation = [],
+}: {
+  gallery: GalleryItem[];
+  matchDocumentation?: MatchDocumentationItem[];
+}) {
   const { ref, isVisible } = useScrollReveal();
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const lightboxRef = useRef<HTMLDivElement>(null);
@@ -1519,6 +1860,11 @@ function CampaignGallery({ gallery }: { gallery: GalleryItem[] }) {
             </figure>
           ))}
         </div>
+
+        {/* Section Baru: Dokumentasi Pertandingan Terbaru */}
+        {matchDocumentation && matchDocumentation.length > 0 && (
+          <MatchDocumentationSlider items={matchDocumentation} />
+        )}
       </div>
 
       {activeItem ? (
@@ -1659,6 +2005,7 @@ export function HomeCampaign({
   divisions,
   robots,
   gallery,
+  matchDocumentation,
   teamLead,
   teamStats,
   teamYears,
@@ -1707,7 +2054,7 @@ export function HomeCampaign({
 
       {/* DivisionGallery (dark) → Gallery (cream) */}
       <div aria-hidden="true" className="section-transition transition-ink-cream" />
-      <CampaignGallery gallery={gallery} />
+      <CampaignGallery gallery={gallery} matchDocumentation={matchDocumentation ?? matchDocumentationItems} />
 
       {/* Gallery (cream) → Sponsor (abyss) */}
       <div aria-hidden="true" className="section-transition transition-cream-abyss" />
