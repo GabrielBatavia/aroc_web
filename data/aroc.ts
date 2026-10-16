@@ -297,7 +297,7 @@ export const robotCards: RobotCard[] = [
       "Dilengkapi algoritma kick-timing presisi tinggi dan impuls eksekusi cepat yang mampu mendeteksi celah gawang dan meluncurkan tembakan kurang dari 40 milidetik.",
     teamTask:
       "Mencetak gol, melakukan penekanan cepat (heavy pressing) pada wilayah lawan, serta membuka ruang serangan di lini depan.",
-    image: "/galery/robot.jpg",
+    image: "/galery/robot1.png",
     tone: "orange",
   },
   {
@@ -310,7 +310,7 @@ export const robotCards: RobotCard[] = [
       "Menggunakan sistem visi komputer sudut lebar ganda dan integrasi IMU presisi tinggi untuk memprediksi lintasan bola dan mengeksekusi aksi diving block otomatis hanya dalam 30 milidetik.",
     teamTask:
       "Menjaga gawang dari segala sudut tembakan lawan, menggagalkan peluang gol musuh, dan mengamankan bola liar di area penalti.",
-    image: "/galery/robot.jpg",
+    image: "/galery/robot2.png",
     tone: "gold",
   },
   {
@@ -323,7 +323,7 @@ export const robotCards: RobotCard[] = [
       "Menggunakan algoritma spatial awareness 360 derajat dan predictive path-planning yang memungkinkannya mengontrol pergerakan bola di area krusial meskipun dalam duel fisik intensif.",
     teamTask:
       "Mendistribusikan serangan, menciptakan peluang gol bersama BARA, serta mengeksekusi tembakan penentu dari lini depan.",
-    image: "/galery/robot.jpg",
+    image: "/galery/robot3.png",
     tone: "cyan",
   },
 ];
