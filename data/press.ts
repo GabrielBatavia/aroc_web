@@ -60,14 +60,14 @@ export const pressAssets: PressAsset[] = [
   {
     title: "Dokumentasi Lab 01",
     description: "Suasana pengembangan dan evaluasi robot di lingkungan lab.",
-    src: "/images/gallery-1.png",
+    src: "/galery/IMG_20250509_232117~2.jpg",
     kind: "Lab Photo",
     downloadLabel: "Download dokumentasi",
   },
   {
     title: "Dokumentasi Lab 02",
     description: "Kolaborasi tim lintas divisi untuk integrasi sistem robot humanoid.",
-    src: "/images/gallery-2.png",
+    src: "/dokumentasi/IMG_8506.JPG",
     kind: "Lab Photo",
     downloadLabel: "Download dokumentasi",
   },
